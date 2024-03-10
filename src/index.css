@@ -1,0 +1,396 @@
+body {
+  background: rgb(55, 54, 54) !important;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  /* height: 100vh; */
+  margin: auto;
+  /* background: #FAF8FB; */
+  background: #000000;
+  min-width: 300px;
+  overflow-y: auto;
+  max-width: 450px;
+  position: relative;
+  /* padding-right: 7px; */
+  scrollbar-width: none;
+  /* firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+#root::-webkit-scrollbar {
+  scrollbar-width: none;
+  display: none;
+}
+
+.App::-webkit-scrollbar {
+  scrollbar-width: none;
+  display: none;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-weight: normal;
+  vertical-align: baseline;
+  font-size: 12px;
+  /* user-select: none; */
+  /* font-family: PingFang SC, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', miui, 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif !important; */
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+ol,
+ul,
+li {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th,
+td {
+  vertical-align: middle;
+}
+
+/* custom */
+a {
+  outline: none;
+  color: #16418a;
+  text-decoration: none;
+  -webkit-backface-visibility: hidden;
+}
+
+a:focus {
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: -webkit-focus-ring-color auto 0;
+}
+
+.cbtn {
+  cursor: pointer;
+}
+
+.ant-layout {
+  background: transparent !important;
+  height: 100%;
+}
+
+.menuSider {
+  position: fixed !important;
+  height: 100%;
+}
+
+.ant-menu-title-content {
+  font-size: 20px;
+}
+
+.layoutMain {
+  position: relative
+}
+
+/* .ant-layout-footer {
+  background: transparent !important;
+  z-index: 999;
+} */
+
+.MenuMantle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  z-index: 10;
+}
+
+/* 版心 */
+.Edition-Center {
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto;
+  padding-bottom: 40px;
+}
+
+@media (max-width:1280px) {
+  .Edition-Center {
+    padding: 0 40px;
+  }
+}
+
+@media (max-width:425px) {
+  .Edition-Center {
+    padding: 0px 12px;
+  }
+}
+
+/* flex 居中 */
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+/* 鼠标手势 */
+.pointer {
+  cursor: pointer;
+}
+
+/* 主题渐变色 */
+.linear-gradient {
+  background: linear-gradient(90deg, #4EADF5 0%, #DB2DCF 100%);
+}
+
+.invalid {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.NoData {
+  padding: 50px 0;
+}
+
+.NoData img {
+  max-width: 80%;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.ant-table-cell {
+  white-space: nowrap !important;
+}
+
+body {
+  width: 100% !important;
+  /* background: #0F160E !important; */
+}
+
+.App {
+  height: 100%;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  /* firefox */
+  -ms-overflow-style: none;
+}
+
+
+body::-webkit-scrollbar {
+  /* background-color: pink;
+  width: 10px; */
+  display: none !important;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+body::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: #f5f5f5; */
+  display: none !important;
+}
+
+body::-webkit-scrollbar-thumb {
+  /* border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px 6px rgba(0, 0, 0, 0.3);
+  background-color: #ddd; */
+  display: none !important;
+}
+
+/* .ant-modal {
+  max-height: calc(100vh - 84px);
+  margin: 64px auto 20px !important;
+  pointer-events: auto !important;
+} */
+
+@media (max-width:768px) {
+  .ant-modal {
+    overflow: auto;
+  }
+
+  /* 小屏合成 */
+  /* .ant-modal span {
+    display: none;
+  } */
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spanRotate {
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transition: transform .5s;
+}
+
+.spanReset {
+  transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  transition: transform .5s;
+}
+
+.swiper-slide-active {
+  z-index: 9999;
+}
+
+.ant-tooltip-inner {
+  border-radius: 12px !important;
+  color: rgba(72, 72, 72, 1) !important;
+  font-family: PingFang SC !important;
+  font-size: 12px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+  background-color: #FFF !important;
+padding: 12px !important;
+}
+
+.ant-tooltip-arrow-content {
+  --antd-arrow-background-color: #FFF !important;
+
+}
+
+
+@keyframes home-rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,346 @@
+.HeaderNav {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  height: 100%;
+  z-index: 99999;
+  padding: 0px 15px;
+  // overflow-x: hidden;
+
+  .switchItem {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    .box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    span {
+      display: flex;
+      align-items: center;
+
+      svg {
+        width: 30px;
+        height: 30px;
+        color: #fff;
+      }
+    }
+
+    // 菜单样式
+    .menuDropDown {
+      top: 57px !important;
+      left: 0 !important;
+
+      .menuItem {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        padding: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+        img {
+          margin-right: 8px;
+        }
+      }
+
+      // .ant-dropdown-menu-item-selected,
+      // .ant-dropdown-menu-submenu-title-selected {
+      //   background-color: transparent !important;
+
+      //   .menuItem {
+      //     color: #FBC830 !important;
+      //   }
+      // }
+
+      .menuActiveItem {
+        color: #ffb752;
+      }
+
+      .ant-dropdown-menu-item,
+      .ant-dropdown-menu-submenu-title {
+        padding: 0px;
+
+        &:last-child {
+          .menuItem {
+            border: 0px;
+          }
+        }
+      }
+    }
+  }
+
+  .HeadMenu {
+    z-index: 99999;
+    width: 36px;
+    height: 36px;
+    margin-left: 10px;
+    // border-radius: 50%;
+  }
+
+  .MenuList {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .MenuItem {
+      display: flex;
+      align-items: center;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 18px;
+      // line-height: 25px;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.4);
+      padding: 0px 18px;
+
+      img {
+        margin-right: 10px;
+      }
+    }
+
+    .active {
+      color: #06c;
+    }
+  }
+
+  .Mobile {
+    display: none;
+
+    .MBASPrice {
+      margin-right: 10px;
+
+      .priceBox {
+        font-family: "PingFang SC";
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 17px;
+        /* identical to box height */
+        color: #018d06;
+      }
+    }
+  }
+
+  @media (max-width: 1349px) {
+    // .MenuList {
+    //   display: none;
+    // }
+    .Mobile {
+      display: flex;
+      align-items: center;
+    }
+
+    .HeadMenu {
+      // display: none;
+    }
+
+    .MobileHeadMenu {
+      display: block;
+    }
+  }
+
+  .SBLMenu {
+    text-align: center;
+  }
+}
+
+.headerBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // background: linear-gradient(174deg, rgba(235, 176, 23, 0.85) 32.9%, rgba(103, 85, 33, 0.85) 92.85%);
+  transform: translate(-65%, -66%);
+  filter: blur(54.5px);
+  background: #6ab7ff;
+  filter: blur(97px);
+  width: 194px;
+  height: 194px;
+  z-index: -99999;
+}
+
+.SubTitle {
+  width: 100%;
+  position: absolute;
+  z-index: 9999;
+  top: 80px;
+  display: flex;
+  justify-content: center;
+  background: #eff8ff;
+  overflow-x: auto;
+
+  .menuContent {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1440px;
+
+    .Item {
+      padding: 22px;
+      font-family: "PingFang SC";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 28px;
+      /* identical to box height */
+      text-align: center;
+      color: rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .line {
+        margin-top: 10px;
+        width: 58px;
+        height: 2px;
+        background: transparent;
+      }
+
+      .lineActive {
+        background: radial-gradient(
+          50% 50% at 50% 50%,
+          #0066cc 0%,
+          rgba(165, 242, 0, 0) 100%
+        );
+      }
+    }
+
+    .activeItem {
+      color: #06c;
+    }
+  }
+}
+
+.DropItem {
+  padding: 5px 12px !important;
+}
+
+.MainContent {
+  padding: 56px 0px 83px;
+  min-height: 100vh !important;
+}
+
+.ant-modal-centered
+  .Modal
+  .ant-modal-content
+  .ant-modal-body
+  .Content-Modal
+  .refereeAddress {
+  font-family: "PingFang SC";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  text-align: center;
+  color: #ffffff;
+
+  .tip {
+    input {
+      border-radius: 6px;
+      border: 1px solid rgba(251, 200, 48, 0.4);
+      background: #000;
+      color: #fff;
+      font-family: PingFang SC;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      padding: 12px;
+    }
+  }
+
+  .btnBox {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > div {
+      margin: 0px 5px;
+      padding: 6px 13px;
+      max-width: 110px;
+      width: 100%;
+      background: #828874;
+      border-radius: 34px;
+    }
+
+    .confirmBtn {
+      border-radius: 6px;
+      background: linear-gradient(
+        90deg,
+        #eb6617 0%,
+        #fbc830 100%,
+        #fbc830 100%
+      );
+      color: #4e2d05;
+      text-align: center;
+      font-family: PingFang SC;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  }
+}
+
+.ant-menu {
+  li {
+    &::after {
+      border-right: none;
+    }
+  }
+
+  .ant-menu-item-selected {
+    .ant-menu-title-content {
+      color: #06c !important;
+    }
+  }
+}
+
+.ant-menu,
+.ant-menu-sub.ant-menu-inline,
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background: transparent !important;
+}
+
+.ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content,
+.ant-menu-inline.ant-menu-root
+  .ant-menu-submenu-title
+  > .ant-menu-title-content {
+  font-family: "PingFang SC";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.ant-menu-inline .ant-menu-item:after,
+.ant-menu-vertical-left .ant-menu-item:after,
+.ant-menu-vertical-right .ant-menu-item:after,
+.ant-menu-vertical .ant-menu-item:after {
+  border-right: 0 !important;
+}
+
+.ant-menu-submenu-arrow,
+.ant-menu-submenu-expand-icon {
+  color: #06c !important;
+}
+
+.ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content,
+.ant-menu-inline.ant-menu-root
+  .ant-menu-submenu-title
+  > .ant-menu-title-content {
+  text-align: left;
+}

@@ -1,0 +1,48 @@
+{
+    "1": "Home",
+    "2": "Introduction",
+    "3": "Transaction",
+    "4": "Subscription successful",
+    "5": "Subscription failed",
+    "6": "Subscribed",
+    "7": "Opening soon",
+    "8": "Ended",
+    "9": "Subscription",
+
+
+    "10": "Receive",
+    "11": "Start time:",
+    "12": "Daily number of IDO:",
+    "13": "Subscription amount:",
+
+
+    "14": "LP airdrop:",
+    "15": "Available for collection:",
+    "16": "IDO rules",
+    "17": "1. Shenlong Community Contract: {{address}}.",
+    "18": "1. Subscription amount: {{num}}USDT.",
+    "19": "2. Each address can only be purchased once.",
+    "20": "3. 10% of the total LP TOKEN added after IDO will be used for IDO participant rewards.",
+    "21": "Purchase",
+    "22": "You need to pay {{num}}USDT",
+
+
+    "23": "Receive",
+    "24": "Receive Rewards",
+    "25": "End time:",
+
+    "Not yet": "Not yet",
+    "Open soon": "Open soon",
+    "failed": "failed",
+    "Copied successfully": "Copied successfully",
+    "info": "INFO",
+    "Approve": "Approve",
+    "Please link wallet": "Please connect wallet",
+    "Received successfully": "Received successfully",
+    "Please bind the recommended address": "Please bind the recommended address",
+    "Confirm recommendation": "Confirm recommendation",
+    "Confirm": "Confirm",
+    "Binding successful": "Binding successful",
+    "Binding failed": "Binding failed",
+    "Insufficient balance": "Insufficient balance"
+}

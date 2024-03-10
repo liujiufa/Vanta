@@ -1,0 +1,107 @@
+{
+  "name": "template",
+  "version": "0.1.0",
+  "private": true,
+  "homepage":"/ido",
+  "dependencies": {
+    "@ant-design/icons": "^5.1.4",
+    "@better-scroll/core": "^2.4.2",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "@umijs/hooks": "^1.9.3",
+    "@web3-react/core": "6.1.9",
+    "@web3-react/injected-connector": "^6.0.7",
+    "@web3-react/walletconnect-connector": "^6.2.10",
+    "ant-design": "^1.0.0",
+    "antd": "^4.24.1",
+    "assert": "^2.0.0",
+    "axios": "^0.26.0",
+    "big.js": "^6.1.1",
+    "copy-to-clipboard": "^3.3.1",
+    "crypto-js": "^4.1.1",
+    "customize-cra": "^1.0.0",
+    "dotenv": "^16.0.3",
+    "dotenv-cli": "^7.2.1",
+    "https-browserify": "^1.0.0",
+    "i18next": "^21.8.2",
+    "lodash": "^4.17.21",
+    "net": "^1.0.2",
+    "os-browserify": "^0.3.0",
+    "react": "^17.0.2",
+    "react-app-rewired": "^2.2.1",
+    "react-dom": "^17.0.2",
+    "react-i18next": "^11.16.9",
+    "react-is": "^18.2.0",
+    "react-quill": "^2.0.0",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "5.0.0",
+    "react-text-loop-next": "^0.0.3",
+    "redux": "^4.1.2",
+    "redux-saga": "^1.1.3",
+    "sockjs-client": "^1.5.1",
+    "stompjs": "^2.3.3",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "styled-components": "^5.3.3",
+    "swiper": "^8.4.7",
+    "typescript": "^4.5.5",
+    "url": "^0.11.0",
+    "vconsole": "^3.15.1",
+    "web-vitals": "^2.1.4",
+    "web3": "^1.7.0"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "dotenv -e .env.production react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "webpack": "webpack --version"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/big.js": "^6.1.3",
+    "@types/crypto-js": "^4.1.1",
+    "@types/jest": "^27.4.0",
+    "@types/lodash": "^4.14.191",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.throttle": "^4.1.9",
+    "@types/node": "^16.11.25",
+    "@types/pubsub-js": "^1.8.3",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "@types/sockjs-client": "^1.5.1",
+    "@types/stompjs": "^2.3.5",
+    "@types/styled-components": "^5.1.22",
+    "animate": "^1.0.0",
+    "buffer": "^6.0.3",
+    "less": "^4.1.3",
+    "less-loader": "^11.1.0",
+    "lottie-web": "^5.10.2",
+    "node-sass": "^7.0.1",
+    "process": "^0.11.10",
+    "sass-loader": "^12.6.0",
+    "webpack-cli": "^5.0.0"
+  },
+  "optionalDependencies": {
+    "animate.css": "^4.1.1"
+  }
+}

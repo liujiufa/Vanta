@@ -1,0 +1,52 @@
+{
+    "1": "首页",
+    "2": "介绍",
+    "3": "交易",
+    "4": "认购成功",
+    "5": "认购失败",
+    "6": "已认购",
+    "7": "即将开放",
+    "8": "已结束",
+    "9": "认购",
+
+
+    "10": "领取",
+    "11": "开始时间:",
+    "12": "每日认购IDO数量:",
+    "13": "认购额度:",
+
+
+    "14": "LP空投:",
+    "15": "可领取:",
+    "16": "IDO规则",
+    "17": "1.神龙社区合约：{{address}}。",
+    "18": "1.认购额度：{{num}}USDT。",
+    "19": "2.每个地址只能购买一次。",
+    "20": "3.IDO之后添加的总的LP TOKEN10%用于IDO参与者奖励。",
+    "21": "购买",
+    "22": "您需支付{{num}}USDT",
+
+
+    "23": "领取",
+    "24": "可领取奖励",
+    "25": "结束时间:",
+
+    
+
+
+    
+    "Not yet": "暂时没有",
+    "Open soon": "即将开放~",
+    "failed": "失败",
+    "Copied successfully": "复制成功",
+    "info": "信息",
+    "Approve": "授权",
+    "Please link wallet": "请链接钱包",
+    "Received successfully": "领取成功",
+    "Please bind the recommended address": "请绑定推荐地址",
+    "Confirm recommendation": "确认推荐",
+    "Confirm": "确认",
+    "Binding successful": "绑定成功",
+    "Binding failed": "绑定失败",
+    "Insufficient balance": "余额不足"
+}

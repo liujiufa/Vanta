@@ -1,0 +1,331 @@
+.Table-Container {
+    .ant-table {
+        background: transparent;
+
+        // tbody {
+        //     &::before {
+        //         content: "";
+        //         display: inline-block;
+        //         width: 100%;
+        //         height: 1px;
+        //         background: linear-gradient(90deg, rgba(165, 242, 0, 0) 1.07%, #A5F200 53.32%, rgba(165, 242, 0, 0) 100.4%);
+        //         opacity: 0.6;
+        //         background-position: center;
+        //         background-repeat: no-repeat;
+        //         vertical-align: middle;
+        //         background-size: 32px 39px;
+        //         margin-top: -10px;
+        //     }
+        // }
+
+
+
+        .ant-table-thead {
+
+            >tr {
+
+                >th {
+                    background: transparent;
+                    font-family: 'PingFang SC';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 16px;
+                    line-height: 22px;
+                    text-transform: uppercase;
+                    color: rgba(0, 0, 0, 0.60);
+                    text-align: center;
+                    border: none;
+                    // background: linear-gradient(90deg, rgba(165, 242, 0, 0) 1.07%, #A5F200 53.32%, rgba(165, 242, 0, 0) 100.4%);
+                    // opacity: 0.6;
+                }
+            }
+        }
+
+        .ant-table-tbody>tr {
+
+            >td {
+                border: 0px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+
+                .item {
+                    font-family: 'PingFang SC';
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 16px;
+                    line-height: 22px;
+                    text-transform: uppercase;
+                    color: #000;
+                }
+
+                .itemActive {
+                    color: #06C;
+                    white-space: nowrap;
+                }
+
+                .itemActived {
+                    white-space: nowrap;
+                    color: #FF4A4A;
+                }
+            }
+        }
+
+        .ant-table-body {
+            border-top: 1px solid !important;
+            border-image: linear-gradient(90deg, rgba(165, 242, 0, 0) 1.07%, #06C 53.32%, rgba(165, 242, 0, 0) 100.4%) 2 2 2 2 !important;
+
+            &::-webkit-scrollbar {
+                height: 4px !important;
+                width: 4px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #72B8FF;
+                border-radius: 2px;
+            }
+
+            &::-webkit-scrollbar-track {
+                -webkit-box-shadow: none;
+            }
+        }
+
+        .ant-table-cell-scrollbar:not([rowspan]) {
+            -webkit-box-shadow: none;
+
+        }
+
+        .ant-table-tbody>tr.ant-table-row:hover>td,
+        .ant-table-tbody>tr>td.ant-table-cell-row-hover {
+            background: none;
+        }
+    }
+
+    .SplaceBox {
+        width: 100%;
+
+        .ItemBox {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+        }
+
+        .devideline {
+            margin: 15px 0px;
+            height: 1px;
+            width: 100%;
+            background: linear-gradient(90deg, rgba(165, 242, 0, 0) 1.07%, #06C 53.32%, rgba(165, 242, 0, 0) 100.4%);
+            opacity: 0.6;
+        }
+
+        // .switch {
+        //     width: 40px;
+        // }
+
+        .itemBox {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .item {
+                font-family: 'PingFang SC';
+                font-style: normal;
+                font-weight: 700;
+                font-size: 14px;
+                line-height: 20px;
+                /* identical to box height */
+                text-transform: uppercase;
+                color: #000;
+            }
+
+            .active {
+                color: #A5F201;
+
+            }
+
+            .actived {
+                color: #FF4A4A;
+
+            }
+
+            .item1 {
+                flex: 1;
+                display: flex;
+                justify-content: flex-start;
+                white-space: nowrap;
+            }
+
+            .item2 {
+                flex: 2;
+                display: flex;
+                justify-content: center;
+            }
+
+            .item3 {
+                flex: 1;
+                display: flex;
+                justify-content: flex-end;
+
+            }
+
+            // .item1 {
+            //     width: 100%;
+            //     max-width: 100px;
+            // }
+
+            // .item3 {
+            //     width: 100%;
+            //     max-width: 100px;
+            // }
+
+            // .item2 {
+            //     width: 100%;
+            //     max-width: 200px;
+            //     display: flex;
+            //     justify-content: center;
+            //     align-items: center;
+            // }
+        }
+    }
+}
+
+.ant-collapse,
+.ant-collapse-content {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.ant-collapse>.ant-collapse-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.ant-collapse>.ant-collapse-item>.ant-collapse-header {
+    padding: 12px 0px !important;
+}
+
+.ant-collapse-content {
+    .group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .left {
+                font-family: 'PingFang SC';
+                font-style: normal;
+                font-size: 14px;
+                line-height: 20px;
+                /* identical to box height */
+                text-transform: uppercase;
+                color: #000;
+                font-weight: 700;
+            }
+
+            .right {
+                font-family: 'PingFang SC';
+                font-style: normal;
+                font-weight: 700;
+                font-size: 14px;
+                line-height: 20px;
+                /* identical to box height */
+                text-transform: uppercase;
+                color: #000;
+            }
+
+        }
+
+        .autoItem {
+            margin: 5px 0px 0px;
+        }
+
+        .ItemBox {
+            flex: 1;
+            display: block;
+        }
+
+        .switch {
+            width: 24px;
+        }
+    }
+}
+
+.ant-collapse-content>.ant-collapse-content-box {
+    padding: 0px;
+}
+
+@media (max-width:525px) {
+    .Table-Container .ant-table .ant-table-thead>tr>th {
+        font-size: 12px;
+    }
+
+    .Table-Container .ant-table .ant-table-thead>tr>.RankTable {
+        padding-top: 0px;
+    }
+
+    .Table-Container .ant-table .ant-table-tbody>tr>td .item {
+        font-size: 12px;
+
+        img {
+            width: 24px;
+            height: 24px;
+        }
+
+        >div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .Table-Container .ant-table .ant-table-tbody>tr>td .autoItem {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .ant-table-tbody>tr>td,
+    .ant-table-thead>tr>th,
+    .ant-table tfoot>tr>td,
+    .ant-table tfoot>tr>th {
+        padding: 8px;
+    }
+
+    .Table-Container .SplaceBox .itemBox .item {
+        font-size: 12px;
+    }
+
+    .Table-Container .SplaceBox .devideline {
+        margin: 10px 0px;
+    }
+
+    .Table-Container .ant-table .ant-table-thead>tr>th {
+        &:first-child {
+            text-align: left !important;
+        }
+
+        &:last-child {
+            text-align: right !important;
+        }
+
+        // &:nth-child(3) {
+
+        //     text-align: right !important;
+        // }
+    }
+
+    .Table-Container .ant-table .ant-table-tbody>tr>td {
+        &:first-child {
+            text-align: left !important;
+        }
+
+        &:last-child {
+            text-align: right !important;
+        }
+    }
+}
