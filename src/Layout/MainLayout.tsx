@@ -305,7 +305,7 @@ const ModalContainer_Close = styled(FlexCCBox)`
   right: 10px;
 `;
 
-const ModalContainer_Title_Container = styled(FlexBox)`
+export const ModalContainer_Title_Container = styled(FlexBox)`
   width: 100%;
   justify-content: flex-start;
   align-items: center;
@@ -316,7 +316,7 @@ const ModalContainer_Title_Container = styled(FlexBox)`
   }
 `;
 
-const ModalContainer_Title = styled(FlexCCBox)`
+export const ModalContainer_Title = styled(FlexCCBox)`
   font-family: "PingFang SC";
   font-size: 14px;
   font-weight: normal;
