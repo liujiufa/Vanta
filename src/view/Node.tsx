@@ -25,7 +25,7 @@ import {
   FlexSBCBox,
   FlexSCBox,
 } from "../components/FlexBox";
-import { Carousel, Tooltip } from "antd";
+import { Carousel, Modal, Tooltip } from "antd";
 import { useGetReward } from "../hooks/useGetReward";
 import { Contracts } from "../web3";
 import logo from "../assets/image/logo.png";
@@ -33,6 +33,7 @@ import {
   ModalContainer_Title,
   ModalContainer_Title_Container,
 } from "../Layout/MainLayout";
+import closeIcon from "../assets/image/closeIcon.svg";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -170,6 +171,126 @@ const NodeRecord_Content = styled.div`
   width: 100%;
 `;
 
+const AllModal = styled(Modal)`
+  z-index: 10000;
+
+  .ant-modal-content {
+    overflow: hidden;
+    border-radius: 10px;
+    background: #101010;
+    border: 1px solid rgba(213, 104, 25, 0.2);
+    .ant-modal-body {
+      border-radius: 20px;
+      position: relative;
+      min-height: 124px;
+      padding: 24px 15px;
+    }
+  }
+`;
+
+const ModalContainer = styled(FlexBox)`
+  /* position: relative; */
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalContainer_Close = styled(FlexCCBox)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
+const ModalContainer_Content = styled.div`
+  width: 100%;
+  margin-top: 20px;
+  font-family: "PingFang SC";
+  font-size: 14px;
+  font-weight: normal;
+  line-height: normal;
+  text-transform: uppercase;
+  letter-spacing: 0em;
+
+  font-variation-settings: "opsz" auto;
+  color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  > span {
+    font-family: "PingFang SC";
+    font-size: 18px;
+    font-weight: normal;
+    line-height: normal;
+    text-transform: uppercase;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #d56819;
+    margin: 5px 0px 20px;
+  }
+`;
+
+const UpBtn = styled(Btn)`
+  width: 100%;
+  font-family: "Raleway";
+  font-size: 14px;
+  font-weight: bold;
+  line-height: normal;
+  text-transform: uppercase;
+  letter-spacing: 0em;
+
+  font-feature-settings: "kern" on;
+  color: #ffffff;
+  /* margin-top: 27px; */
+`;
+
+const BalanceBox = styled(FlexBox)`
+  width: 100%;
+  align-items: center;
+  font-family: PingFang SC;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: normal;
+  text-transform: uppercase;
+  letter-spacing: 0em;
+
+  font-variation-settings: "opsz" auto;
+  color: #999999;
+  margin-top: 10px;
+  > span {
+    font-family: PingFang SC;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: normal;
+    text-transform: uppercase;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #d56819;
+    margin: 0px 5px;
+  }
+`;
+
+const HomeContainerBox_Content_Bg3 = styled.div`
+  position: absolute;
+  bottom: -15px;
+  right: -101px;
+  width: 261px;
+  height: 261px;
+  flex-shrink: 0;
+  border-radius: 261px;
+  opacity: 0.4;
+  background: linear-gradient(
+    131deg,
+    rgba(113, 112, 242, 0.4) 35.38%,
+    rgba(152, 102, 234, 0.4) 85.25%
+  );
+  filter: blur(99.5px);
+`;
+
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
@@ -182,7 +303,7 @@ export default function Rank() {
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-
+  const [ActivationModal, setActivationModal] = useState(false);
   const getInitData = () => {
     userInfo({}).then((res: any) => {
       if (res.code === 200) {
@@ -278,6 +399,51 @@ export default function Rank() {
           <NoData></NoData>
         </NodeRecord_Content>
       </NodeRecord>
+
+      <AllModal
+        visible={true}
+        className="Modal"
+        centered
+        width={"345px"}
+        closable={false}
+        footer={null}
+        onCancel={() => {
+          setActivationModal(false);
+        }}
+      >
+        <ModalContainer>
+          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+
+          <ModalContainer_Close>
+            {" "}
+            <img
+              src={closeIcon}
+              alt=""
+              onClick={() => {
+                setActivationModal(false);
+              }}
+            />
+          </ModalContainer_Close>
+          <ModalContainer_Title_Container>
+            <img src={logo} alt="" />
+            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
+          </ModalContainer_Title_Container>
+          <ModalContainer_Content>
+            Activation requires destroying MBK
+            <span>100</span>
+            <UpBtn
+              onClick={() => {
+                // BindFun();
+              }}
+            >
+              {t("Activation")}
+            </UpBtn>
+            <BalanceBox>
+              wallet balance: <span>100,000.00</span>MBK
+            </BalanceBox>
+          </ModalContainer_Content>
+        </ModalContainer>
+      </AllModal>
     </NodeContainerBox>
   );
 }

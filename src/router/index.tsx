@@ -5,6 +5,7 @@ import MainLayout from "../Layout/MainLayout";
 import DeputyLayout from "../Layout/DeputyLayout";
 const Home = React.lazy(() => import('../view/Home'));
 const Node = React.lazy(() => import('../view/Node'));
+const Subscription = React.lazy(() => import('../view/Subscription'));
 
 export default function Router() {
   return (
@@ -14,6 +15,7 @@ export default function Router() {
           <Route path=":address/">
             <Route index element={<Home />}></Route>
             <Route path="Node" element={<Node />}></Route>
+            <Route path="Subscription" element={<Subscription />}></Route>
           
             
           </Route>

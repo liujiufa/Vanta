@@ -422,7 +422,12 @@ export default function Rank() {
       </Announcement>
       <MenuList>
         {MenuListArr?.map((item: any, index: any) => (
-          <MenuList_Item key={index}>
+          <MenuList_Item
+            key={index}
+            onClick={() => {
+              Navigate("/View/" + item?.name);
+            }}
+          >
             <img src={item?.img} alt="" />
             {item?.name}
           </MenuList_Item>
