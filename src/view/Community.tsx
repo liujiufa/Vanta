@@ -79,6 +79,45 @@ const Btn = styled(FlexCCBox)`
   background: #d56819;
 `;
 
+const NodeInfo_Mid_Content = styled(FlexBox)`
+  width: 100%;
+  justify-content: space-evenly;
+  margin: 20px 0px 24px;
+  align-items: center;
+  > div {
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+    &:last-child {
+      font-family: PingFang SC;
+      font-size: 18px;
+      font-weight: normal;
+      line-height: normal;
+      text-transform: capitalize;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      color: #d56819;
+      > span {
+        font-family: PingFang SC;
+        font-size: 10px;
+        font-weight: normal;
+        line-height: normal;
+        text-transform: uppercase;
+        letter-spacing: 0em;
+
+        font-variation-settings: "opsz" auto;
+        color: #ffffff;
+      }
+    }
+  }
+`;
+
 const NodeInfo_Top_Btn = styled(Btn)`
   width: fit-content;
   margin: auto;
@@ -279,12 +318,13 @@ const HomeContainerBox_Content_Bg3 = styled.div`
   filter: blur(99.5px);
 `;
 
-const Award_Record_Content = styled.div`
+export const Award_Record_Content = styled.div`
   width: 100%;
 `;
 const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
   width: 100%;
   padding: 10px 15px;
+  overflow-x: auto;
   > div {
     font-family: "PingFang SC";
     font-size: 12px;
@@ -304,6 +344,7 @@ const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
     z-index: 1;
     border-radius: 234px;
     margin-right: 10px;
+    white-space: nowrap;
   }
   .activeSubTab {
     font-family: "PingFang SC";
@@ -329,13 +370,13 @@ const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
 
 const Award_Record_Content_Tab_Item = styled(FlexCCBox)``;
 
-const Award_Record_Content_Record_Content = styled.div`
+export const Award_Record_Content_Record_Content = styled.div`
   > div {
     border-bottom: 1px solid rgba(213, 104, 25, 0.2);
   }
 `;
 
-const Award_Record_Content_Record_Content_Item = styled.div`
+export const Award_Record_Content_Record_Content_Item = styled.div`
   width: 100%;
   padding: 10px 15px;
   > div {
@@ -371,7 +412,7 @@ const Award_Record_Content_Record_Content_Item = styled.div`
     }
   }
 `;
-const Get_Record_Content_Record_Content_Item = styled(
+export const Get_Record_Content_Record_Content_Item = styled(
   Award_Record_Content_Record_Content_Item
 )<{ type: any }>`
   > div {
@@ -450,19 +491,31 @@ export default function Rank() {
   return (
     <NodeContainerBox>
       <NodeInfo>
-        <NodeInfo_Top>
-          <ModalContainer_Title_Container>
-            <img src={logo} />
-            <ModalContainer_Title>My Node </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-          <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
-          <NodeInfo_Top_Btn>Subscription</NodeInfo_Top_Btn>
-        </NodeInfo_Top>
+        {true ? (
+          <NodeInfo_Top>
+            <ModalContainer_Title_Container>
+              <img src={logo} />
+              <ModalContainer_Title>My Community</ModalContainer_Title>
+            </ModalContainer_Title_Container>
+            <NodeInfo_Mid_Content>
+              <div>To be collected</div>
+              <div>
+                3,000.00 <span>mbk</span>
+              </div>
+            </NodeInfo_Mid_Content>
+            <NodeInfo_Top_Btn>receive</NodeInfo_Top_Btn>
+          </NodeInfo_Top>
+        ) : (
+          <NodeInfo_Top>
+            <ModalContainer_Title_Container>
+              <img src={logo} />
+              <ModalContainer_Title>My Community</ModalContainer_Title>
+            </ModalContainer_Title_Container>
+            <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
+            <NodeInfo_Top_Btn>activation</NodeInfo_Top_Btn>
+          </NodeInfo_Top>
+        )}
         <NodeInfo_Bottom>
-          <NodeInfo_Bottom_Item>
-            Prize pool funds
-            <span>3000 MBK</span>
-          </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
             My LP quantity
             <span>3000 LP</span>

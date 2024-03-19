@@ -34,6 +34,8 @@ import {
   ModalContainer_Title_Container,
 } from "../Layout/MainLayout";
 import closeIcon from "../assets/image/closeIcon.svg";
+import { ZeroStrokeIcon } from "../assets/image/homeBox";
+import { HelpIconAuto, NodeInfo_Top_Rule } from "./Insurance";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -46,23 +48,11 @@ const NodeInfo = styled.div`
 `;
 
 const NodeInfo_Top = styled(FlexBox)`
+  position: relative;
   flex-direction: column;
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
-`;
-
-const NodeInfo_Top_Tip = styled.div`
-  font-family: PingFang SC;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: normal;
-  text-transform: uppercase;
-  letter-spacing: 0em;
-
-  font-variation-settings: "opsz" auto;
-  color: #d56819;
-  margin: 20px 0px 24px;
 `;
 
 const Btn = styled(FlexCCBox)`
@@ -84,14 +74,19 @@ const NodeInfo_Top_Btn = styled(Btn)`
   margin: auto;
 `;
 
-const NodeInfo_Bottom = styled.div`
-  padding: 15px;
-  > div {
-    margin-bottom: 13px;
-    &:last-child {
-      margin-bottom: 0px;
-    }
-  }
+const NodeInfo_Bottom = styled(FlexCCBox)`
+  padding: 11px;
+  border-top: 1px solid rgba(213, 104, 25, 0.2);
+
+  font-family: PingFang SC;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: normal;
+  text-transform: uppercase;
+  letter-spacing: 0em;
+
+  font-variation-settings: "opsz" auto;
+  color: #d56819;
 `;
 const NodeInfo_Bottom_Item = styled(FlexSBCBox)`
   width: 100%;
@@ -127,6 +122,10 @@ const NodeRecord = styled.div`
 const NodeRecord_Tab = styled(FlexSBCBox)`
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
   > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
     padding: 13px 14px;
     font-family: PingFang SC;
     font-size: 12px;
@@ -392,6 +391,69 @@ const Get_Record_Content_Record_Content_Item = styled(
   }
 `;
 
+const NodeInfo_Top_Item = styled(FlexSBCBox)`
+  width: 100%;
+  font-family: PingFang SC;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: normal;
+  text-transform: capitalize;
+  letter-spacing: 0em;
+
+  font-variation-settings: "opsz" auto;
+  color: #ffffff;
+  margin-top: 18px;
+  > div {
+    font-family: PingFang SC;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: rgba(255, 255, 255, 0.8);
+  }
+`;
+
+const NodeInfo_Mid = styled(FlexSBCBox)`
+  width: 100%;
+  padding: 10px 15px;
+  > div {
+    display: flex;
+    align-items: center;
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+    &:last-child {
+      font-family: PingFang SC;
+      font-size: 18px;
+      font-weight: normal;
+      line-height: normal;
+      text-transform: capitalize;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      color: #d56819;
+      > span {
+        font-family: PingFang SC;
+        font-size: 10px;
+        font-weight: normal;
+        line-height: normal;
+        text-transform: uppercase;
+        letter-spacing: 0em;
+        margin-left: 5px;
+        font-variation-settings: "opsz" auto;
+        color: #ffffff;
+      }
+    }
+  }
+`;
+
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
@@ -443,7 +505,7 @@ export default function Rank() {
     if (type === 1) {
       return <span style={{ color: "#D56819" }}>Confirming</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>Confirming</span>;
+      return <span style={{ color: "#0256FF" }}>successful</span>;
     }
   };
 
@@ -451,31 +513,34 @@ export default function Rank() {
     <NodeContainerBox>
       <NodeInfo>
         <NodeInfo_Top>
+          <NodeInfo_Top_Rule>
+            <HelpIconAuto /> Rule
+          </NodeInfo_Top_Rule>
           <ModalContainer_Title_Container>
-            <img src={logo} />
-            <ModalContainer_Title>My Node </ModalContainer_Title>
+            <img src={ZeroStrokeIcon} />
+            <ModalContainer_Title>Insurance Status</ModalContainer_Title>
           </ModalContainer_Title_Container>
-          <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
-          <NodeInfo_Top_Btn>Subscription</NodeInfo_Top_Btn>
+
+          <NodeInfo_Top_Item>
+            <div>Recommended Active Users</div>
+            20 pcs
+          </NodeInfo_Top_Item>
+          <NodeInfo_Top_Item>
+            <div>Sharing Rewards</div>
+            10000 MBK
+          </NodeInfo_Top_Item>
+          <NodeInfo_Top_Item>
+            <div>Direct Referral Rewards</div>
+            10000 MBK
+          </NodeInfo_Top_Item>
         </NodeInfo_Top>
-        <NodeInfo_Bottom>
-          <NodeInfo_Bottom_Item>
-            Prize pool funds
-            <span>3000 MBK</span>
-          </NodeInfo_Bottom_Item>
-          <NodeInfo_Bottom_Item>
-            My LP quantity
-            <span>3000 LP</span>
-          </NodeInfo_Bottom_Item>
-          <NodeInfo_Bottom_Item>
-            Community subscription performance
-            <span>3000 USDT</span>
-          </NodeInfo_Bottom_Item>
-          <NodeInfo_Bottom_Item>
-            Accumulated NFT equity rewards
-            <span>3000 MBK</span>
-          </NodeInfo_Bottom_Item>
-        </NodeInfo_Bottom>
+        <NodeInfo_Mid>
+          <div>Released and pending for claim</div>
+          <div>
+            0 <span>MBK</span>
+          </div>
+        </NodeInfo_Mid>
+        <NodeInfo_Bottom>Released after activation</NodeInfo_Bottom>
       </NodeInfo>
 
       <NodeRecord>
@@ -486,7 +551,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Award record
+            Reward record
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -494,15 +559,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            Get records
-          </NodeRecord_Tab_Item>
-          <NodeRecord_Tab_Item
-            className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
-            onClick={() => {
-              setActiveTab(3);
-            }}
-          >
-            Subscription record
+            Claim record
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -523,7 +580,7 @@ export default function Rank() {
                     setSubTab(2);
                   }}
                 >
-                  LP WeiAghted
+                  Share reward
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 3 ? "activeSubTab" : ""}
@@ -531,7 +588,7 @@ export default function Rank() {
                     setSubTab(3);
                   }}
                 >
-                  Equally Distributed
+                  Direct referral reward
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
@@ -542,7 +599,7 @@ export default function Rank() {
                         Reward type <span>LP weighted</span>
                       </div>
                       <div>
-                        Release time <span>2023-12-23 12:23</span>
+                        Time <span>2023-12-23 12:23</span>
                       </div>
                       <div>
                         Quantity Issued (MBK) <span>2000.00</span>
@@ -565,40 +622,10 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Collection time <span>2023-12-23 12:23</span>
+                        time<span>2023-12-23 12:23</span>
                       </div>
                       <div>
-                        Receive quantity (MBK) <span>2000.00</span>
-                      </div>
-                      <div>State{StateObj(1)}</div>
-                      <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
-                ) : (
-                  <NoData></NoData>
-                )}
-              </Award_Record_Content_Record_Content>
-            </Award_Record_Content>
-          )}
-          {Number(ActiveTab) === 3 && (
-            <Award_Record_Content>
-              <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        Type <span>Subscription</span>
-                      </div>
-                      <div>
-                        Time <span>2023-12-23 12:23</span>
-                      </div>
-                      <div>
-                        Payment amount(USDT) <span>2000.00</span>
+                        Quantity Claimed(MBK)<span>2000.00</span>
                       </div>
                       <div>State{StateObj(1)}</div>
                       <div>

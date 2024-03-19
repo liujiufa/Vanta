@@ -31,6 +31,7 @@ import bannerImg1 from "../assets/image/Home/bannerImg1.png";
 import announcementIcon from "../assets/image/Home/announcementIcon.svg";
 import outLinkIcon from "../assets/image/Home/outLinkIcon.svg";
 import menuIcon1 from "../assets/image/Home/menuIcon1.png";
+import menuIcon7 from "../assets/image/Home/menuIcon7.png";
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import coinIcon from "../assets/image/Home/coinIcon.svg";
 
@@ -362,7 +363,7 @@ export default function Rank() {
     { img: menuIcon1, name: "Invite" },
     { img: menuIcon1, name: "Exchange" },
     { img: menuIcon1, name: "Swap" },
-    { img: menuIcon1, name: "Insurance" },
+    { img: menuIcon7, name: "Insurance" },
     { img: menuIcon1, name: "More" },
   ];
 
