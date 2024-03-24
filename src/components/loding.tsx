@@ -7,7 +7,7 @@ import lodingimg from '../assets/image/loding.png'
     75%{-webkit-transform:rotate(270deg);}
     100%{-webkit-transform:rotate(360deg);}
 `
-const LodingMode = styled.div`
+export const LodingMode = styled.div`
     position: fixed;
     top: 0;left: 0;
     z-index: 99999;

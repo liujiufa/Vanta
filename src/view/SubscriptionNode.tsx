@@ -36,6 +36,7 @@ import {
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
+import { HelpIcon } from "../assets/image/homeBox";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -164,7 +165,7 @@ const NodeInfo_Mid_Price = styled(FlexCCBox)`
     margin-left: 5px;
   }
 `;
-const NodeInfo_Mid_Rule = styled(FlexECBox)`
+export const NodeInfo_Mid_Rule = styled(FlexECBox)`
   width: 100%;
   font-family: PingFang SC;
   font-size: 10px;
@@ -176,7 +177,7 @@ const NodeInfo_Mid_Rule = styled(FlexECBox)`
   font-variation-settings: "opsz" auto;
   color: #666666;
   margin-bottom: 0px !important;
-  > img {
+  > svg {
     margin-right: 5px;
   }
 `;
@@ -283,7 +284,7 @@ export default function Rank() {
             10000 <span>USDT</span>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
-            <img src={helpIcon} alt="" />
+            <HelpIcon />
             rule
           </NodeInfo_Mid_Rule>
           <NodeInfo_Mid_Conditions>

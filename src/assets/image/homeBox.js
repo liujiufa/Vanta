@@ -6,6 +6,7 @@ import ReservePoolIcon from "./Home/ReservePoolIcon.png";
 
 export { ReactComponent as HelpIcon } from "./Home/helpIcon.svg";
 export { ReactComponent as SmallOutLinkIcon } from "./Home/smallOutLinkIcon.svg";
+export { ReactComponent as QuotaSubscriptionIcon } from "./Home/QuotaSubscriptionIcon.svg";
 
 export {
   menuIcon7,

@@ -48,6 +48,12 @@ import Web3 from "web3";
 import styled from "styled-components";
 import { FlexBox, FlexCCBox, FlexSBCBox } from "../components/FlexBox";
 import { useSign } from "../hooks/useSign";
+import {
+  BgIcon,
+  MetaMaskIcon,
+  OkxIcon,
+  TpIcon,
+} from "../assets/image/layoutBox";
 const { Header, Content, Footer, Sider } = Layout;
 
 let refereeUserAddress: any;
@@ -338,7 +344,7 @@ const ModalContainer_Content = styled.div`
   letter-spacing: 0em;
   font-variation-settings: "opsz" auto;
   color: #ffffff;
-
+  padding: 15px 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -393,6 +399,29 @@ const HomeContainerBox_Content_Bg3 = styled.div`
     rgba(152, 102, 234, 0.4) 85.25%
   );
   filter: blur(99.5px);
+`;
+
+const WalletItem = styled(FlexCCBox)`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #f7e1d1;
+  border-radius: 5px;
+  box-shadow: 0px 3.55px 35.49px -17px #633800;
+  margin-bottom: 15px;
+  font-family: PingFang SC;
+  font-size: 17.14px;
+  font-weight: normal;
+  line-height: normal;
+  letter-spacing: 0em;
+
+  font-variation-settings: "opsz" auto;
+  color: #ffffff;
+  > svg {
+    margin-right: 5px;
+  }
+  &:last-child {
+    margin-bottom: 0px;
+  }
 `;
 
 const MainLayout: React.FC = () => {
@@ -780,6 +809,50 @@ const MainLayout: React.FC = () => {
             >
               {t("Sure")}
             </UpBtn>
+          </ModalContainer_Content>
+        </ModalContainer>
+      </AllModal>
+      <AllModal
+        visible={false}
+        className="Modal"
+        centered
+        width={"345px"}
+        closable={false}
+        footer={null}
+        onCancel={() => {
+          setBindModal(false);
+        }}
+      >
+        <ModalContainer>
+          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+
+          <ModalContainer_Close>
+            {" "}
+            <img
+              src={closeIcon}
+              alt=""
+              onClick={() => {
+                setBindModal(false);
+              }}
+            />
+          </ModalContainer_Close>
+          <ModalContainer_Content>
+            <WalletItem>
+              <MetaMaskIcon />
+              MetaMask
+            </WalletItem>
+            <WalletItem>
+              <OkxIcon />
+              OKX
+            </WalletItem>
+            <WalletItem>
+              <BgIcon />
+              Bitget Wallet
+            </WalletItem>
+            <WalletItem>
+              <TpIcon />
+              TP wallet
+            </WalletItem>
           </ModalContainer_Content>
         </ModalContainer>
       </AllModal>
