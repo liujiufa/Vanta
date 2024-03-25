@@ -88,29 +88,6 @@ const NodeInfo_Bottom = styled(FlexCCBox)`
   font-variation-settings: "opsz" auto;
   color: #d56819;
 `;
-const NodeInfo_Bottom_Item = styled(FlexSBCBox)`
-  width: 100%;
-  font-family: PingFang SC;
-  font-size: 12px;
-  font-weight: normal;
-  line-height: normal;
-  text-transform: capitalize;
-  letter-spacing: 0em;
-
-  font-variation-settings: "opsz" auto;
-  color: rgba(255, 255, 255, 0.8);
-  > span {
-    font-family: PingFang SC;
-    font-size: 14px;
-    font-weight: normal;
-    line-height: normal;
-    text-transform: uppercase;
-    letter-spacing: 0em;
-
-    font-variation-settings: "opsz" auto;
-    color: #ffffff;
-  }
-`;
 
 const NodeRecord = styled.div`
   width: 100%;
@@ -453,6 +430,7 @@ const NodeInfo_Mid = styled(FlexSBCBox)`
     }
   }
 `;
+
 
 export default function Rank() {
   const { t, i18n } = useTranslation();

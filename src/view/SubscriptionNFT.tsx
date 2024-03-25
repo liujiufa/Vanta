@@ -36,7 +36,6 @@ import {
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
-import { HelpIcon } from "../assets/image/homeBox";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -53,20 +52,11 @@ const NodeInfo_Top = styled(FlexBox)`
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
-`;
-
-const Btn = styled(FlexCCBox)`
-  padding: 10px 15px;
-  font-family: "PingFang SC";
-  font-size: 14px;
-  font-weight: normal;
-  line-height: normal;
-  text-transform: uppercase;
-  letter-spacing: 0em;
-  border-radius: 10px;
-  font-variation-settings: "opsz" auto;
-  color: #ffffff;
-  background: #d56819;
+  > div {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 `;
 
 const NodeInfo_Bottom = styled(FlexCCBox)`
@@ -114,6 +104,9 @@ const NodeInfo_Bottom_Item = styled(FlexSBCBox)`
 const NodeInfo_Bottom_Item_First = styled(NodeInfo_Bottom_Item)`
   margin-top: 18px;
 `;
+const NodeInfo_Mid_Item_First = styled(NodeInfo_Bottom_Item_First)`
+  margin: 0px 0px 10px 0px !important;
+`;
 
 const NodeInfo_Mid = styled(FlexBox)`
   flex-direction: column;
@@ -139,33 +132,40 @@ const NodeInfo_Mid_Title = styled(FlexCCBox)`
   font-variation-settings: "opsz" auto;
   color: #ffffff;
 `;
-const NodeInfo_Mid_Price = styled(FlexCCBox)`
-  width: 100%;
-  font-family: PingFang SC;
-  font-size: 18px;
-  font-weight: normal;
-  line-height: normal;
-  text-transform: capitalize;
-  letter-spacing: 0em;
-
-  font-variation-settings: "opsz" auto;
-  color: #d56819;
-
-  z-index: 0;
-  > span {
+const NodeInfo_Mid_Price = styled(FlexBox)`
+  flex-direction: column;
+  align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     font-family: PingFang SC;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: normal;
     line-height: normal;
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: 0em;
 
     font-variation-settings: "opsz" auto;
-    color: rgba(255, 255, 255, 0.8);
-    margin-left: 5px;
+    color: #d56819;
+
+    z-index: 0;
+    > span {
+      font-family: PingFang SC;
+      font-size: 12px;
+      font-weight: normal;
+      line-height: normal;
+      text-transform: uppercase;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      color: rgba(255, 255, 255, 0.8);
+      margin-left: 5px;
+    }
   }
 `;
-export const NodeInfo_Mid_Rule = styled(FlexECBox)`
+const NodeInfo_Mid_Rule = styled(FlexECBox)`
   width: 100%;
   font-family: PingFang SC;
   font-size: 10px;
@@ -176,13 +176,13 @@ export const NodeInfo_Mid_Rule = styled(FlexECBox)`
 
   font-variation-settings: "opsz" auto;
   color: #666666;
-  margin-bottom: 0px !important;
-  > svg {
+  /* margin-bottom: 15px !important; */
+  > img {
     margin-right: 5px;
   }
 `;
 
-export const NodeInfo_Mid_Conditions = styled.div`
+const NodeInfo_Mid_Conditions = styled.div`
   width: 100%;
   font-family: PingFang SC;
   font-size: 14px;
@@ -194,8 +194,6 @@ export const NodeInfo_Mid_Conditions = styled.div`
   font-variation-settings: "opsz" auto;
   color: #d56819;
   > div {
-    display: flex;
-    align-items: center;
     font-family: PingFang SC;
     font-size: 12px;
     font-weight: normal;
@@ -205,8 +203,7 @@ export const NodeInfo_Mid_Conditions = styled.div`
     font-variation-settings: "opsz" auto;
     color: rgba(255, 255, 255, 0.8);
     margin-top: 5px;
-    > img,
-    svg {
+    > img {
       margin-right: 5px;
     }
     &:first-child {
@@ -267,39 +264,59 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={logo} />
-            <ModalContainer_Title>Subscription Node</ModalContainer_Title>
+            <ModalContainer_Title>Subscription NFT</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
-            Node Total
-            <span>100 PCS</span>
+            NFT Total Amount
+            <span>36 PCS</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
-            The Remaining Amount
-            <span>100 PCS</span>
+            The remaining amount
+            <span>36 PCS</span>
+          </NodeInfo_Bottom_Item_First>
+        </NodeInfo_Top>
+
+        <NodeInfo_Top>
+          <NodeInfo_Bottom_Item_First>
+            Number of subscription rounds
+            <span>first round</span>
+          </NodeInfo_Bottom_Item_First>
+          <NodeInfo_Bottom_Item_First>
+            Subscription quantity
+            <span>36 PCS</span>
+          </NodeInfo_Bottom_Item_First>
+          <NodeInfo_Bottom_Item_First>
+            The remaining amount
+            <span>36 PCS</span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
+          <NodeInfo_Mid_Item_First>
+            Current price
+            <span>1MBK=30.00USDT</span>
+          </NodeInfo_Mid_Item_First>
           <NodeInfo_Mid_Title>
-            Current node subscription price
+            Current NFT subscription price
           </NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
-            10000 <span>USDT</span>
+            <div>
+              16.67 <span>MBK</span>
+            </div>
+            <div>
+              {" "}
+              <span> = 500USDT</span>
+            </div>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
-            <HelpIcon />
+            <img src={helpIcon} alt="" />
             rule
           </NodeInfo_Mid_Rule>
+
           <NodeInfo_Mid_Conditions>
-            Subscription conditions
-            <div>
-              <img src={yesIcon} alt="" />
-              Hold NFT yourself
-            </div>
-            <div>
-              <img src={errorIcon} alt="" />
-              The community subscribed for more than 30 NFTs
-            </div>
+            Current subscription rewards
+            <div>1. Initial subscription reward 2000 MBK</div>
+            <div>2. First round subscription reward 2000 MBK</div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>
         <NodeInfo_Bottom>Subscription</NodeInfo_Bottom>
