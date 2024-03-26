@@ -15,7 +15,7 @@ import {
   startWord,
   NumSplic1,
 } from "../utils/tool";
-import { Login, signBindReferee, userIsBind } from "../API/index";
+import { Login, getUserInfo, isRefereeAddress } from "../API/index";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { stateType } from "../store/reducer";
@@ -307,8 +307,10 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
+  z-index: 100;
   top: 10px;
   right: 10px;
+  z-index: 100;
 `;
 
 export const ModalContainer_Title_Container = styled(FlexBox)`
@@ -399,6 +401,9 @@ const HomeContainerBox_Content_Bg3 = styled.div`
     rgba(152, 102, 234, 0.4) 85.25%
   );
   filter: blur(99.5px);
+  z-index: -1;
+  z-index: -1;
+  z-index: -1;
 `;
 
 const WalletItem = styled(FlexCCBox)`
@@ -427,16 +432,22 @@ const WalletItem = styled(FlexCCBox)`
 const MainLayout: React.FC = () => {
   const web3 = new Web3();
   let dispatch = useDispatch();
-  let state = useSelector<stateType, stateType>((state) => state);
+  let token = useSelector<any>((state) => state.token);
+  let address = useSelector<any>((state) => state.address);
   let { t, i18n } = useTranslation();
-  const web3React = useWeb3React();
   let [ItemActive, setItemActive] = useState("/");
   const [InputValue, setInputValue] = useState<any>("");
   const Navigate = useNavigate();
   const { connectWallet } = useConnectWallet();
+  const web3React = useWeb3React();
   const { width } = useViewport();
   const [BindModal, setBindModal] = useState(false);
+  const [SelectWallet, setSelectWallet] = useState(false);
   const { signFun } = useSign();
+
+  useEffect(() => {
+    connectWallet && connectWallet();
+  }, [connectWallet]);
 
   let tag = web3.utils.isAddress(window.location.pathname.slice(1));
   if (tag) {
@@ -541,14 +552,6 @@ const MainLayout: React.FC = () => {
     }
   }
 
-  function scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    document.body.scrollTo(0, 0);
-  }
-
   const LoginFun = useCallback(async () => {
     if (web3React.account) {
       let tag = await web3.utils.isAddress(window.location.pathname.slice(1));
@@ -557,7 +560,7 @@ const MainLayout: React.FC = () => {
       } else {
         refereeUserAddress = "";
       }
-
+      console.log(1);
       await signFun((res: any) => {
         Login({
           ...res,
@@ -566,7 +569,7 @@ const MainLayout: React.FC = () => {
         }).then((res: any) => {
           if (res.code === 200) {
             showLoding(false);
-            setBindModal(false);
+            setSelectWallet(false);
             dispatch(
               createLoginSuccessAction(
                 res.data.token,
@@ -583,64 +586,63 @@ const MainLayout: React.FC = () => {
       addMessage("Please link wallet");
     }
   }, [web3React.account, refereeUserAddress]);
+
   const BindFun = useCallback(async () => {
     if (web3React.account) {
       let tag = await web3.utils.isAddress(InputValue);
       if (!tag) return addMessage("请输入正确的钱包地址");
-      console.log(InputValue, refereeUserAddress, "InputValue");
-
-      await signFun((res: any) => {
-        Login({
-          ...res,
-          userAddress: web3React.account as string,
-          refereeUserAddress: InputValue,
-        }).then((res: any) => {
-          if (res.code === 200) {
-            showLoding(false);
-            setBindModal(false);
-            dispatch(
-              createLoginSuccessAction(
-                res.data.token,
-                web3React.account as string
-              )
-            );
-          } else {
-            showLoding(false);
-            addMessage(res.msg);
-          }
-        });
-      }, `userAddress=${web3React.account as string}&refereeUserAddress=${InputValue}`);
+      let res: any = await isRefereeAddress({ userAddress: InputValue });
+      if (!(res?.code === 200)) return addMessage(res.msg);
+      let isSuccessBind: any;
+      try {
+        showLoding(true);
+        console.log("isSuccessBind", "isSuccessBind");
+        isSuccessBind = await Contracts.example?.bind(
+          web3React.account as string,
+          InputValue as string
+        );
+      } catch (error: any) {
+        addMessage("失败");
+      }
+      showLoding(false);
+      if (!!isSuccessBind?.status) {
+        setBindModal(false);
+        return addMessage("绑定成功");
+      } else {
+        addMessage("失败");
+      }
     } else {
       addMessage("Please link wallet");
     }
   }, [web3React.account, InputValue]);
 
-  useEffect(() => {
-    connectWallet && connectWallet();
-  }, [connectWallet]);
+  const ConnectWalletFun = async (type: 1) => {
+    await LoginFun();
+  };
 
   useEffect(() => {
-    if (!web3React.account) return;
-    // userIsBind({ userAddress: web3React.account }).then((res: any) => {
-    //   if (res?.code === 200 && !!res?.data?.isBind) {
-    //     setBindModal(false);
-    //     // LoginFun();
-    //   } else {
-    //     setBindModal(true);
-    //   }
-    // });
-  }, [web3React.account, BindModal]);
+    if (!web3React?.account) return;
+    Contracts.example
+      .isBind(web3React?.account as string, "Referrer")
+      .then((res: any) => {
+        if (res) {
+          setBindModal(false);
+        } else {
+          setBindModal(true);
+        }
+      });
+  }, [web3React?.account, BindModal]);
 
   useEffect(() => {
     console.log(pathname, location.pathname, "pathname");
     if (pathname) {
-      scrollToTop();
       setItemActive(pathname);
     }
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 0);
   }, [pathname]);
+
   useEffect(() => {
     if (!!refereeUserAddress) {
       setInputValue(refereeUserAddress);
@@ -651,31 +653,38 @@ const MainLayout: React.FC = () => {
     <MyLayout>
       {/* <BgBox2></BgBox2> */}
       <HeaderContainer>
-        <div
-          className="HeaderNav"
-          onClick={() => {
-            Navigate("/View/");
-          }}
-        >
-          <LogoContainer></LogoContainer>
+        <div className="HeaderNav">
+          <LogoContainer
+            onClick={() => {
+              Navigate("/View/");
+            }}
+          ></LogoContainer>
 
           <SetBox>
-            {web3React.account ? (
+            {address ? (
               <>
                 <div className="Connect  pointer activeConnect">
                   <img src={activeWalletIcon} alt="" />{" "}
-                  {AddrHandle(web3React.account as string, 6, 4)}
+                  {AddrHandle(address as string, 6, 4)}
                 </div>
               </>
             ) : (
-              <>
-                <img
-                  src={walletIcon}
-                  onClick={() => {
-                    connectWallet && connectWallet();
-                  }}
-                />
-              </>
+              // <>
+              //   <img
+              //     src={walletIcon}
+              //     onClick={() => {
+              //       connectWallet && connectWallet();
+              //     }}
+              //   />
+              // </>
+              <div
+                className="Connect  pointer activeConnect"
+                onClick={() => {
+                  setSelectWallet(true);
+                }}
+              >
+                Connect Wallet
+              </div>
             )}
 
             <DropdownContainer
@@ -765,7 +774,7 @@ const MainLayout: React.FC = () => {
         </div>
       </FooterContainer>
       <AllModal
-        visible={false}
+        visible={BindModal}
         className="Modal"
         centered
         width={"345px"}
@@ -813,14 +822,14 @@ const MainLayout: React.FC = () => {
         </ModalContainer>
       </AllModal>
       <AllModal
-        visible={false}
+        visible={SelectWallet}
         className="Modal"
         centered
         width={"345px"}
         closable={false}
         footer={null}
         onCancel={() => {
-          setBindModal(false);
+          setSelectWallet(false);
         }}
       >
         <ModalContainer>
@@ -832,12 +841,16 @@ const MainLayout: React.FC = () => {
               src={closeIcon}
               alt=""
               onClick={() => {
-                setBindModal(false);
+                setSelectWallet(false);
               }}
             />
           </ModalContainer_Close>
           <ModalContainer_Content>
-            <WalletItem>
+            <WalletItem
+              onClick={() => {
+                ConnectWalletFun(1);
+              }}
+            >
               <MetaMaskIcon />
               MetaMask
             </WalletItem>

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  getHomePrice,
-  refereeUserList,
-  teamUserList,
+  
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -347,7 +345,6 @@ export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
-  const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
@@ -357,14 +354,14 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
 
   const MenuListArr = [
-    { img: menuIcon1, name: "Subscription" },
-    { img: menuIcon1, name: "Node" },
-    { img: menuIcon1, name: "Community" },
-    { img: menuIcon1, name: "Invite" },
-    { img: menuIcon1, name: "Exchange" },
-    { img: menuIcon1, name: "Swap" },
-    { img: menuIcon7, name: "Insurance" },
-    { img: menuIcon1, name: "More" },
+    { img: menuIcon1, name: "Subscription", route: "Robot" },
+    { img: menuIcon1, name: "Node", route: "Node" },
+    { img: menuIcon1, name: "Community", route: "Community" },
+    { img: menuIcon1, name: "Invite", route: "Invite" },
+    { img: menuIcon1, name: "Exchange", route: "Exchange" },
+    { img: menuIcon1, name: "Swap", route: "Swap" },
+    { img: menuIcon7, name: "Insurance", route: "Insurance" },
+    { img: menuIcon1, name: "More", route: "More" },
   ];
 
   const getInitData = () => {
@@ -377,26 +374,12 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-      getInitData();
+      //getInitData();
     }
   }, [state.token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-      Contracts.example
-        .balanceOf(account as string, "LPToken")
-        .then((res: any) => {
-          setBalance(EthertoWei(res ?? "0"));
-          Contracts.example
-            .queryUsdtAmountByLPAmount(
-              account as string,
-              EthertoWei(res ?? "0") + ""
-            )
-            .then((res: any) => {
-              console.log(res, "er");
-              setInputValueAmount(EthertoWei(res ?? "0"));
-            });
-        });
     }
   }, [account]);
 
@@ -426,7 +409,7 @@ export default function Rank() {
           <MenuList_Item
             key={index}
             onClick={() => {
-              Navigate("/View/" + item?.name);
+              Navigate("/View/" + item?.route);
             }}
           >
             <img src={item?.img} alt="" />

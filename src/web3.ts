@@ -112,6 +112,14 @@ export class Contracts {
     );
     return obj?.methods.allowance(addr, toaddr).call({ from: addr });
   }
+  symbol(addr: string, contractName: string) {
+    this.verification(contractName);
+    let obj = new this.web3.eth.Contract(
+      abiObj[contractName],
+      contractAddress[contractName]
+    );
+    return obj?.methods.symbol().call({ from: addr });
+  }
   //授权1
   approve(addr: string, toaddr: string, contractName: string, value: string) {
     this.verification(contractName);
@@ -134,7 +142,6 @@ export class Contracts {
       "123"
     );
   }
-
   //除开拓者奖励领取
   withdrawReward(addr: string, data: string, contractName: string) {
     // this.verification("Distribute");
@@ -146,113 +153,43 @@ export class Contracts {
       .withdrawReward(data)
       .send({ from: addr, gasPrice: "5000000000" });
   }
-  buyStarLevel(addr: string, data: string) {
-    this.verification("StarMarket");
-    return this.contract.StarMarket?.methods
-      .buyStarLevel(data)
-      .send({ from: addr, gasPrice: "5000000000" });
-  }
   //查询绑定
-  bound(addr: string, contractName: string, contactAddress: string) {
-    // this.verification(contractName)
-    if (!this.contract[contractName]) {
-      this.contract[contractName] = new this.web3.eth.Contract(
-        abiObj[contractName],
-        contactAddress
-      );
-    }
-    let obj = new this.web3.eth.Contract(abiObj[contractName], contactAddress);
-    // console.log(obj, addr, abiObj[contractName] "obj");
-    return obj?.methods.bound(addr).call({ from: addr });
-  }
-  //查询绑定
-  boundReferrer(
-    addr: string,
-    contractName: string,
-    contactAddress: string,
-    referAddress: any
-  ) {
-    // this.verification(contractName)
-    if (!this.contract[contractName]) {
-      this.contract[contractName] = new this.web3.eth.Contract(
-        abiObj[contractName],
-        contactAddress
-      );
-    }
-    let obj = new this.web3.eth.Contract(abiObj[contractName], contactAddress);
-    // console.log(obj, addr, abiObj[contractName] "obj");
-    console.log(addr, contractName, contactAddress, referAddress);
+  isBind(addr: string, contractName: string) {
+    this.verification(contractName);
 
-    return obj?.methods
-      .boundReferrer(referAddress)
+    let obj = new this.web3.eth.Contract(
+      abiObj[contractName],
+      contractAddress[contractName]
+    );
+    return obj?.methods.isBind(addr).call({ from: addr });
+  }
+  bind(addr: string, address: string) {
+    this.verification("Referrer");
+    return this.contract.Referrer?.methods
+      .bind(address)
       .send({ from: addr, gasPrice: "5000000000" });
   }
-  getIdoInfo(addr: string) {
-    this.verification("IDO");
-    return this.contract.IDO?.methods.getIdoInfo().call({ from: addr });
-  }
-  getUserState(addr: string) {
-    this.verification("IDO");
-    return this.contract.IDO?.methods.getUserState().call({ from: addr });
-  }
 
-  preSale(addr: string) {
-    this.verification("IDO");
-    return this.contract.IDO?.methods
-      .preSale()
-      .send({ from: addr, gasPrice: "5000000000" });
-  }
-  claim(addr: string) {
-    this.verification("IDO");
-    return this.contract.IDO?.methods
-      .claim()
-      .send({ from: addr, gasPrice: "5000000000" });
-  }
-  userInfos(addr: string) {
-    this.verification("Entrance");
-    return this.contract.Entrance?.methods.userInfos(addr).call({ from: addr });
-  }
-
-  improving(addr: string, statusType: number) {
-    this.verification("Entrance");
-    console.log(statusType);
-
-    return this.contract.Entrance?.methods
-      .improving(statusType)
-      .send({ from: addr, gasPrice: "5000000000" });
-  }
-  buying(addr: string, value: string) {
-    this.verification("Entrance");
+  buyBot(addr: string, value: string) {
+    this.verification("Bot");
     var amount = Web3.utils.toWei(value);
 
-    return this.contract.Entrance?.methods
-      .buying(amount)
+    return this.contract.Bot?.methods
+      .buyBot(amount)
       .send({ from: addr, gasPrice: "5000000000" });
   }
-  sellLpToken(addr: string, value: string) {
-    this.verification("Entrance");
-    var amount = Web3.utils.toWei(value);
-
-    return this.contract.Entrance?.methods
-      .sellLpToken(amount)
-      .send({ from: addr, gasPrice: "5000000000" });
-  }
-
-  queryUsdtAmountByLPAmount(addr: string, amount: string) {
-    this.verification("Entrance");
-    var amounted = Web3.utils.toWei(amount);
-console.log(amounted,'amounted');
-
-    return this.contract.Entrance?.methods
-      .queryUsdtAmountByLPAmount(amounted)
+  queryUsdtByMbk(addr: string, value: string) {
+    this.verification("Bot");
+    let amount = Web3.utils.toWei(value);
+    return this.contract.Bot?.methods
+      .queryUsdtByMbk(amount)
       .call({ from: addr });
   }
-  queryLpAmountByUsdtAmount(addr: string, amount: string) {
-    this.verification("Entrance");
-    var amounted = Web3.utils.toWei(amount);
-
-    return this.contract.Entrance?.methods
-      .queryLpAmountByUsdtAmount(amounted)
+  queryMbkByUsdt(addr: string, value: string) {
+    this.verification("Bot");
+    let amount = Web3.utils.toWei(value);
+    return this.contract.Bot?.methods
+      .queryMbkByUsdt(amount)
       .call({ from: addr });
   }
 }

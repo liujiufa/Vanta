@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   getHomePrice,
+  getRobotManageAwardRecord,
+  getRobotPerformanceAwardRecord,
   refereeUserList,
   teamUserList,
   userInfo,
@@ -13,9 +15,16 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+  decimalNum,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ContainerBox,
   FlexBox,
@@ -134,6 +143,7 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
+  z-index: 100;
   top: 10px;
   right: 10px;
 `;
@@ -183,6 +193,7 @@ const HomeContainerBox_Content_Bg3 = styled.div`
     rgba(152, 102, 234, 0.4) 85.25%
   );
   filter: blur(99.5px);
+  z-index: -1;
 `;
 
 const Award_Record_Content = styled.div`
@@ -381,36 +392,78 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
-  const getInitData = () => {
-    userInfo({}).then((res: any) => {
-      if (res.code === 200) {
-        setUserInfo(res?.data);
-      }
-    });
+  const { state: stateObj } = useLocation();
+  //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
+  //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
+  const TypeObj = {
+    1: "推荐奖励",
+    2: "管理奖励",
+    3: "平级奖励",
+    4: "领取奖励",
+    5: "业绩明星奖励",
+    6: "直推明星奖励",
+    7: "NFT团队明星奖励",
   };
+
+  const subTabArr = {
+    1: [
+      { key: 0, name: "All" },
+      { key: 1, name: "Recommendation Award" },
+      { key: 2, name: "Management Award" },
+      { key: 0, name: "Level Award" },
+    ],
+    2: [
+      { key: 0, name: "All" },
+      { key: 5, name: "Performance Star Award" },
+      { key: 6, name: "Directly promoted star award" },
+      { key: 7, name: "NFT team star" },
+    ],
+  };
+  const recordType: number = Number((stateObj as any)?.type);
+  const getAwardRecord = (type: any) => {
+    if (recordType === 1) {
+      getRobotManageAwardRecord(type).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (recordType === 2) {
+      getRobotPerformanceAwardRecord(type).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    }
+  };
+
+  const getGetRecord = useCallback(() => {
+    if (recordType === 1) {
+      getRobotManageAwardRecord(4).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (recordType === 2) {
+      getRobotPerformanceAwardRecord(8).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    }
+  }, [ActiveTab]);
 
   useEffect(() => {
     if (state.token) {
-      getInitData();
+      if (Number(ActiveTab) === 1) {
+        return getAwardRecord(SubTab);
+      } else if (Number(ActiveTab) === 2) {
+        return getGetRecord();
+      }
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token, SubTab, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-      Contracts.example
-        .balanceOf(account as string, "LPToken")
-        .then((res: any) => {
-          setBalance(EthertoWei(res ?? "0"));
-          Contracts.example
-            .queryUsdtAmountByLPAmount(
-              account as string,
-              EthertoWei(res ?? "0") + ""
-            )
-            .then((res: any) => {
-              console.log(res, "er");
-              setInputValueAmount(EthertoWei(res ?? "0"));
-            });
-        });
     }
   }, [account]);
 
@@ -447,21 +500,25 @@ export default function Rank() {
           {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 0 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(0);
-                  }}
-                >
-                  All
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
+                {subTabArr[recordType ?? 0]?.map((item: any) => (
+                  <Award_Record_Content_Tab_Item
+                    className={
+                      Number(SubTab) === item?.key ? "activeSubTab" : ""
+                    }
+                    onClick={() => {
+                      setSubTab(item?.key);
+                    }}
+                  >
+                    {item?.name}
+                  </Award_Record_Content_Tab_Item>
+                ))}
+                {/* <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 1 ? "activeSubTab" : ""}
                   onClick={() => {
                     setSubTab(1);
                   }}
                 >
-                  Performance Star Award
+                  Recommendation Award
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 2 ? "activeSubTab" : ""}
@@ -469,7 +526,7 @@ export default function Rank() {
                     setSubTab(2);
                   }}
                 >
-                  Directly promoted star award
+                  Management Award
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 3 ? "activeSubTab" : ""}
@@ -477,21 +534,28 @@ export default function Rank() {
                     setSubTab(3);
                   }}
                 >
-                  NFT team star
-                </Award_Record_Content_Tab_Item>
+                  Level Award
+                </Award_Record_Content_Tab_Item> */}
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>LP weighted</span>
+                        Reward type <span>{TypeObj[item?.businessType]}</span>
                       </div>
                       <div>
-                        Time <span>2023-12-23 12:23</span>
+                        Time{" "}
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK) <span>2000.00</span>
+                        Quantity Issued (MBK){" "}
+                        <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -504,21 +568,29 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
                     >
                       <div>
-                        Time<span>2023-12-23 12:23</span>
+                        Time
+                        <span>
+                          {" "}
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>2000.00</span>
+                        Quantity(MBK)<span>{decimalNum(item?.amount, 2)}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))

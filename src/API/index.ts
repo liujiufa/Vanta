@@ -1,112 +1,91 @@
-import axois from '../utils/axiosExport'
+import axois from "../utils/axiosExport";
 interface LoginData {
-    password: string;
-    refereeUserAddress: string;
-    userAddress: string;
-    userPower: number;
+  password: string;
+  refereeUserAddress: string;
+  userAddress: string;
+  userPower: number;
 }
 
 export function Login(data: LoginData) {
-    return axois.request({
-        url: '/user/loginByPass',
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+  return axois.request({
+    url: "/user/login",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
 }
-/* 获取LP挖矿显示数据 */
-export function getHomePrice() {
-    return axois.request({
-        url: '/ippUserOrder/getHomePrice',
-        method: 'get'
-    })
+/* 判断上级地址是否有效 */
+export function isRefereeAddress(data: any) {
+  return axois.request({
+    url: `/user/isRefereeAddress`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
 }
-// 绑定关系
-export function signBindReferee(data: any) {
-    console.log(data);
 
-    return axois.request({
-        url: `/uUser/signBindReferee`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+export function getUserInfo() {
+  return axois.request({
+    url: "/user/getUserInfo",
+    method: "get",
+  });
 }
-export function incomeRecordList(data: any) {
-    return axois.request({
-        url: `/userProperty/incomeRecordList`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+
+export function userInfo() {
+  return axois.request({
+    url: "/user/getUserInfo",
+    method: "get",
+  });
 }
-export function lpRecordList(data: any) {
-    return axois.request({
-        url: `/userProperty/lpRecordList`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+
+export function getRobotInfo() {
+  return axois.request({
+    url: "/robot/getRobotInfo",
+    method: "get",
+  });
 }
-export function refereeUserList(data: any) {
-    return axois.request({
-        url: `/userRefereeBinary/refereeUserList`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+
+export function receive(data: LoginData) {
+  return axois.request({
+    url: "/user/isRefereeAddress/{address}",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
 }
-export function teamUserList(data: any) {
-    return axois.request({
-        url: `/userRefereeBinary/teamUserList`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+
+export function getRobotManageAward() {
+  return axois.request({
+    url: "/robot/getRobotManageAward",
+    method: "get",
+  });
 }
-// 获取用户信息
-export function userInfo(data: any) {
-    return axois.request({
-        url: `/user/userInfo`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+export function getRobotPerformanceAwardInfo() {
+  return axois.request({
+    url: "/robot/getRobotPerformanceAwardInfo",
+    method: "get",
+  });
 }
-// 获取用户LP信息
-export function userLpInfo(data: any) {
-    return axois.request({
-        url: `/user/userLpInfo`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+
+export function getRobotBuyRecord(status: any) {
+  return axois.request({
+    url: `/robot/getRobotBuyRecord/${status}`,
+    method: "get",
+  });
 }
-// 获取用户LP信息
-export function receive(data: any) {
-    return axois.request({
-        url: `/userProperty/receive`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+export function getRobotManageAwardRecord(type: any) {
+  return axois.request({
+    url: `/robot/getRobotManageAwardRecord/${type}`,
+    method: "get",
+  });
 }
-// 获取用户LP信息
-export function userIsBind(data: any) {
-    return axois.request({
-        url: `/user/userIsBind`,
-        method: 'post',
-        data: {
-            ...data,
-        }
-    })
+// 获取机器人业绩奖励记录
+export function getRobotPerformanceAwardRecord(type: any) {
+  return axois.request({
+    url: `/robot/getRobotPerformanceAwardRecord/${type}`,
+    method: "get",
+  });
 }

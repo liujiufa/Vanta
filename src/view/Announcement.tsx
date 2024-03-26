@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  getHomePrice,
-  refereeUserList,
-  teamUserList,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -98,7 +95,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-  top: 10px;
+    z-index: 100;
+top: 10px;
   right: 10px;
 `;
 
@@ -147,6 +145,7 @@ const HomeContainerBox_Content_Bg3 = styled.div`
     rgba(152, 102, 234, 0.4) 85.25%
   );
   filter: blur(99.5px);
+  z-index: -1;
 `;
 
 const Award_Record_Content = styled.div`
@@ -340,26 +339,26 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-      getInitData();
+       //getInitData();
     }
   }, [state.token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-      Contracts.example
-        .balanceOf(account as string, "LPToken")
-        .then((res: any) => {
-          setBalance(EthertoWei(res ?? "0"));
-          Contracts.example
-            .queryUsdtAmountByLPAmount(
-              account as string,
-              EthertoWei(res ?? "0") + ""
-            )
-            .then((res: any) => {
-              console.log(res, "er");
-              setInputValueAmount(EthertoWei(res ?? "0"));
-            });
-        });
+      // Contracts.example
+      //   .balanceOf(account as string, "LPToken")
+      //   .then((res: any) => {
+      //     setBalance(EthertoWei(res ?? "0"));
+      //     Contracts.example
+      //       .queryUsdtAmountByLPAmount(
+      //         account as string,
+      //         EthertoWei(res ?? "0") + ""
+      //       )
+      //       .then((res: any) => {
+      //         console.log(res, "er");
+      //         setInputValueAmount(EthertoWei(res ?? "0"));
+      //       });
+      //   });
     }
   }, [account]);
   return (

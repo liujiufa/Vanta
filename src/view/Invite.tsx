@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  getHomePrice,
-  refereeUserList,
-  teamUserList,
+  
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -242,26 +240,13 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-      getInitData();
+       //getInitData();
     }
   }, [state.token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-      Contracts.example
-        .balanceOf(account as string, "LPToken")
-        .then((res: any) => {
-          setBalance(EthertoWei(res ?? "0"));
-          Contracts.example
-            .queryUsdtAmountByLPAmount(
-              account as string,
-              EthertoWei(res ?? "0") + ""
-            )
-            .then((res: any) => {
-              console.log(res, "er");
-              setInputValueAmount(EthertoWei(res ?? "0"));
-            });
-        });
+       
     }
   }, [account]);
 

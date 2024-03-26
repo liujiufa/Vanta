@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   getHomePrice,
+  getRobotInfo,
+  getRobotManageAward,
+  getRobotPerformanceAwardInfo,
   refereeUserList,
   teamUserList,
   userInfo,
@@ -13,7 +16,14 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  decimalNum,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -45,6 +55,10 @@ import {
 } from "../assets/image/homeBox";
 import { DemonIcon, MyQuotaIcon } from "../assets/image/RobotBox";
 import { NodeInfo_Mid_Rule } from "./SubscriptionNode";
+import { contractAddress } from "../config";
+import useUSDTGroup from "../hooks/useUSDTGroup";
+import { throttle } from "lodash";
+import { log } from "console";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -132,6 +146,7 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
+  z-index: 100;
   top: 10px;
   right: 10px;
 `;
@@ -222,6 +237,7 @@ const HomeContainerBox_Content_Bg3 = styled.div`
     rgba(152, 102, 234, 0.4) 85.25%
   );
   filter: blur(99.5px);
+  z-index: -1;
 `;
 
 const NodeInfo_Top_Item = styled(FlexSBCBox)`
@@ -348,6 +364,15 @@ const InputBox = styled(FlexSBCBox)`
 
         font-variation-settings: "opsz" auto;
         color: rgba(51, 51, 51, 0.8);
+        &::-webkit-outer-spin-button {
+          -webkit-appearance: textfield;
+        }
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: textfield;
+        }
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
       }
     }
     &:last-child {
@@ -537,7 +562,7 @@ const MyQuota_Box_Right = styled.div`
   line-height: normal;
   text-transform: capitalize;
   letter-spacing: 0em;
-
+  text-align: center;
   font-variation-settings: "opsz" auto;
   color: #f7e1d1;
   > div {
@@ -611,6 +636,7 @@ export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
+  const token = useSelector<stateType, any>((state) => state.token);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
@@ -618,48 +644,98 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [Price, setPrice] = useState<any>("");
+  const [InputValueAmount, setInputValueAmount] = useState<any>("");
+  const [InputValueAmountValue, setInputValueAmountValue] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.Bot, "MBK");
+  const [RobotInfo, setRobotInfo] = useState<any>({});
+  const [RobotManageAwardInfo, setRobotManageAwardInfo] = useState<any>({});
+  const [RobotPerformanceAwardInfo, setRobotPerformanceAwardInfo] =
+    useState<any>({});
+
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getRobotInfo().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setRobotInfo(res?.data);
+      }
+    });
+    getRobotManageAward().then((res: any) => {
+      if (res.code === 200) {
+        setRobotManageAwardInfo(res?.data);
+      }
+    });
+    getRobotPerformanceAwardInfo().then((res: any) => {
+      if (res.code === 200) {
+        setRobotPerformanceAwardInfo(res?.data);
       }
     });
   };
 
+  const getVilifyState = throttle(async (value: string) => {
+    if (!account) return;
+    return Contracts.example.queryUsdtByMbk(account as string, value);
+  }, 2000);
+
+  const InputValueFun = async (e: any) => {
+    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
+    setInputValueAmount(value);
+    if (Number(value) > 0) {
+      getVilifyState(value)?.then((res: any) => {
+        setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
+      });
+    }
+  };
+
+  const MaxFun = (value: string) => {
+    setInputValueAmount(value);
+
+    if (Number(value) > 0) {
+      getVilifyState(value)?.then((res: any) => {
+        setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
+      });
+    }
+  };
+
   useEffect(() => {
-    if (state.token) {
+    if (token) {
       getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [token]);
 
   useEffect(() => {
     if (account) {
-      Contracts.example
-        .balanceOf(account as string, "LPToken")
-        .then((res: any) => {
-          setBalance(EthertoWei(res ?? "0"));
-          Contracts.example
-            .queryUsdtAmountByLPAmount(
-              account as string,
-              EthertoWei(res ?? "0") + ""
-            )
-            .then((res: any) => {
-              console.log(res, "er");
-              setInputValueAmount(EthertoWei(res ?? "0"));
-            });
-        });
+      getVilifyState("1")?.then((res: any) => {
+        setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
+      });
     }
   }, [account]);
 
-  const StateObj = (type: number) => {
-    if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
-    } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
-    }
+  const buyRobotFun = (value: string) => {
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+        res = await Contracts.example?.buyBot(account as string, value);
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("购买失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("购买成功");
+      } else {
+        addMessage("购买失败");
+      }
+    });
   };
 
   return (
@@ -675,7 +751,7 @@ export default function Rank() {
               <AvailableBox>
                 Available (USDT)
                 <div>
-                  3,000.00 <span>USDT</span>
+                  {RobotInfo?.amount ?? 0} <span>USDT</span>
                 </div>
               </AvailableBox>
             </MyQuota_Box_Left>
@@ -683,23 +759,22 @@ export default function Rank() {
             <MyQuota_Box_Right>
               grade
               <div>
-                <DemonIconBox />
-                V5
+                <DemonIconBox />V{RobotInfo?.teamLevel ?? 0}
               </div>
             </MyQuota_Box_Right>
           </MyQuota_Box>
           <NodeInfo_Top_Item_Box>
             <NodeInfo_Top_Item>
               <div>Total subscription quantity</div>
-              100000 MBK
+              {RobotInfo?.totalSubscriptionNum ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Total subscription amount</div>
-              3000 USDT
+              {RobotInfo?.totalSubscriptionAmount ?? 0} USDT
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Quota used</div>
-              3000 USDT
+              {RobotInfo?.usedAmount ?? 0} USDT
             </NodeInfo_Top_Item>
           </NodeInfo_Top_Item_Box>
         </MyQuota>
@@ -710,7 +785,11 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Quota subscription</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/SubscriptionQuotaRecord");
+              }}
+            >
               Subscription record <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
@@ -718,19 +797,32 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Current price</div>
-                1MBK=30.00USDT
+                1MBK={Price ?? "--"}USDT
               </NodeInfo_Top_Item>
               <InputBox>
                 <div>
-                  <input type="" /> MBK
+                  <input
+                    type="number"
+                    value={!!InputValueAmount ? InputValueAmount : ""}
+                    onChange={(e) => {
+                      InputValueFun(e);
+                    }}
+                  />{" "}
+                  MBK
                 </div>{" "}
-                <div>MAX</div>
+                <div
+                  onClick={() => {
+                    MaxFun(TOKENBalance);
+                  }}
+                >
+                  MAX
+                </div>
               </InputBox>
               <InputContainer_Bottom>
                 <BalanceBox_InputContainer>
                   wallet balance{" "}
                   <div>
-                    100,000.00 <span>mbk</span>
+                    {TOKENBalance} <span>mbk</span>
                   </div>
                 </BalanceBox_InputContainer>
 
@@ -744,10 +836,16 @@ export default function Rank() {
           <NodeInfo_Top_LotteryGame_Reward>
             Pledge value
             <div>
-              0 <span>USDT</span>
+              {InputValueAmountValue} <span>USDT</span>
             </div>
           </NodeInfo_Top_LotteryGame_Reward>
-          <GetRewardBtn>Subscription</GetRewardBtn>
+          <GetRewardBtn
+            onClick={() => {
+              buyRobotFun(InputValueAmount);
+            }}
+          >
+            Subscription
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
 
@@ -756,7 +854,13 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Management rewards</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/SubscriptionQuotaAwardRecord", {
+                  state: { type: 1 },
+                });
+              }}
+            >
               Award record
               <SmallOutLinkIconBox />
             </FinancialRecords>
@@ -765,11 +869,13 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Team performance</div>
-                3000 MBK(6000USDT)
+                {RobotManageAwardInfo?.teamPerformanceNum ?? 0} MBK(
+                {RobotManageAwardInfo?.teamPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Community performance</div>
-                3000 MBK(6000USDT)
+                {RobotManageAwardInfo?.communityPerformanceNum ?? 0} MBK(
+                {RobotManageAwardInfo?.communityPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
@@ -777,18 +883,18 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Referral rewards</div>
-                3000 MBK
+                {RobotManageAwardInfo?.totalRefereeAward ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Management rewards</div>
-                3000 MBK
+                {RobotManageAwardInfo?.totalManageAward ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info>
           <NodeInfo_Top_Management_Reward>
             To Be Collected(MBK)
             <div>
-              0 <span>MBK</span>
+              {RobotManageAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn>receive</GetRewardBtn>
@@ -800,7 +906,13 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Performance rewards</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/SubscriptionQuotaAwardRecord", {
+                  state: { type: 2 },
+                });
+              }}
+            >
               Award record
               <SmallOutLinkIconBox />
             </FinancialRecords>
@@ -809,26 +921,44 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Performance star rewards</div>
-                3000 MBK
+                {RobotPerformanceAwardInfo?.totalPerformanceStarNum ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Direct promotion star rewards</div>
-                3000 MBK
+                {RobotPerformanceAwardInfo?.totalPerformanceRefereeNum ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_Management_Reward>
             To Be Collected(MBK)
             <div>
-              0 <span>MBK</span>
+              {RobotPerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn>receive</GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
-      <Goto>Performance star ranking &gt;&gt; </Goto>
-      <Goto>Directly recommend star ranking &gt;&gt; </Goto>
-      <Goto>NFT team star &gt;&gt; </Goto>
+      <Goto
+        onClick={() => {
+          Navigate("/View/RankRecord", { state: { type: 1 } });
+        }}
+      >
+        Performance star ranking &gt;&gt;{" "}
+      </Goto>
+      <Goto
+        onClick={() => {
+          Navigate("/View/RankRecord", { state: { type: 2 } });
+        }}
+      >
+        Directly recommend star ranking &gt;&gt;{" "}
+      </Goto>
+      <Goto
+        onClick={() => {
+          Navigate("/View/RankRecord", { state: { type: 3 } });
+        }}
+      >
+        NFT team star &gt;&gt;{" "}
+      </Goto>
 
       <AllModal
         visible={false}
