@@ -89,3 +89,51 @@ export function getRobotPerformanceAwardRecord(type: any) {
     method: "get",
   });
 }
+export function getRobotRankRecord(data: any) {
+  return axois.request({
+    url: "/rank/getRobotRankRecord",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+export function getPledgeUserInfo() {
+  return axois.request({
+    url: `/pledge/getPledgeUserInfo`,
+    method: "get",
+  });
+}
+export function getRedemptionAccountInfo() {
+  return axois.request({
+    url: `/pledge/getRedemptionAccountInfo`,
+    method: "get",
+  });
+}
+export function getPledgeManageAward() {
+  return axois.request({
+    url: `/pledge/getPledgeManageAward`,
+    method: "get",
+  });
+}
+export function getPledgePerformanceAwardInfo() {
+  return axois.request({
+    url: `/pledge/getPledgePerformanceAwardInfo`,
+    method: "get",
+  });
+}
+export function getPledgeOrderRecord(status: number) {
+  return axois.request({
+    url: `/pledge/getPledgeOrderRecord/${status}`,
+    method: "get",
+  });
+}
+export function joinPledge(data: any) {
+  return axois.request({
+    url: "/pledge/joinPledge",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}

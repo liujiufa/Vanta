@@ -192,4 +192,11 @@ export class Contracts {
       .queryMbkByUsdt(amount)
       .call({ from: addr });
   }
+  stake(addr: string, value: string) {
+    this.verification("pledgeContract");
+
+    return this.contract.pledgeContract?.methods
+      .stake(value)
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
 }

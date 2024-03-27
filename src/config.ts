@@ -1,6 +1,7 @@
 import Token from "./ABI/ERC20Token.json";
 import Referrer from "./ABI/Referrer.json";
 import Bot from "./ABI/Bot.json";
+import pledgeContract from "./ABI/Stake.json";
 
 // 正式
 export const LOCAL_KEY = "MBAS_LANG";
@@ -8,8 +9,8 @@ export const isMain = false;
 // 自己
 // export let baseUrl: string = isMain ? 'http://120.79.67.226:16088/' : 'http://192.168.2.114:16088/';
 export let baseUrl: string = isMain
-  ? "https://shenlong88.com/user/"
-  : "http://47.76.173.162:18888/";
+  ? "http://47.76.173.162:18888/"
+  : "http://172.20.10.2:18888/";
 // export let baseUrl: string = isMain ? window.location.origin + '/user/' : 'http://120.79.67.226:13777/';
 export let ContractUrl: string = isMain
   ? "https://bscscan.com/address/"
@@ -32,6 +33,7 @@ export const abiObj: abiObjType = {
   MBK: Token,
   Referrer: Referrer,
   Bot: Bot,
+  pledgeContract: pledgeContract,
 };
 
 export const Main: contractAddressType = {
@@ -44,6 +46,7 @@ const Test = {
   MBK: "0xdA99fA57019FB1DFC1AAea892e5190a91236A840",
   Referrer: "0xc89D894A742551Ec2878104644B22FEeDF748525",
   Bot: "0x997E86D80981Bee9Bb02661b27C19583b55A47a9",
+  pledgeContract: "0xa571673D014ce338815F62A31F059a95D594Bb5a",
 };
 
 export const contractAddress: contractAddressType = isMain ? Main : Test;

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { getRobotRankRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -13,7 +10,7 @@ import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
 import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ContainerBox,
   FlexBox,
@@ -134,8 +131,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -318,7 +315,8 @@ export default function Rank() {
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
+  const { state: typeObj } = useLocation();
+  const [ActiveTab, setActiveTab] = useState<any>(Number(typeObj as any) ?? 1);
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -329,7 +327,11 @@ export default function Rank() {
   const CustomRender = useSelectDate();
 
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getRobotRankRecord({
+      month: 0,
+      type: ActiveTab,
+      year: 0,
+    }).then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
@@ -338,7 +340,7 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      getInitData();
     }
   }, [state.token, ActiveTab]);
 

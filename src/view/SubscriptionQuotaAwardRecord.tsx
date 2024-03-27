@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  getHomePrice,
   getRobotManageAwardRecord,
   getRobotPerformanceAwardRecord,
-  refereeUserList,
-  teamUserList,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";

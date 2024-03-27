@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { getPledgeOrderRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -11,9 +8,16 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+  decimalNum,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ContainerBox,
   FlexBox,
@@ -132,8 +136,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -380,8 +384,11 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
+
+  const { state: stateObj } = useLocation();
+  const [ActiveTab, setActiveTab] = useState<any>(
+    Number((stateObj as any)?.type) ?? 1
+  );
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -390,34 +397,59 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
 
+  //1:质押记录 2:赎回记录
+  const recordType: number = Number((stateObj as any)?.type) ?? 1;
   const onChange = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
+    if (Number(SubTab) !== 0) return;
   };
-  const getInitData = () => {
-    userInfo({}).then((res: any) => {
-      if (res.code === 200) {
-        setUserInfo(res?.data);
-      }
-    });
+  const TypeObj = {
+    1: "质押中",
+    2: "待赎回",
+    3: "已赎回",
+  };
+
+  const subTabArr = {
+    1: [
+      { key: -1, name: "All" },
+      { key: 0, name: "Pledge in progress" },
+      { key: 1, name: "To Be Redeemed" },
+      { key: 2, name: "Redeemed" },
+    ],
+  };
+  const getInitData = (type: number) => {
+    if (Number(ActiveTab) === 1) {
+      getPledgeOrderRecord(type).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (Number(ActiveTab) === 2) {
+      getPledgeOrderRecord(2).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    }
   };
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      getInitData(SubTab);
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token, ActiveTab, SubTab]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
   const StateObj = (type: number) => {
-    if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+    if (type === 0) {
+      return <span style={{ color: "#D56819" }}>Pledge in progress</span>;
+    } else if (type === 1) {
+      return <span style={{ color: "#D56819" }}>To be redeemed</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>redeemed</span>;
     }
   };
 
@@ -446,75 +478,76 @@ export default function Rank() {
           {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 0 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(0);
-                  }}
-                >
-                  All
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(1);
-                  }}
-                >
-                  Performance Star Award
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(2);
-                  }}
-                >
-                  Directly promoted star award
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(3);
-                  }}
-                >
-                  NFT team star
-                </Award_Record_Content_Tab_Item>
+                {subTabArr[recordType ?? 0].map((item: any, index: any) => (
+                  <Award_Record_Content_Tab_Item
+                    key={index}
+                    className={
+                      Number(SubTab) === item?.key ? "activeSubTab" : ""
+                    }
+                    onClick={() => {
+                      setSubTab(item?.key);
+                    }}
+                  >
+                    {item?.name}
+                  </Award_Record_Content_Tab_Item>
+                ))}
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Pledge ID <span>202312312154</span>
+                        Pledge ID <span>{item?.orderNo}</span>
                       </div>
                       <div>
-                        Pledge time <span>2023-12-23 12:23</span>
+                        Pledge time{" "}
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Pledge Quantity(MBK) <span>2000.00</span>
+                        Pledge Quantity(MBK){" "}
+                        <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
                       </div>
                       <div>
-                        Pledge Amount(USDT)<span>2000.00</span>
+                        Pledge Amount(USDT)
+                        <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
                       </div>
                       <div>
-                        MBK Price(MBK)<span>2000.00</span>
+                        MBK Price(MBK)
+                        <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
                       </div>
                       <div>
-                        Pledge cycle<span>7 DAY</span>
+                        Pledge cycle<span>{item?.cycle ?? 0} DAY</span>
                       </div>
                       <div>
                         Reinvestment at maturity
                         <span>
                           {" "}
-                          <MySwitch defaultChecked onChange={onChange} />
+                          <MySwitch
+                            defaultChecked
+                            checked={!!item?.isReinvest}
+                            onChange={onChange}
+                          />
                         </span>
                       </div>
                       <div>
-                        maturity Time<span>2000.00</span>
+                        maturity Time
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.endTime)
+                          )}
+                        </span>
                       </div>
 
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(item?.status)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.pledgeHash, 6, 6)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -527,24 +560,26 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
                     >
                       <div>
-                      redemption time<span>2023-12-23 12:23</span>
+                        redemption time<span>2023-12-23 12:23</span>
                       </div>
                       <div>
-                      Redemption Quantity(MBK)<span>2000.00</span>
+                        Redemption Quantity(MBK)
+                        <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
                       </div>
                       <div>
-                      Corresponding Pledge ID<span>2023123121...</span>
+                        Corresponding Pledge ID<span>{item?.orderNo}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.redemptionHash, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))

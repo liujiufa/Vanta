@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  
+  getPledgeManageAward,
+  getPledgePerformanceAwardInfo,
+  getPledgeUserInfo,
+  getRedemptionAccountInfo,
+  joinPledge,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -11,7 +15,14 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  decimalNum,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -43,6 +54,9 @@ import {
 } from "../assets/image/homeBox";
 import { DemonIcon, MyQuotaIcon } from "../assets/image/RobotBox";
 import { NodeInfo_Mid_Rule } from "./SubscriptionNode";
+import { throttle } from "lodash";
+import useUSDTGroup from "../hooks/useUSDTGroup";
+import { contractAddress } from "../config";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -130,8 +144,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -684,19 +698,46 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [PledgeUserInfo, setPledgeUserInfo] = useState<any>({});
+  const [TRedemptionAccountInfo, setTRedemptionAccountInfo] = useState<any>({});
+  const [PledgeManageAward, setPledgeManageAward] = useState<any>({});
+  const [PledgePerformanceAwardInfo, setPledgePerformanceAwardInfo] =
+    useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const [SubTab, setSubTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
+  const [Price, setPrice] = useState<any>("");
+  const [InputValueAmount, setInputValueAmount] = useState<any>("");
+  const [InputValueAmountValue, setInputValueAmountValue] = useState<any>("0");
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.pledgeContract, "MBK");
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getPledgeUserInfo().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setPledgeUserInfo(res?.data);
+      }
+    });
+    getRedemptionAccountInfo().then((res: any) => {
+      if (res.code === 200) {
+        setTRedemptionAccountInfo(res?.data);
+      }
+    });
+    getPledgeManageAward().then((res: any) => {
+      if (res.code === 200) {
+        setPledgeManageAward(res?.data);
+      }
+    });
+    getPledgePerformanceAwardInfo().then((res: any) => {
+      if (res.code === 200) {
+        setPledgePerformanceAwardInfo(res?.data);
       }
     });
   };
@@ -704,15 +745,66 @@ export default function Rank() {
     console.log(`switch to ${checked}`);
   };
 
+  const getVilifyState = throttle(async (value: string) => {
+    if (!account) return;
+    return Contracts.example.queryUsdtByMbk(account as string, value);
+  }, 2000);
+
+  const InputValueFun = async (e: any) => {
+    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
+    setInputValueAmount(value);
+    if (Number(value) > 0) {
+      getVilifyState(value)?.then((res: any) => {
+        setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
+      });
+    }
+  };
+
+  const MaxFun = (value: string) => {
+    setInputValueAmount(value);
+
+    if (Number(value) > 0) {
+      getVilifyState(value)?.then((res: any) => {
+        setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
+      });
+    }
+  };
+
+  const pledgeFun = (value: string) => {
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+
+        let item: any = await joinPledge({ id: 0, isReinvest: 0, num: value });
+        if (item?.code === 200 && item?.data) {
+          console.log(item?.data, "1212");
+
+          res = await Contracts.example?.stake(account as string, item?.data);
+        }
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("购买失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("购买成功");
+      } else {
+        addMessage("购买失败");
+      }
+    });
+  };
+
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
@@ -723,6 +815,13 @@ export default function Rank() {
       return <span style={{ color: "#0256FF" }}>successful</span>;
     }
   };
+  useEffect(() => {
+    if (account) {
+      getVilifyState("1")?.then((res: any) => {
+        setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
+      });
+    }
+  }, [account]);
 
   return (
     <NodeContainerBox>
@@ -737,7 +836,7 @@ export default function Rank() {
               <AvailableBox>
                 In Pledge(MBK)
                 <div>
-                  3,000.00 <span>MBK</span>
+                  {PledgeUserInfo?.currentPledgeNum ?? 0} <span>MBK</span>
                 </div>
               </AvailableBox>
             </MyQuota_Box_Left>
@@ -745,33 +844,32 @@ export default function Rank() {
             <MyQuota_Box_Right>
               grade
               <div>
-                <DemonIconBox />
-                V5
+                <DemonIconBox />V {PledgeUserInfo?.teamLevel ?? 0}
               </div>
             </MyQuota_Box_Right>
           </MyQuota_Box>
           <NodeInfo_Top_Item_Box>
             <NodeInfo_Top_Item>
               <div>Current stake value</div>
-              100000 USDT
+              {PledgeUserInfo?.currentPledgeAmount ?? 0} USDT
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Historical pledge quantity</div>
-              3000 MBK
+              {PledgeUserInfo?.totalPledgeNum ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Historical pledge value</div>
-              3000 USDT
+              {PledgeUserInfo?.totalPledgeAmount ?? 0} USDT
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Cumulative static income</div>
-              3000 MBK
+              {PledgeUserInfo?.totalEarnNum ?? 0} MBK
             </NodeInfo_Top_Item>
           </NodeInfo_Top_Item_Box>
           <NodeInfo_Top_Management_Reward>
             To Be Collected
             <div>
-              0 <span>MBK</span>
+              {PledgeUserInfo?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
 
@@ -787,7 +885,11 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Principal redemption</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/PledgeAwardRecord", { state: { type: 2 } });
+              }}
+            >
               redemption record
               <SmallOutLinkIconBox />
             </FinancialRecords>
@@ -796,11 +898,11 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Accumulated redemption principal</div>
-                3000 MBK
+                {TRedemptionAccountInfo?.totalAmount ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item style={{ color: "#D56819" }}>
                 <div>Waiting for redemption (MBK)</div>
-                3000 MBK
+                {TRedemptionAccountInfo?.freezeAmount ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info_Bottom>
@@ -814,7 +916,11 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Staking mining</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/PledgeAwardRecord", { state: { type: 1 } });
+              }}
+            >
               Pledge record <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
@@ -822,14 +928,15 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Available robot quota x4</div>
-                3000USDT
+                {decimalNum(PledgeUserInfo?.robotAmount ?? 0, 2)}USDT
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Current price</div>
                 1MBK=30.00USDT
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item style={{ marginBottom: "18px" }}>
-                <div>Pledge cycle</div>7 days
+                <div>Pledge cycle</div>
+                {PledgeUserInfo?.cycle ?? 0} days
               </NodeInfo_Top_Item>
 
               <InputBox>
@@ -868,7 +975,13 @@ export default function Rank() {
             </PledgeValue>
           </PledgeValue_Container>
 
-          <GetRewardBtn>pledge</GetRewardBtn>
+          <GetRewardBtn
+            onClick={() => {
+              pledgeFun("20");
+            }}
+          >
+            pledge
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
 
@@ -886,11 +999,13 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Team performance</div>
-                3000 MBK(6000USDT)
+                {PledgeManageAward?.teamPerformanceNum ?? 0} MBK(
+                {PledgeManageAward?.teamPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Community performance</div>
-                3000 MBK(6000USDT)
+                {PledgeManageAward?.communityPerformanceNum ?? 0} MBK(
+                {PledgeManageAward?.communityPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
@@ -898,18 +1013,18 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Referral rewards</div>
-                3000 MBK
+                {PledgeManageAward?.totalRefereeAward ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Management rewards</div>
-                3000 MBK
+                {PledgeManageAward?.totalManageAward ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info>
           <NodeInfo_Top_Management_Reward>
             To Be Collected(MBK)
             <div>
-              0 <span>MBK</span>
+              {PledgeManageAward?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn>receive</GetRewardBtn>
@@ -930,18 +1045,20 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>Performance star rewards</div>
-                3000 MBK
+                {PledgePerformanceAwardInfo?.totalPerformanceStarNum ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Direct promotion star rewards</div>
-                3000 MBK
+                {PledgePerformanceAwardInfo?.totalPerformanceRefereeNum ??
+                  0}{" "}
+                MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_Management_Reward>
             To Be Collected(MBK)
             <div>
-              0 <span>MBK</span>
+              {PledgePerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn>receive</GetRewardBtn>
