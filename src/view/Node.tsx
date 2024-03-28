@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { activationNode, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -11,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -32,6 +35,8 @@ import {
   ModalContainer_Title_Container,
 } from "../Layout/MainLayout";
 import closeIcon from "../assets/image/closeIcon.svg";
+import useUSDTGroup from "../hooks/useUSDTGroup";
+import { contractAddress } from "../config";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -185,8 +190,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -392,10 +397,49 @@ const Get_Record_Content_Record_Content_Item = styled(
   }
 `;
 
+const NodeInfo_Mid_Content = styled(FlexBox)`
+  width: 100%;
+  justify-content: space-evenly;
+  margin: 20px 0px 24px;
+  align-items: center;
+  > div {
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+    &:last-child {
+      font-family: PingFang SC;
+      font-size: 18px;
+      font-weight: normal;
+      line-height: normal;
+      text-transform: capitalize;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      color: #d56819;
+      > span {
+        font-family: PingFang SC;
+        font-size: 10px;
+        font-weight: normal;
+        line-height: normal;
+        text-transform: uppercase;
+        letter-spacing: 0em;
+
+        font-variation-settings: "opsz" auto;
+        color: #ffffff;
+      }
+    }
+  }
+`;
+
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
-  const state = useSelector<stateType, stateType>((state) => state);
+  const token = useSelector<any>((state) => state.token);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
@@ -406,8 +450,16 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.nodeContract, "MBK");
+
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    userInfo().then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
@@ -415,14 +467,13 @@ export default function Rank() {
   };
 
   useEffect(() => {
-    if (state.token) {
-       //getInitData();
+    if (token) {
+      //getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
@@ -434,17 +485,89 @@ export default function Rank() {
     }
   };
 
+  const activationFun = (value: string) => {
+    if (!token) return;
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+
+        let item: any = await activationNode({});
+        if (item?.code === 200 && item?.data) {
+          console.log(item?.data, "1212");
+
+          res = await Contracts.example?.avtiveNode(
+            account as string,
+            item?.data
+          );
+        }
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("激活失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("激活成功");
+      } else {
+        addMessage("激活失败");
+      }
+    });
+  };
+
+  const NodeInfo_Top_Box_Fun = (type: any) => {
+    // return (
+    //   <NodeInfo_Top>
+    //     <ModalContainer_Title_Container>
+    //       <img src={logo} />
+    //       <ModalContainer_Title>My Node </ModalContainer_Title>
+    //     </ModalContainer_Title_Container>
+    //     <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
+    //     <NodeInfo_Top_Btn>Subscription</NodeInfo_Top_Btn>
+    //   </NodeInfo_Top>
+    // );
+
+    return (
+      <NodeInfo_Top>
+        <ModalContainer_Title_Container>
+          <img src={logo} />
+          <ModalContainer_Title>My Node </ModalContainer_Title>
+        </ModalContainer_Title_Container>
+        <NodeInfo_Top_Tip>
+          You have subscribed to the node To be activated
+        </NodeInfo_Top_Tip>
+        <NodeInfo_Top_Btn
+          onClick={() => {
+            setActivationModal(true);
+          }}
+        >
+          activation
+        </NodeInfo_Top_Btn>
+      </NodeInfo_Top>
+    );
+
+    return (
+      <NodeInfo_Top>
+        <ModalContainer_Title_Container>
+          <img src={logo} />
+          <ModalContainer_Title>My Node </ModalContainer_Title>
+        </ModalContainer_Title_Container>
+        <NodeInfo_Mid_Content>
+          <div>To be collected</div>
+          <div>
+            3,000.00 <span>mbk</span>
+          </div>
+        </NodeInfo_Mid_Content>
+        <NodeInfo_Top_Btn>receive</NodeInfo_Top_Btn>
+      </NodeInfo_Top>
+    );
+  };
+
   return (
     <NodeContainerBox>
       <NodeInfo>
-        <NodeInfo_Top>
-          <ModalContainer_Title_Container>
-            <img src={logo} />
-            <ModalContainer_Title>My Node </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-          <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
-          <NodeInfo_Top_Btn>Subscription</NodeInfo_Top_Btn>
-        </NodeInfo_Top>
+        {NodeInfo_Top_Box_Fun(1)}
         <NodeInfo_Bottom>
           <NodeInfo_Bottom_Item>
             Prize pool funds
@@ -603,7 +726,7 @@ export default function Rank() {
       </NodeRecord>
 
       <AllModal
-        visible={false}
+        visible={ActivationModal}
         className="Modal"
         centered
         width={"345px"}
@@ -635,7 +758,7 @@ export default function Rank() {
             <span>100</span>
             <UpBtn
               onClick={() => {
-                // BindFun();
+                activationFun("100");
               }}
             >
               {t("Activation")}

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { buyNode, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -11,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -35,6 +38,8 @@ import helpIcon from "../assets/image/Home/helpIcon.svg";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
 import { HelpIcon } from "../assets/image/homeBox";
+import useUSDTGroup from "../hooks/useUSDTGroup";
+import { contractAddress } from "../config";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -225,24 +230,57 @@ export default function Rank() {
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
 
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    userInfo().then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
     });
   };
 
+  const buyNodeFun = (value: string) => {
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+
+        let item: any = await buyNode({});
+        if (item?.code === 200 && item?.data) {
+          console.log(item?.data, "1212");
+
+          res = await Contracts.example?.buyNode(account as string, item?.data);
+        }
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("购买失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("购买成功");
+      } else {
+        addMessage("购买失败");
+      }
+    });
+  };
+
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      //getInitData();
     }
   }, [state.token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
@@ -287,7 +325,13 @@ export default function Rank() {
             </div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>
-        <NodeInfo_Bottom>Subscription</NodeInfo_Bottom>
+        <NodeInfo_Bottom
+          onClick={() => {
+            buyNodeFun("10000");
+          }}
+        >
+          Subscription
+        </NodeInfo_Bottom>
       </NodeInfo>
     </NodeContainerBox>
   );

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { activationCommunity, activationNode, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -11,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -32,6 +35,8 @@ import {
   ModalContainer_Title_Container,
 } from "../Layout/MainLayout";
 import closeIcon from "../assets/image/closeIcon.svg";
+import { contractAddress } from "../config";
+import useUSDTGroup from "../hooks/useUSDTGroup";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -224,8 +229,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -436,7 +441,7 @@ export const Get_Record_Content_Record_Content_Item = styled(
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
-  const state = useSelector<stateType, stateType>((state) => state);
+  const token = useSelector<any>((state) => state?.token);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
@@ -447,19 +452,52 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.communityContract, "MBK");
+
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    userInfo().then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
     });
   };
 
-  useEffect(() => {
-    if (state.token) {
-       //getInitData();
-    }
-  }, [state.token, ActiveTab]);
+  const activationFun = (value: string) => {
+    if (!token) return;
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+
+        let item: any = await activationCommunity({});
+        if (item?.code === 200 && item?.data) {
+          console.log(item?.data, "1212");
+
+          res = await Contracts.example?.activeCommunity(
+            account as string,
+            item?.data
+          );
+        }
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("激活失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("激活成功");
+      } else {
+        addMessage("激活失败");
+      }
+    });
+  };
 
   useEffect(() => {
     if (account) {
@@ -491,7 +529,7 @@ export default function Rank() {
   return (
     <NodeContainerBox>
       <NodeInfo>
-        {true ? (
+        {false ? (
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
               <img src={logo} />
@@ -512,7 +550,13 @@ export default function Rank() {
               <ModalContainer_Title>My Community</ModalContainer_Title>
             </ModalContainer_Title_Container>
             <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
-            <NodeInfo_Top_Btn>activation</NodeInfo_Top_Btn>
+            <NodeInfo_Top_Btn
+              onClick={() => {
+                setActivationModal(true);
+              }}
+            >
+              activation
+            </NodeInfo_Top_Btn>
           </NodeInfo_Top>
         )}
         <NodeInfo_Bottom>
@@ -669,7 +713,7 @@ export default function Rank() {
       </NodeRecord>
 
       <AllModal
-        visible={false}
+        visible={ActivationModal}
         className="Modal"
         centered
         width={"345px"}
@@ -702,6 +746,7 @@ export default function Rank() {
             <UpBtn
               onClick={() => {
                 // BindFun();
+                activationFun("500000");
               }}
             >
               {t("Activation")}

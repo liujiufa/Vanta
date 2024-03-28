@@ -4,6 +4,9 @@ import Bot from "./ABI/Bot.json";
 import pledgeContract from "./ABI/Stake.json";
 import nftContract from "./ABI/MbkNft.json";
 import lpContract from "./ABI/LpStake.json";
+import nodeContract from "./ABI/Node.json";
+import communityContract from "./ABI/Community.json";
+import gameContract from "./ABI/Game.json";
 
 // 正式
 export const LOCAL_KEY = "MBAS_LANG";
@@ -39,6 +42,9 @@ export const abiObj: abiObjType = {
   pledgeContract: pledgeContract,
   nftContract: nftContract,
   lpContract: lpContract,
+  nodeContract: nodeContract,
+  communityContract: communityContract,
+  gameContract: gameContract,
 };
 
 export const Main: contractAddressType = {
@@ -55,6 +61,9 @@ const Test = {
   pledgeContract: "0xa571673D014ce338815F62A31F059a95D594Bb5a",
   nftContract: "0x74055D36589c5FdD32B8ee5315e86cF9B351BeF1",
   lpContract: "0x5f9873c7A1D9DC2fBf4643131111C4384dD3f8d4",
+  nodeContract: "0x20E0Fc8B87F71627cAa8773b3FeFD21Eb1572Cc8",
+  communityContract: "0x2DA540558f1e1fB972fe14d517Bc332091625FCb",
+  gameContract: "0x12de9Df69B3351010BE8B5454FBe0baFC877353a",
 };
 
 export const contractAddress: contractAddressType = isMain ? Main : Test;

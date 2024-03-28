@@ -216,13 +216,41 @@ export class Contracts {
     this.verification("nftContract");
     return this.contract.nftContract?.methods
       .active(tokenId)
-      .send({ from: addr });
+      .send({ from: addr, gasPrice: "5000000000" });
   }
   stakeLP(addr: string, amount: string, period: number) {
     this.verification("lpContract");
-
+    let amounted = Web3.utils.toWei(amount);
     return this.contract.lpContract?.methods
-      .stake(amount, period)
-      .send({ from: addr });
+      .stake(amounted, period)
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
+  buyNode(addr: string, data: any) {
+    this.verification("nodeContract");
+
+    return this.contract.nodeContract?.methods
+      .buyNode(data)
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
+  avtiveNode(addr: string, data: any) {
+    this.verification("nodeContract");
+
+    return this.contract.nodeContract?.methods
+      .avtiveNode(data)
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
+  activeCommunity(addr: string, data: any) {
+    this.verification("communityContract");
+
+    return this.contract.communityContract?.methods
+      .activeCommunity(data)
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
+  participate(addr: string, data: any) {
+    this.verification("gameContract");
+
+    return this.contract.gameContract?.methods
+      .participate(data)
+      .send({ from: addr, gasPrice: "5000000000" });
   }
 }

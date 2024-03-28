@@ -143,3 +143,39 @@ export function joinPledge(data: any) {
     },
   });
 }
+export function buyNode(data: any) {
+  return axois.request({
+    url: "/node/buyNode",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+export function activationNode(data: any) {
+  return axois.request({
+    url: "/node/activationNode",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+export function activationCommunity(data: any) {
+  return axois.request({
+    url: "/community/activationCommunity",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+export function joinGame(data: any) {
+  return axois.request({
+    url: "/game/joinGame",
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
