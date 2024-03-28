@@ -128,6 +128,12 @@ export function getPledgeOrderRecord(status: number) {
     method: "get",
   });
 }
+export function getMyCardInfo() {
+  return axois.request({
+    url: `/card/getMyCardInfo`,
+    method: "get",
+  });
+}
 export function joinPledge(data: any) {
   return axois.request({
     url: "/pledge/joinPledge",

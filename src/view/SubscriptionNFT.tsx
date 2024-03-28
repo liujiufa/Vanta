@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -11,7 +8,14 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  decimalNum,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -34,6 +38,8 @@ import {
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
+import useUSDTGroup from "../hooks/useUSDTGroup";
+import { contractAddress } from "../config";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -220,26 +226,61 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
+  const [NFTPrice, setNFTPrice] = useState<any>({});
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.nftContract, "MBK");
 
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    userInfo().then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
     });
   };
 
+  const getContractsData = async () => {
+    let data = await Contracts.example?.queryPrice(account as string);
+    let nftBuyed = await Contracts.example?.totalSupply(account as string);
+
+    setNFTPrice({ ...data, supply: nftBuyed });
+  };
+
+  const mintFun = (value: string) => {
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+        res = await Contracts.example?.mint(account as string);
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("mint失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("mint成功");
+      } else {
+        addMessage("mint失败");
+      }
+    });
+  };
+
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      //getInitData();
     }
   }, [state.token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-       
+      getContractsData();
     }
   }, [account]);
 
@@ -253,11 +294,11 @@ export default function Rank() {
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
             NFT Total Amount
-            <span>36 PCS</span>
+            <span>8000 PCS</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
             The remaining amount
-            <span>36 PCS</span>
+            <span>{8000 - Number(NFTPrice?.supply ?? 0)} PCS</span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
@@ -286,11 +327,12 @@ export default function Rank() {
           </NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
             <div>
-              16.67 <span>MBK</span>
+              {decimalNum(EthertoWei(NFTPrice?.mbkAmount ?? "0"), 2)}{" "}
+              <span>MBK</span>
             </div>
             <div>
               {" "}
-              <span> = 500USDT</span>
+              <span> = {EthertoWei(NFTPrice?.usdtAmount ?? "0")}USDT</span>
             </div>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
@@ -304,7 +346,13 @@ export default function Rank() {
             <div>2. First round subscription reward 2000 MBK</div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>
-        <NodeInfo_Bottom>Subscription</NodeInfo_Bottom>
+        <NodeInfo_Bottom
+          onClick={() => {
+            mintFun(EthertoWei(NFTPrice?.mbkAmount ?? "0"));
+          }}
+        >
+          Subscription
+        </NodeInfo_Bottom>
       </NodeInfo>
     </NodeContainerBox>
   );

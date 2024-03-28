@@ -90,10 +90,6 @@ export class Contracts {
   getBalance(addr: string) {
     return this.web3.eth.getBalance(addr);
   }
-  totalSupply(addr: string) {
-    this.verification("PEX");
-    return this.contract.PEX?.methods.totalSupply().call({ from: addr });
-  }
   //查询余额
   balanceOf(addr: string, contractName: string) {
     this.verification(contractName);
@@ -198,5 +194,35 @@ export class Contracts {
     return this.contract.pledgeContract?.methods
       .stake(value)
       .send({ from: addr, gasPrice: "5000000000" });
+  }
+  mint(addr: string) {
+    this.verification("nftContract");
+
+    return this.contract.nftContract?.methods
+      .mint()
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
+  queryPrice(addr: string) {
+    this.verification("nftContract");
+    return this.contract.nftContract?.methods.queryPrice().call({ from: addr });
+  }
+  totalSupply(addr: string) {
+    this.verification("nftContract");
+    return this.contract.nftContract?.methods
+      .totalSupply()
+      .call({ from: addr });
+  }
+  active(addr: string, tokenId: number) {
+    this.verification("nftContract");
+    return this.contract.nftContract?.methods
+      .active(tokenId)
+      .send({ from: addr });
+  }
+  stakeLP(addr: string, amount: string, period: number) {
+    this.verification("lpContract");
+
+    return this.contract.lpContract?.methods
+      .stake(amount, period)
+      .send({ from: addr });
   }
 }
