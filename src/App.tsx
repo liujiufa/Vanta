@@ -20,7 +20,7 @@ import ViewportProvider from "./components/viewportContext";
 // import { useNavigate } from "react-router-dom";
 // import Home from './view/Home';
 import prohibit from "./assets/image/prohibit.png";
-import cloneIcon from "./assets/image/cloneIcon.png";
+import cloneIcon from "./assets/image/closeIcon.svg";
 
 import { t } from "i18next";
 import useConnectWallet from "./hooks/useConnectWallet";
@@ -44,9 +44,6 @@ function App() {
   const { connectWallet } = useConnectWallet();
   const { signFun } = useSign();
   const navigate = useNavigate();
-  const initalToken = localStorage.getItem(
-    (web3React.account as string)?.toLowerCase()
-  );
 
   const dispatch = useDispatch();
   let state = useSelector<stateType, stateType>((state) => state);

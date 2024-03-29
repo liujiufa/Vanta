@@ -253,4 +253,30 @@ export class Contracts {
       .participate(data)
       .send({ from: addr, gasPrice: "5000000000" });
   }
+  //   uint amountIn,   ／／兑换代币数量
+  // uint amountOutMin, ／／ ０
+  // address[] calldata path,  ／／  ［ｔｏｋｅｎＩｎ，ｔｏｋｅｎＯｕｔ］
+  // address to, ／／用户地址
+  // uint deadline ／／当前时间 （秒）＋360
+  swapExactTokensForTokensSupportingFeeOnTransferTokens(
+    addr: string,
+    amountIn: string,
+    amountOutMin: 0,
+    addressArr: [string, string],
+    deadline: number
+  ) {
+    this.verification("IPancakeRouter02");
+    let amountIned = Web3.utils.toWei(amountIn);
+    console.log(deadline, "deadline");
+
+    return this.contract.IPancakeRouter02?.methods
+      .swapExactTokensForTokensSupportingFeeOnTransferTokens(
+        amountIned,
+        amountOutMin,
+        addressArr,
+        addr,
+        deadline
+      )
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
 }

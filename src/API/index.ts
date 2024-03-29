@@ -179,3 +179,118 @@ export function joinGame(data: any) {
     },
   });
 }
+export function getBannerList() {
+  return axois.request({
+    url: `/home/getBannerList`,
+    method: "get",
+  });
+}
+export function getNoticeList() {
+  return axois.request({
+    url: `/home/getNoticeList`,
+    method: "get",
+  });
+}
+export function getCoinPriceList() {
+  return axois.request({
+    url: `/home/getCoinPriceList`,
+    method: "get",
+  });
+}
+export function latestRecord(data: any) {
+  return axois.request({
+    url: `/pledge/latestRecord`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+export function getMyFreeInfo() {
+  return axois.request({
+    url: `/free/getMyFreeInfo`,
+    method: "get",
+  });
+}
+export function homePoolInfo() {
+  return axois.request({
+    url: `/game/homePoolInfo`,
+    method: "get",
+  });
+}
+export function getMyNodeInfo() {
+  return axois.request({
+    url: `/node/getMyNodeInfo`,
+    method: "get",
+  });
+}
+export function getPledgeUserAwardRecord(type: 9 | 10) {
+  return axois.request({
+    url: `/pledge/getPledgeUserAwardRecord/${type}`,
+    method: "get",
+  });
+}
+// 0:All 12-质押管理奖励 13-质押推荐奖励 14-质押平级奖励 15质押管理账户领取记录
+export function getPledgeManageAwardRecord(type: 0 | 12 | 13 | 14 | 15) {
+  return axois.request({
+    url: `/pledge/getPledgeManageAwardRecord/${type}`,
+    method: "get",
+  });
+}
+// 16质押-业绩明星奖励 17质押-直推明星奖励 18质押-NFT团队明星奖励 19质押-业绩账户领取奖记录
+export function getPledgePerformanceAwardRecord(type: 0 | 16 | 17 | 18 | 19) {
+  return axois.request({
+    url: `/pledge/getPledgePerformanceAwardRecord/${type}`,
+    method: "get",
+  });
+}
+export function getMyCommunity() {
+  return axois.request({
+    url: `/community/getMyCommunity`,
+    method: "get",
+  });
+}
+//0:all 46-节点LP加权  43-节点平均分配 44-节点小区加权 45-节点领取记录
+export function getNodeAwardRecord(type: 0 | 46 | 43 | 44 | 45) {
+  return axois.request({
+    url: `/node/getNodeAwardRecord/${type}`,
+    method: "get",
+  });
+}
+export function getNodeBuyRecord() {
+  return axois.request({
+    url: `/node/getNodeBuyRecord`,
+    method: "get",
+  });
+}
+export function getNodeBaseInfo() {
+  return axois.request({
+    url: `/node/getNodeBaseInfo`,
+    method: "get",
+  });
+}
+//0-All 34-社区激活记录 35-社区LP加权奖励 36-社区平均分配奖励 37-社区小区加权奖励 38-社区账户奖励领取记录
+export function getCommunityAwardRecord(type: 0 | 34 | 35 | 36 | 37 | 38) {
+  return axois.request({
+    url: `/community/getCommunityAwardRecord/${type}`,
+    method: "get",
+  });
+}
+export function getCommunitySoldBase() {
+  return axois.request({
+    url: `/community/getCommunitySoldBase`,
+    method: "get",
+  });
+}
+export function getCardBase() {
+  return axois.request({
+    url: `/card/getCardBase`,
+    method: "get",
+  });
+}
+export function getPioneerInfo() {
+  return axois.request({
+    url: `/card/getPioneerInfo`,
+    method: "get",
+  });
+}

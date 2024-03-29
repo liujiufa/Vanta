@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { buyNode, userInfo } from "../API/index";
+import { buyNode, getNodeBaseInfo, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -223,61 +223,75 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [NodeBaseInfo, setNodeBaseInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  // const {
+  //   TOKENBalance,
+  //   TOKENAllowance,
+  //   handleApprove,
+  //   handleTransaction,
+  //   handleUSDTRefresh,
+  // } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
+
   const {
     TOKENBalance,
     TOKENAllowance,
     handleApprove,
     handleTransaction,
     handleUSDTRefresh,
-  } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
+  } = useUSDTGroup(contractAddress?.nftContract, "MBK");
 
   const getInitData = () => {
-    userInfo().then((res: any) => {
+    getNodeBaseInfo().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setNodeBaseInfo(res?.data);
       }
     });
   };
 
   const buyNodeFun = (value: string) => {
+    // if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.isHoldNft)
+    //   return addMessage("未满足认购条件");
     if (Number(value) <= 0) return;
-    handleTransaction(value, async (call: any) => {
-      let res: any;
-      try {
-        showLoding(true);
+    if (!state.token) return;
+    console.log(value, TOKENBalance, "value");
+    handleApprove(value, async () => {});
 
-        let item: any = await buyNode({});
-        if (item?.code === 200 && item?.data) {
-          console.log(item?.data, "1212");
+    // handleTransaction(value, async (call: any) => {
+    //   let res: any;
+    //   try {
+    //     showLoding(true);
+    //     let item: any = await buyNode({});
+    //     if (item?.code === 200 && item?.data) {
+    //       console.log(item?.data, "1212");
+    //       res = await Contracts.example?.buyNode(account as string, item?.data);
+    //     }
+    //   } catch (error: any) {
+    //     showLoding(false);
+    //     return addMessage("购买失败");
+    //   }
 
-          res = await Contracts.example?.buyNode(account as string, item?.data);
-        }
-      } catch (error: any) {
-        showLoding(false);
-        return addMessage("购买失败");
-      }
-      showLoding(false);
-      if (!!res?.status) {
-        call();
-        addMessage("购买成功");
-      } else {
-        addMessage("购买失败");
-      }
-    });
+    //   showLoding(false);
+    //   if (!!res?.status) {
+    //     call();
+    //     Navigate("/View/Node");
+    //     addMessage("购买成功");
+    //   } else {
+    //     addMessage("购买失败");
+    //   }
+    // });
   };
 
   useEffect(() => {
     if (state.token) {
-      //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token]);
 
   useEffect(() => {
     if (account) {
@@ -294,11 +308,11 @@ export default function Rank() {
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
             Node Total
-            <span>100 PCS</span>
+            <span>{NodeBaseInfo?.totalSupply ?? 0} PCS</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
             The Remaining Amount
-            <span>100 PCS</span>
+            <span>{NodeBaseInfo?.reaminSupply ?? 0} PCS</span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
@@ -307,7 +321,7 @@ export default function Rank() {
             Current node subscription price
           </NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
-            10000 <span>USDT</span>
+            {NodeBaseInfo?.price ?? 0} <span>USDT</span>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
             <HelpIcon />
@@ -316,18 +330,24 @@ export default function Rank() {
           <NodeInfo_Mid_Conditions>
             Subscription conditions
             <div>
-              <img src={yesIcon} alt="" />
+              <img
+                src={!!NodeBaseInfo?.isHoldNft ? yesIcon : errorIcon}
+                alt=""
+              />
               Hold NFT yourself
             </div>
             <div>
-              <img src={errorIcon} alt="" />
+              <img
+                src={!!NodeBaseInfo?.isCommunityNftNum ? yesIcon : errorIcon}
+                alt=""
+              />
               The community subscribed for more than 30 NFTs
             </div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            buyNodeFun("10000");
+            buyNodeFun(NodeBaseInfo?.price);
           }}
         >
           Subscription

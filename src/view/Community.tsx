@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { activationCommunity, activationNode, userInfo } from "../API/index";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  activationCommunity,
+  activationNode,
+  getCommunityAwardRecord,
+  getMyCommunity,
+  userInfo,
+} from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -13,6 +19,8 @@ import {
   EthertoWei,
   NumSplic,
   addMessage,
+  dateFormat,
+  decimalNum,
   showLoding,
 } from "../utils/tool";
 import { useTranslation } from "react-i18next";
@@ -443,93 +451,73 @@ export default function Rank() {
   const { account } = useWeb3React();
   const token = useSelector<any>((state) => state?.token);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [MyCommunity, setMyCommunity] = useState<any>({});
+  const [CommunityAwardRecord, setCommunityAwardRecord] = useState<any>([]);
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const [SubTab, setSubTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  const [ActivationModal, setActivationModal] = useState(false);
-  const {
-    TOKENBalance,
-    TOKENAllowance,
-    handleApprove,
-    handleTransaction,
-    handleUSDTRefresh,
-  } = useUSDTGroup(contractAddress?.communityContract, "MBK");
+  
+  const typeObj = {
+    34: "社区激活记录",
+    35: "社区LP加权奖励",
+    36: "社区平均分配奖励",
+    37: "社区小区加权奖励",
+    38: "社区账户奖励领取记录",
+  };
 
-  const getInitData = () => {
-    userInfo().then((res: any) => {
+  const getInitData = useCallback(() => {
+    getMyCommunity().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setMyCommunity(res?.data);
       }
     });
-  };
+  }, [token]);
+  //0-All 34-社区激活记录 35-社区LP加权奖励 36-社区平均分配奖励 37-社区小区加权奖励 38-社区账户奖励领取记录
 
-  const activationFun = (value: string) => {
-    if (!token) return;
-    if (Number(value) <= 0) return;
-    handleTransaction(value, async (call: any) => {
-      let res: any;
-      try {
-        showLoding(true);
-
-        let item: any = await activationCommunity({});
-        if (item?.code === 200 && item?.data) {
-          console.log(item?.data, "1212");
-
-          res = await Contracts.example?.activeCommunity(
-            account as string,
-            item?.data
-          );
+  const getInitAwardRecord = (type: 0 | 34 | 35 | 36 | 37 | 38) => {
+    if (Number(ActiveTab) === 1 || Number(ActiveTab) === 3) {
+      getCommunityAwardRecord(type)?.then((res: any) => {
+        if (res.code === 200) {
+          setCommunityAwardRecord(res?.data);
         }
-      } catch (error: any) {
-        showLoding(false);
-        return addMessage("激活失败");
-      }
-      showLoding(false);
-      if (!!res?.status) {
-        call();
-        addMessage("激活成功");
-      } else {
-        addMessage("激活失败");
-      }
-    });
+      });
+    } else if (Number(ActiveTab) === 2) {
+      getCommunityAwardRecord(38)?.then((res: any) => {
+        if (res.code === 200) {
+          setCommunityAwardRecord(res?.data);
+        }
+      });
+    }
   };
+
 
   useEffect(() => {
-    if (account) {
-      // Contracts.example
-      //   .balanceOf(account as string, "LPToken")
-      //   .then((res: any) => {
-      //     setBalance(EthertoWei(res ?? "0"));
-      //     Contracts.example
-      //       .queryUsdtAmountByLPAmount(
-      //         account as string,
-      //         EthertoWei(res ?? "0") + ""
-      //       )
-      //       .then((res: any) => {
-      //         console.log(res, "er");
-      //         setInputValueAmount(EthertoWei(res ?? "0"));
-      //       });
-      //   });
+    if (token) {
+      getInitData();
     }
-  }, [account]);
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      getInitAwardRecord(SubTab);
+    }
+  }, [token, ActiveTab, SubTab]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
       return <span style={{ color: "#D56819" }}>Confirming</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>Confirming</span>;
+      return <span style={{ color: "#0256FF" }}>success</span>;
     }
   };
 
   return (
     <NodeContainerBox>
       <NodeInfo>
-        {false ? (
+        {!!MyCommunity?.unlock ? (
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
               <img src={logo} />
@@ -538,7 +526,7 @@ export default function Rank() {
             <NodeInfo_Mid_Content>
               <div>To be collected</div>
               <div>
-                3,000.00 <span>mbk</span>
+                {decimalNum(MyCommunity?.amount ?? 0, 2)} <span>mbk</span>
               </div>
             </NodeInfo_Mid_Content>
             <NodeInfo_Top_Btn>receive</NodeInfo_Top_Btn>
@@ -552,7 +540,8 @@ export default function Rank() {
             <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
             <NodeInfo_Top_Btn
               onClick={() => {
-                setActivationModal(true);
+                // setActivationModal(true);
+                Navigate("/View/SubscriptionCommunity");
               }}
             >
               activation
@@ -562,15 +551,17 @@ export default function Rank() {
         <NodeInfo_Bottom>
           <NodeInfo_Bottom_Item>
             My LP quantity
-            <span>3000 LP</span>
+            <span>{decimalNum(MyCommunity?.lpNum ?? 0, 2)} LP</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
             Community subscription performance
-            <span>3000 USDT</span>
+            <span>
+              {decimalNum(MyCommunity?.communityPerformance ?? 0, 2)} USDT
+            </span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
             Accumulated NFT equity rewards
-            <span>3000 MBK</span>
+            <span>{decimalNum(MyCommunity?.totalAmount ?? 0, 2)} MBK</span>
           </NodeInfo_Bottom_Item>
         </NodeInfo_Bottom>
       </NodeInfo>
@@ -615,34 +606,49 @@ export default function Rank() {
                   All
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
+                  className={Number(SubTab) === 35 ? "activeSubTab" : ""}
                   onClick={() => {
-                    setSubTab(2);
+                    setSubTab(35);
                   }}
                 >
                   LP WeiAghted
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
+                  className={Number(SubTab) === 36 ? "activeSubTab" : ""}
                   onClick={() => {
-                    setSubTab(3);
+                    setSubTab(36);
                   }}
                 >
                   Equally Distributed
                 </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 37 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(37);
+                  }}
+                >
+                  Cell Weighting
+                </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {CommunityAwardRecord?.length > 0 ? (
+                  CommunityAwardRecord?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>LP weighted</span>
+                        Reward type <span>{typeObj[item?.businessType]}</span>
                       </div>
                       <div>
-                        Release time <span>2023-12-23 12:23</span>
+                        Release time{" "}
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK) <span>2000.00</span>
+                        Quantity Issued (MBK){" "}
+                        <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -655,21 +661,30 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {CommunityAwardRecord?.length > 0 ? (
+                  CommunityAwardRecord?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
                     >
                       <div>
-                        Collection time <span>2023-12-23 12:23</span>
+                        Collection time{" "}
+                        <span>
+                          {" "}
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Receive quantity (MBK) <span>2000.00</span>
+                        Receive quantity (MBK){" "}
+                        <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))
@@ -682,24 +697,33 @@ export default function Rank() {
           {Number(ActiveTab) === 3 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {CommunityAwardRecord?.length > 0 ? (
+                  CommunityAwardRecord?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
                     >
                       <div>
-                        Type <span>Subscription</span>
+                        Type <span>activation</span>
                       </div>
                       <div>
-                        Time <span>2023-12-23 12:23</span>
+                        Time{" "}
+                        <span>
+                          {" "}
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Payment amount(USDT) <span>2000.00</span>
+                        Payment amount(USDT){" "}
+                        <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))
@@ -712,51 +736,7 @@ export default function Rank() {
         </NodeRecord_Content>
       </NodeRecord>
 
-      <AllModal
-        visible={ActivationModal}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
-          </ModalContainer_Title_Container>
-          <ModalContainer_Content>
-            Activation requires destroying MBK
-            <span>100</span>
-            <UpBtn
-              onClick={() => {
-                // BindFun();
-                activationFun("500000");
-              }}
-            >
-              {t("Activation")}
-            </UpBtn>
-            <BalanceBox>
-              wallet balance: <span>100,000.00</span>MBK
-            </BalanceBox>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
+      
     </NodeContainerBox>
   );
 }

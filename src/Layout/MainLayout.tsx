@@ -444,6 +444,9 @@ const MainLayout: React.FC = () => {
   const [BindModal, setBindModal] = useState(false);
   const [SelectWallet, setSelectWallet] = useState(false);
   const { signFun } = useSign();
+  const initalToken = localStorage.getItem(
+    (web3React.account as string)?.toLowerCase()
+  );
 
   useEffect(() => {
     connectWallet && connectWallet();
@@ -661,11 +664,11 @@ const MainLayout: React.FC = () => {
           ></LogoContainer>
 
           <SetBox>
-            {address ? (
+            {token ? (
               <>
                 <div className="Connect  pointer activeConnect">
                   <img src={activeWalletIcon} alt="" />{" "}
-                  {AddrHandle(address as string, 6, 4)}
+                  {AddrHandle(web3React.account as string, 6, 4)}
                 </div>
               </>
             ) : (

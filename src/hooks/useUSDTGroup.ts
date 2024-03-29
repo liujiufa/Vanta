@@ -47,7 +47,7 @@ export default function useUSDTGroup(
           setHash(+new Date());
           showLoding(false);
           console.log("await", res);
-          await fun(handleUSDTRefresh);
+          await fun();
         } catch (error) {
           showLoding(false);
         }
@@ -99,6 +99,9 @@ export default function useUSDTGroup(
         if (Number(TOKENAllowance) >= Number(price)) {
           await transactionCallBack(handleUSDTRefresh);
         } else {
+          console.log(price, transactionCallBack, "1212");
+
+          // await handleApprove(price);
           await handleApprove(price, transactionCallBack);
         }
       } else {

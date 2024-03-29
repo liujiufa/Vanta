@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
-  getHomePrice,
   getRobotInfo,
   getRobotManageAward,
   getRobotPerformanceAwardInfo,
-  refereeUserList,
-  teamUserList,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -938,23 +935,24 @@ export default function Rank() {
           <GetRewardBtn>receive</GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
+      {/*recordType 1:认购机器人明星排名 2:质押明星排名*/}
       <Goto
         onClick={() => {
-          Navigate("/View/RankRecord", { state: { type: 1 } });
+          Navigate("/View/RankRecord", { state: { type: 1, recordType: 1 } });
         }}
       >
         Performance star ranking &gt;&gt;{" "}
       </Goto>
       <Goto
         onClick={() => {
-          Navigate("/View/RankRecord", { state: { type: 2 } });
+          Navigate("/View/RankRecord", { state: { type: 2, recordType: 1 } });
         }}
       >
         Directly recommend star ranking &gt;&gt;{" "}
       </Goto>
       <Goto
         onClick={() => {
-          Navigate("/View/RankRecord", { state: { type: 3 } });
+          Navigate("/View/RankRecord", { state: { type: 3, recordType: 1 } });
         }}
       >
         NFT team star &gt;&gt;{" "}

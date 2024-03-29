@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { userInfo } from "../API/index";
+import { getCardBase, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -40,6 +40,7 @@ import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
+import { useInputValue } from "../hooks/useInputValue";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -221,13 +222,12 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [CardBase, setCardBase] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [NFTPrice, setNFTPrice] = useState<any>({});
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const {
     TOKENBalance,
     TOKENAllowance,
@@ -235,11 +235,18 @@ export default function Rank() {
     handleTransaction,
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.nftContract, "MBK");
+  const {
+    Price,
+    InputValueAmountValue,
+    InputValueAmount,
+    MaxFun,
+    InputValueFun,
+  } = useInputValue();
 
   const getInitData = () => {
-    userInfo().then((res: any) => {
+    getCardBase().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setCardBase(res?.data);
       }
     });
   };
@@ -265,6 +272,7 @@ export default function Rank() {
       showLoding(false);
       if (!!res?.status) {
         call();
+        Navigate("/View/NFT");
         addMessage("mint成功");
       } else {
         addMessage("mint失败");
@@ -273,10 +281,10 @@ export default function Rank() {
   };
 
   useEffect(() => {
-    if (state.token) {
-      //getInitData();
-    }
-  }, [state.token, ActiveTab]);
+    // if (state.token) {
+    // }
+    getInitData();
+  }, []);
 
   useEffect(() => {
     if (account) {
@@ -305,22 +313,26 @@ export default function Rank() {
         <NodeInfo_Top>
           <NodeInfo_Bottom_Item_First>
             Number of subscription rounds
-            <span>first round</span>
+            <span>第{CardBase?.roundNum ?? "-"}轮</span>
           </NodeInfo_Bottom_Item_First>
           <NodeInfo_Bottom_Item_First>
             Subscription quantity
-            <span>36 PCS</span>
+            <span>{CardBase?.roundSupplyNum ?? 0} PCS</span>
           </NodeInfo_Bottom_Item_First>
           <NodeInfo_Bottom_Item_First>
             The remaining amount
-            <span>36 PCS</span>
+            <span>
+              {Number(CardBase?.roundSupplyNum ?? 0) -
+                Number(CardBase?.roundSoldNum ?? 0)}{" "}
+              PCS
+            </span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
           <NodeInfo_Mid_Item_First>
             Current price
-            <span>1MBK=30.00USDT</span>
+            <span>1MBK={Price ?? "--"}USDT</span>
           </NodeInfo_Mid_Item_First>
           <NodeInfo_Mid_Title>
             Current NFT subscription price
@@ -340,11 +352,13 @@ export default function Rank() {
             rule
           </NodeInfo_Mid_Rule>
 
-          <NodeInfo_Mid_Conditions>
-            Current subscription rewards
-            <div>1. Initial subscription reward 2000 MBK</div>
-            <div>2. First round subscription reward 2000 MBK</div>
-          </NodeInfo_Mid_Conditions>
+          {Number(CardBase?.roundNum) === 1 && (
+            <NodeInfo_Mid_Conditions>
+              Current subscription rewards
+              <div>1. Initial subscription reward 2000 MBK</div>
+              <div>2. First round subscription reward 2000 MBK</div>
+            </NodeInfo_Mid_Conditions>
+          )}
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {

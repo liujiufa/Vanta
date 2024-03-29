@@ -63,7 +63,8 @@ const MyDatePicker = styled(DatePicker)`
 `;
 export function useSelectDate() {
   const [visible, setVisible] = useState(false);
-
+  const [DateString, setDateString] = useState<any>(new Date());
+  // const [];
   const labelRenderer = useCallback((type, data) => {
     switch (type) {
       case "year":
@@ -86,7 +87,7 @@ export function useSelectDate() {
   const DatePickerComponent = () => (
     <>
       <InputContainer>
-        <input type="text" value={"August 10, 2024"} />{" "}
+        <input type="text" readOnly={true} value={DateString.toDateString()} />{" "}
         <MyCalendarIcon onClick={() => setVisible(true)} />
       </InputContainer>
       <MyDatePicker
@@ -95,8 +96,10 @@ export function useSelectDate() {
         onClose={() => setVisible(false)}
         defaultValue={now}
         max={now}
+        precision="month"
         onConfirm={(val) => {
           Toast.show(val.toDateString());
+          setDateString(val);
           setVisible(false); // 如果需要在确认后关闭 DatePicker
         }}
         renderLabel={labelRenderer}
@@ -105,5 +108,5 @@ export function useSelectDate() {
     </>
   );
 
-  return DatePickerComponent;
+  return { DatePickerComponent, DateString, setDateString };
 }

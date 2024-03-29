@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  
+  getBannerList,
+  getCoinPriceList,
+  getMyFreeInfo,
+  getNoticeList,
+  homePoolInfo,
+  latestRecord,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -11,7 +16,14 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+  decimalNum,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -44,6 +56,7 @@ const MyCarousel = styled.div`
       width: 100%;
       > img {
         width: 100%;
+        max-height: 128px;
       }
     }
     .slick-dots li,
@@ -76,6 +89,29 @@ const Announcement = styled(FlexSBCBox)`
   padding: 12px 15px;
   border-radius: 10px;
   background: #d56819;
+  .announcement-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .announcement-list {
+    display: flex;
+    animation: scroll 10s linear infinite;
+    margin-bottom: 0px;
+    > li {
+      min-width: 342px;
+      width: 100%;
+    }
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 `;
 
 const Announcement_Left = styled.div``;
@@ -88,6 +124,7 @@ const Announcement_Mid = styled.div`
   line-height: normal;
   text-transform: capitalize;
   letter-spacing: 0em;
+  overflow: hidden;
 
   font-variation-settings: "opsz" auto;
   color: #333333;
@@ -281,6 +318,9 @@ const HotQuotes_Content = styled.div`
 
 const HotQuotes_Content_Item = styled(FlexSBCBox)`
   width: 100%;
+  > img {
+    max-width: 32px;
+  }
 `;
 const HotQuotes_Content_Item_Right = styled(FlexSBCBox)`
   width: 100%;
@@ -345,13 +385,28 @@ export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
-  const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
+  const [BannerList, setBannerList] = useState<any>([]);
+  const [NoticeList, setNoticeList] = useState<any>([]);
+  const [CoinPriceList, setCoinPriceList] = useState<any>([]);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [LatestRecord, setLatestRecord] = useState<any>({});
+  const [MyFreeInfo, setMyFreeInfo] = useState<any>({});
+  const [PoolInfo, setPoolInfo] = useState<any>({});
+  const containerRef = useRef<any>(null);
+  const listRef = useRef<any>(null);
+
+  useEffect(() => {
+    const containerWidth = containerRef.current.offsetWidth;
+    const listWidth = listRef.current.offsetWidth;
+
+    if (listWidth > containerWidth) {
+      listRef.current.style.width = `${listWidth}px`;
+    } else {
+      listRef.current.style.width = "100%";
+    }
+  }, []);
 
   const MenuListArr = [
     { img: menuIcon1, name: "Subscription", route: "Robot" },
@@ -365,31 +420,55 @@ export default function Rank() {
   ];
 
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getBannerList().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setBannerList(res?.data);
+      }
+    });
+    getNoticeList().then((res: any) => {
+      if (res.code === 200) {
+        setNoticeList(res?.data);
+      }
+    });
+    getCoinPriceList().then((res: any) => {
+      if (res.code === 200) {
+        setCoinPriceList(res?.data);
+      }
+    });
+    latestRecord({}).then((res: any) => {
+      if (res.code === 200) {
+        setLatestRecord(res?.data);
+      }
+    });
+  };
+
+  const getInitTokenData = () => {
+    getMyFreeInfo().then((res: any) => {
+      if (res.code === 200) {
+        setMyFreeInfo(res?.data);
+      }
+    });
+    homePoolInfo().then((res: any) => {
+      if (res.code === 200) {
+        setPoolInfo(res?.data);
       }
     });
   };
 
   useEffect(() => {
+    getInitData();
     if (state.token) {
-      //getInitData();
+      getInitTokenData();
     }
-  }, [state.token, ActiveTab]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
+  }, [state.token]);
 
   return (
     <HomeContainerBox>
       <MyCarousel>
         <Carousel autoplay>
-          {BannerListArr?.map((item: any, index: any) => (
+          {BannerList?.map((item: any, index: any) => (
             <div key={index} className="item">
-              <img src={item?.img} alt="" />
+              <img src={item?.bannerUrl} alt="" />
             </div>
           ))}
         </Carousel>
@@ -399,7 +478,13 @@ export default function Rank() {
           {" "}
           <img src={announcementIcon} alt="" />{" "}
         </Announcement_Left>
-        <Announcement_Mid>announcement announcement</Announcement_Mid>
+        <Announcement_Mid ref={containerRef}>
+          <ul className="announcement-list" ref={listRef}>
+            {NoticeList?.map((item: any, index: any) => (
+              <li key={index}>{item?.content}</li>
+            ))}
+          </ul>
+        </Announcement_Mid>
         <Announcement_Right>
           <img src={outLinkIcon} alt="" />
         </Announcement_Right>
@@ -417,9 +502,17 @@ export default function Rank() {
           </MenuList_Item>
         ))}
       </MenuList>
-      <ActionList>
-        <div>12:24:46 0x12ds....fdee pledge value 3000USDT</div>
-      </ActionList>
+      {LatestRecord?.createTime && (
+        <ActionList>
+          <div>
+            {" "}
+            {dateFormat("HH:MM:SS", new Date(LatestRecord?.createTime))}{" "}
+            {AddrHandle(LatestRecord?.userAddress, 6, 6)} pledge value{" "}
+            {LatestRecord?.pledgeNum}MBK
+          </div>
+          {/* <div>12:24:46 0x12ds....fdee pledge value 3000USDT</div> */}
+        </ActionList>
+      )}
 
       <RewardContainer>
         <RewardItem>
@@ -436,13 +529,13 @@ export default function Rank() {
             <RewardItem_Info_Item>
               Zero referral rewards
               <RewardItem_Info_Item_Value>
-                0.0000 <span>MBK</span>
+                {decimalNum(MyFreeInfo?.refereeAmount, 2) ?? 0} <span>MBK</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
               Zero dynamic rewards
               <RewardItem_Info_Item_Value>
-                0.0000 <span>MBK</span>
+                {decimalNum(MyFreeInfo?.shareAmount, 2) ?? 0} <span>MBK</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
           </RewardItem_Info>
@@ -461,13 +554,15 @@ export default function Rank() {
             <RewardItem_Info_Item>
               Prize distribution yesterday
               <RewardItem_Info_Item_Value>
-                0.0000 <span>MBK</span>
+                {decimalNum(MyFreeInfo?.yesterdayLotteryAmount, 2) ?? 0}{" "}
+                <span>MBK</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
               Prize pool funds
               <RewardItem_Info_Item_Value>
-                0.0000 <span>MBK</span>
+                {decimalNum(MyFreeInfo?.todayPoolAmount, 2) ?? 0}{" "}
+                <span>MBK</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
           </RewardItem_Info>
@@ -476,19 +571,29 @@ export default function Rank() {
 
       <HotQuotes>
         <HotQuotes_Title>Hot Quotes</HotQuotes_Title>
-        <HotQuotes_Content>
-          <HotQuotes_Content_Item>
-            <img src={coinIcon} alt="" />
-            <HotQuotes_Content_Item_Right>
-              <HotQuotes_Content_Item_Right_Top>
-                BTC<div>$35,306.69</div>
-              </HotQuotes_Content_Item_Right_Top>
-              <HotQuotes_Content_Item_Right_Buttom add={true}>
-                Bitcoin<div>+1.21%</div>
-              </HotQuotes_Content_Item_Right_Buttom>
-            </HotQuotes_Content_Item_Right>
-          </HotQuotes_Content_Item>
-        </HotQuotes_Content>
+        {CoinPriceList?.length > 0 ? (
+          <HotQuotes_Content>
+            {CoinPriceList?.map((item: any, index: any) => (
+              <HotQuotes_Content_Item>
+                <img src={item?.icon} alt="" />
+                <HotQuotes_Content_Item_Right>
+                  <HotQuotes_Content_Item_Right_Top>
+                    {item?.coinName}
+                    <div>${item?.price}</div>
+                  </HotQuotes_Content_Item_Right_Top>
+                  <HotQuotes_Content_Item_Right_Buttom add={true}>
+                    {item?.apiSymbol}
+                    <div>{item?.changeRate}%</div>
+                  </HotQuotes_Content_Item_Right_Buttom>
+                </HotQuotes_Content_Item_Right>
+              </HotQuotes_Content_Item>
+            ))}
+          </HotQuotes_Content>
+        ) : (
+          <HotQuotes_Content>
+            <NoData />
+          </HotQuotes_Content>
+        )}
       </HotQuotes>
     </HomeContainerBox>
   );

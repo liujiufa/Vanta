@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -11,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  showLoding,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -39,6 +42,9 @@ import {
   Award_Record_Content_Record_Content,
   Get_Record_Content_Record_Content_Item,
 } from "./Community";
+import { useInputValue } from "../hooks/useInputValue";
+import useUSDTGroup from "../hooks/useUSDTGroup";
+import { contractAddress } from "../config";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
@@ -180,12 +186,54 @@ export default function Rank() {
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const {
+    Price,
+    InputValueAmountValue,
+    InputValueAmount,
+    MaxFun,
+    InputValueFun,
+  } = useInputValue();
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.IPancakeRouter02, "MBK");
 
   const getInitData = () => {
     userInfo({}).then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
+      }
+    });
+  };
+
+  const SwapFun = (value: string) => {
+    if (!account) return;
+    if (Number(value) <= 0) return;
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+        res =
+          await Contracts.example?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            account as string,
+            value,
+            0,
+            [contractAddress?.MBK, contractAddress?.USDT],
+            Number(new Date().valueOf()) + 1000
+          );
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("激活失败");
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        addMessage("激活成功");
+      } else {
+        addMessage("激活失败");
       }
     });
   };
@@ -200,7 +248,7 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      //getInitData();
     }
   }, [state.token, ActiveTab]);
 
@@ -236,7 +284,7 @@ export default function Rank() {
 
             <CoinBox_Transfer>
               <img src={transferIcon} alt="" />
-              1MBK=30.00USDT
+              1MBK={Price ?? "--"}USDT
             </CoinBox_Transfer>
             <CoinBox_Item>
               <img src={logo} />
@@ -246,7 +294,13 @@ export default function Rank() {
           </CoinBox>
         </NodeInfo_Top>
 
-        <NodeInfo_Bottom>exchange</NodeInfo_Bottom>
+        <NodeInfo_Bottom
+          onClick={() => {
+            SwapFun("50");
+          }}
+        >
+          exchange
+        </NodeInfo_Bottom>
       </NodeInfo>
       <DirectPush_Title_Container>
         <img src={exchangeIcon} alt="" />

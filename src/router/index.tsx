@@ -29,7 +29,9 @@ const Pledge = React.lazy(() => import("../view/Pledge"));
 const PledgeAwardRecord = React.lazy(() => import("../view/PledgeAwardRecord"));
 const NFT = React.lazy(() => import("../view/NFT"));
 const SubscriptionNFT = React.lazy(() => import("../view/SubscriptionNFT"));
-
+const PledgeEarningsRecord = React.lazy(
+  () => import("../view/PledgeEarningsRecord")
+);
 export default function Router() {
   return (
     <Suspense fallback={<PageLoding></PageLoding>}>
@@ -48,7 +50,7 @@ export default function Router() {
               element={<SubscriptionCommunity />}
             ></Route>
             <Route path="Invite" element={<Invite />}></Route>
-            <Route path="Exchange" element={<Exchange />}></Route>
+            <Route path="Swap" element={<Exchange />}></Route>
             <Route path="Insurance" element={<Insurance />}></Route>
             <Route path="ZeroStroke" element={<ZeroStroke />}></Route>
             <Route path="LotteryGame" element={<LotteryGame />}></Route>
@@ -68,6 +70,10 @@ export default function Router() {
             <Route
               path="PledgeAwardRecord"
               element={<PledgeAwardRecord />}
+            ></Route>
+            <Route
+              path="PledgeEarningsRecord"
+              element={<PledgeEarningsRecord />}
             ></Route>
             <Route path="NFT" element={<NFT />}></Route>
             <Route path="SubscriptionNFT" element={<SubscriptionNFT />}></Route>

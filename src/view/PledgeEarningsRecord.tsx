@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
+  getPledgeManageAwardRecord,
+  getPledgePerformanceAwardRecord,
+  getPledgeUserAwardRecord,
   getRobotManageAwardRecord,
   getRobotPerformanceAwardRecord,
   userInfo,
@@ -404,28 +407,41 @@ export default function Rank() {
 
   const subTabArr = {
     1: [
-      { key: 0, name: "All" },
-      { key: 1, name: "Recommendation Award" },
-      { key: 2, name: "Management Award" },
-      { key: 0, name: "Level Award" },
+      // { key: 0, name: "All" },
+      // { key: 1, name: "Recommendation Award" },
+      // { key: 2, name: "Management Award" },
+      // { key: 0, name: "Level Award" },
     ],
     2: [
       { key: 0, name: "All" },
-      { key: 5, name: "Performance Star Award" },
-      { key: 6, name: "Directly promoted star award" },
-      { key: 7, name: "NFT team star" },
+      { key: 12, name: "Management Award" },
+      { key: 13, name: "Recommendation Award" },
+      { key: 14, name: "Level Award" },
+    ],
+    3: [
+      { key: 0, name: "All" },
+      { key: 16, name: "Performance Star Award" },
+      { key: 17, name: "Directly promoted star award" },
+      { key: 18, name: "NFT team star" },
     ],
   };
-  const recordType: number = Number((stateObj as any)?.type);
+  // 1:质押静态奖励记录
+  const recordType: number = Number((stateObj as any)?.recoedType);
   const getAwardRecord = (type: any) => {
     if (recordType === 1) {
-      getRobotManageAwardRecord(type).then((res: any) => {
+      getPledgeUserAwardRecord(9).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
     } else if (recordType === 2) {
-      getRobotPerformanceAwardRecord(type).then((res: any) => {
+      getPledgeManageAwardRecord(type).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (recordType === 3) {
+      getPledgePerformanceAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
@@ -435,13 +451,19 @@ export default function Rank() {
 
   const getGetRecord = useCallback(() => {
     if (recordType === 1) {
-      getRobotManageAwardRecord(4).then((res: any) => {
+      getPledgeUserAwardRecord(10).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
     } else if (recordType === 2) {
-      getRobotPerformanceAwardRecord(8).then((res: any) => {
+      getPledgeManageAwardRecord(15).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (recordType === 3) {
+      getPledgePerformanceAwardRecord(19).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
@@ -457,7 +479,7 @@ export default function Rank() {
         return getGetRecord();
       }
     }
-  }, [state.token, SubTab, ActiveTab]);
+  }, [state.token, SubTab, ActiveTab, recordType]);
 
   useEffect(() => {
     if (account) {

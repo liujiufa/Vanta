@@ -57,6 +57,7 @@ import { NodeInfo_Mid_Rule } from "./SubscriptionNode";
 import { throttle } from "lodash";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
+import { useInputValue } from "../hooks/useInputValue";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -703,15 +704,11 @@ export default function Rank() {
   const [PledgeManageAward, setPledgeManageAward] = useState<any>({});
   const [PledgePerformanceAwardInfo, setPledgePerformanceAwardInfo] =
     useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
-  const [SubTab, setSubTab] = useState<any>(1);
+  const [IsReinvest, setIsReinvest] = useState<any>(false);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [ActivationModal, setActivationModal] = useState(false);
-  const [Price, setPrice] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("");
-  const [InputValueAmountValue, setInputValueAmountValue] = useState<any>("0");
   const {
     TOKENBalance,
     TOKENAllowance,
@@ -719,6 +716,14 @@ export default function Rank() {
     handleTransaction,
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.pledgeContract, "MBK");
+  const {
+    Price,
+    InputValueAmountValue,
+    InputValueAmount,
+    MaxFun,
+    InputValueFun,
+  } = useInputValue();
+
   const getInitData = () => {
     getPledgeUserInfo().then((res: any) => {
       if (res.code === 200) {
@@ -743,41 +748,31 @@ export default function Rank() {
   };
   const onChange = (checked: boolean) => {
     console.log(`switch to ${checked}`);
-  };
-
-  const getVilifyState = throttle(async (value: string) => {
-    if (!account) return;
-    return Contracts.example.queryUsdtByMbk(account as string, value);
-  }, 2000);
-
-  const InputValueFun = async (e: any) => {
-    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
-    setInputValueAmount(value);
-    if (Number(value) > 0) {
-      getVilifyState(value)?.then((res: any) => {
-        setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
-      });
-    }
-  };
-
-  const MaxFun = (value: string) => {
-    setInputValueAmount(value);
-
-    if (Number(value) > 0) {
-      getVilifyState(value)?.then((res: any) => {
-        setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
-      });
-    }
+    setIsReinvest(checked);
   };
 
   const pledgeFun = (value: string) => {
-    if (Number(value) <= 0) return;
+    if (Number(value) < 20 || Number(value) % 20 !== 0)
+      return addMessage("每次质押数量需为20的倍数");
+    if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
+      return addMessage("以后每次质押要大于上次的质押数量");
+    if (
+      Number(value) * Number(Price) +
+        Number(PledgeUserInfo?.totalPledgeAmount) >
+      Number(PledgeUserInfo?.robotAmount)
+    )
+      return addMessage("质押总价值要小于等于购买机器人的价值");
+
     handleTransaction(value, async (call: any) => {
       let res: any;
       try {
         showLoding(true);
 
-        let item: any = await joinPledge({ id: 0, isReinvest: 0, num: value });
+        let item: any = await joinPledge({
+          id: 0,
+          isReinvest: !!IsReinvest ? 1 : 0,
+          num: value,
+        });
         if (item?.code === 200 && item?.data) {
           console.log(item?.data, "1212");
 
@@ -815,13 +810,6 @@ export default function Rank() {
       return <span style={{ color: "#0256FF" }}>successful</span>;
     }
   };
-  useEffect(() => {
-    if (account) {
-      getVilifyState("1")?.then((res: any) => {
-        setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
-      });
-    }
-  }, [account]);
 
   return (
     <NodeContainerBox>
@@ -875,7 +863,15 @@ export default function Rank() {
 
           <Receive_Record_Container>
             <div>Receive</div>
-            <div>Record</div>
+            <div
+              onClick={() => {
+                Navigate("/View/PledgeEarningsRecord", {
+                  state: { recoedType: 1 },
+                });
+              }}
+            >
+              Record
+            </div>
           </Receive_Record_Container>
         </MyQuota>
       </NodeInfo>
@@ -932,7 +928,7 @@ export default function Rank() {
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>Current price</div>
-                1MBK=30.00USDT
+                1MBK={Price ?? "--"}USDT
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item style={{ marginBottom: "18px" }}>
                 <div>Pledge cycle</div>
@@ -941,15 +937,28 @@ export default function Rank() {
 
               <InputBox>
                 <div>
-                  <input type="" /> MBK
+                  <input
+                    type=""
+                    value={!!InputValueAmount ? InputValueAmount : ""}
+                    onChange={(e) => {
+                      InputValueFun(e);
+                    }}
+                  />{" "}
+                  MBK
                 </div>{" "}
-                <div>MAX</div>
+                <div
+                  onClick={() => {
+                    MaxFun(TOKENBalance);
+                  }}
+                >
+                  MAX
+                </div>
               </InputBox>
               <InputContainer_Bottom>
                 <BalanceBox_InputContainer>
                   wallet balance{" "}
                   <div>
-                    100,000.00 <span>mbk</span>
+                    {TOKENBalance} <span>mbk</span>
                   </div>
                 </BalanceBox_InputContainer>
 
@@ -964,20 +973,24 @@ export default function Rank() {
             <PledgeValue>
               Pledge value{" "}
               <div>
-                <span> 3000</span> USDT
+                <span> {InputValueAmountValue}</span> USDT
               </div>
             </PledgeValue>
             <PledgeValue>
               Reinvestment at maturity
               <div>
-                <Switch defaultChecked onChange={onChange} />
+                <Switch
+                  defaultChecked
+                  checked={!!IsReinvest}
+                  onChange={onChange}
+                />
               </div>
             </PledgeValue>
           </PledgeValue_Container>
 
           <GetRewardBtn
             onClick={() => {
-              pledgeFun("20");
+              pledgeFun(InputValueAmount);
             }}
           >
             pledge
@@ -990,7 +1003,13 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Management rewards</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/PledgeEarningsRecord", {
+                  state: { recoedType: 2 },
+                });
+              }}
+            >
               Award record
               <SmallOutLinkIconBox />
             </FinancialRecords>
@@ -1036,7 +1055,13 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
             <ModalContainer_Title>Performance rewards</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/PledgeEarningsRecord", {
+                  state: { recoedType: 3 },
+                });
+              }}
+            >
               Award record
               <SmallOutLinkIconBox />
             </FinancialRecords>
@@ -1064,9 +1089,29 @@ export default function Rank() {
           <GetRewardBtn>receive</GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
-      <Goto>Performance star ranking &gt;&gt; </Goto>
-      <Goto>Directly recommend star ranking &gt;&gt; </Goto>
-      <Goto>NFT team star &gt;&gt; </Goto>
+      {/*recordType 1:认购机器人明星排名 2:质押明星排名*/}
+
+      <Goto
+        onClick={() => {
+          Navigate("/View/RankRecord", { state: { type: 1, recordType: 2 } });
+        }}
+      >
+        Performance star ranking &gt;&gt;{" "}
+      </Goto>
+      <Goto
+        onClick={() => {
+          Navigate("/View/RankRecord", { state: { type: 1, recordType: 2 } });
+        }}
+      >
+        Directly recommend star ranking &gt;&gt;{" "}
+      </Goto>
+      <Goto
+        onClick={() => {
+          Navigate("/View/RankRecord", { state: { type: 1, recordType: 2 } });
+        }}
+      >
+        NFT team star &gt;&gt;{" "}
+      </Goto>
 
       <AllModal
         visible={false}

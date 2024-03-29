@@ -314,9 +314,10 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
   const { state: typeObj } = useLocation();
-  const [ActiveTab, setActiveTab] = useState<any>(Number(typeObj as any) ?? 1);
+  const [ActiveTab, setActiveTab] = useState<any>(
+    Number((typeObj as any)?.type as any) ?? 1
+  );
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -324,16 +325,17 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
-  const CustomRender = useSelectDate();
-
+  const { DatePickerComponent, DateString, setDateString } = useSelectDate();
+  const recordType: number = Number((typeObj as any)?.recordType);
+  // 1机器人业绩明星 2机器人-直推明星 3机器人-NFT团队明星 4-质押业绩明星 5-质押直推明星 6-质押NFT团队明星 7NFT-先锋排名
   const getInitData = () => {
     getRobotRankRecord({
-      month: 0,
-      type: ActiveTab,
-      year: 0,
+      month: DateString?.getMonth(),
+      type: recordType === 1 ? ActiveTab : Number(ActiveTab) + 3,
+      year: DateString?.getFullYear(),
     }).then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setRecordList(res?.data);
       }
     });
   };
@@ -342,7 +344,7 @@ export default function Rank() {
     if (state.token) {
       getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token, ActiveTab, DateString, recordType]);
 
   useEffect(() => {
     if (account) {
@@ -379,6 +381,7 @@ export default function Rank() {
             className={Number(ActiveTab) === 1 ? "activeTab" : "tab"}
             onClick={() => {
               setActiveTab(1);
+              setDateString(new Date());
             }}
           >
             performance
@@ -387,6 +390,7 @@ export default function Rank() {
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
             onClick={() => {
               setActiveTab(2);
+              setDateString(new Date());
             }}
           >
             direct push
@@ -395,6 +399,7 @@ export default function Rank() {
             className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
             onClick={() => {
               setActiveTab(3);
+              setDateString(new Date());
             }}
           >
             NFT team
@@ -402,7 +407,7 @@ export default function Rank() {
         </NodeRecord_Tab>
         <NodeRecord_Content>
           <NodeRecord_Date_Select>
-            <CustomRender />
+            <DatePickerComponent />
           </NodeRecord_Date_Select>
           {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
@@ -413,12 +418,12 @@ export default function Rank() {
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
-                  {true ? (
-                    [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                  {RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
                       <Award_Record_Content_Record_Content_Item key={index}>
-                        <div>0x1234...1234</div>
-                        <div>3,000,000</div>
-                        <div>1</div>
+                        <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                        <div>{NumSplic(item?.performance, 2)}</div>
+                        <div>{item?.rankNo}</div>
                       </Award_Record_Content_Record_Content_Item>
                     ))
                   ) : (
@@ -437,12 +442,12 @@ export default function Rank() {
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
-                  {true ? (
-                    [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                  {RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
                       <Award_Record_Content_Record_Content_Item key={index}>
-                        <div>0x1234...1234</div>
-                        <div>3,000,000</div>
-                        <div>1</div>
+                        <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                        <div>{NumSplic(item?.performance, 2)}</div>
+                        <div>{item?.rankNo}</div>
                       </Award_Record_Content_Record_Content_Item>
                     ))
                   ) : (
@@ -461,12 +466,12 @@ export default function Rank() {
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
-                  {true ? (
-                    [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                  {RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
                       <Award_Record_Content_Record_Content_Item key={index}>
-                        <div>0x1234...1234</div>
-                        <div>3,000,000</div>
-                        <div>1</div>
+                        <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                        <div>{NumSplic(item?.performance, 2)}</div>
+                        <div>{item?.rankNo}</div>
                       </Award_Record_Content_Record_Content_Item>
                     ))
                   ) : (

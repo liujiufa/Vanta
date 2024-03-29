@@ -478,7 +478,7 @@ export default function Rank() {
           {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
-                {subTabArr[recordType ?? 0].map((item: any, index: any) => (
+                {subTabArr[recordType ?? 1]?.map((item: any, index: any) => (
                   <Award_Record_Content_Tab_Item
                     key={index}
                     className={
