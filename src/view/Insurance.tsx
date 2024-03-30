@@ -318,9 +318,10 @@ export default function Rank() {
   }, [state.token]);
 
   useEffect(() => {
-    if (account) {
+    if (state.token && Number(diffTime) <= 0) {
+      getInitData();
     }
-  }, [account]);
+  }, [state.token, diffTime]);
 
   return (
     <NodeContainerBox>
