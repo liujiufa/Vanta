@@ -584,7 +584,7 @@ export default function Rank() {
                     Number(CommunitySoldBase?.currentPrice) / Number(Price) +
                       500,
                     2
-                  )
+                  ) + ""
                 );
               }}
             >

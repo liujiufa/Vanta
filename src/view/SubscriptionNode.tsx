@@ -230,21 +230,21 @@ export default function Rank() {
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  // const {
-  //   TOKENBalance,
-  //   TOKENAllowance,
-  //   handleApprove,
-  //   handleTransaction,
-  //   handleUSDTRefresh,
-  // } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
-
   const {
     TOKENBalance,
     TOKENAllowance,
     handleApprove,
     handleTransaction,
     handleUSDTRefresh,
-  } = useUSDTGroup(contractAddress?.nftContract, "MBK");
+  } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
+
+  // const {
+  //   TOKENBalance,
+  //   TOKENAllowance,
+  //   handleApprove,
+  //   handleTransaction,
+  //   handleUSDTRefresh,
+  // } = useUSDTGroup(contractAddress?.nftContract, "MBK");
 
   const getInitData = () => {
     getNodeBaseInfo().then((res: any) => {
@@ -259,32 +259,30 @@ export default function Rank() {
     //   return addMessage("未满足认购条件");
     if (Number(value) <= 0) return;
     if (!state.token) return;
-    console.log(value, TOKENBalance, "value");
-    handleApprove(value, async () => {});
 
-    // handleTransaction(value, async (call: any) => {
-    //   let res: any;
-    //   try {
-    //     showLoding(true);
-    //     let item: any = await buyNode({});
-    //     if (item?.code === 200 && item?.data) {
-    //       console.log(item?.data, "1212");
-    //       res = await Contracts.example?.buyNode(account as string, item?.data);
-    //     }
-    //   } catch (error: any) {
-    //     showLoding(false);
-    //     return addMessage("购买失败");
-    //   }
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+        let item: any = await buyNode({});
+        if (item?.code === 200 && item?.data) {
+          console.log(item?.data, "1212");
+          res = await Contracts.example?.buyNode(account as string, item?.data);
+        }
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage("购买失败");
+      }
 
-    //   showLoding(false);
-    //   if (!!res?.status) {
-    //     call();
-    //     Navigate("/View/Node");
-    //     addMessage("购买成功");
-    //   } else {
-    //     addMessage("购买失败");
-    //   }
-    // });
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        Navigate("/View/Node");
+        addMessage("购买成功");
+      } else {
+        addMessage("购买失败");
+      }
+    });
   };
 
   useEffect(() => {
@@ -347,7 +345,7 @@ export default function Rank() {
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            buyNodeFun(NodeBaseInfo?.price);
+            buyNodeFun(NodeBaseInfo?.price + "");
           }}
         >
           Subscription

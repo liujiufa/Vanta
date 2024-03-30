@@ -47,7 +47,7 @@ export default function useUSDTGroup(
           setHash(+new Date());
           showLoding(false);
           console.log("await", res);
-          await fun();
+          await fun(handleUSDTRefresh);
         } catch (error) {
           showLoding(false);
         }
