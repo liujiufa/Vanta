@@ -37,7 +37,7 @@ import {
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
-import { HelpIcon } from "../assets/image/homeBox";
+import { HelpIcon, menuIcon2 } from "../assets/image/homeBox";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 
@@ -301,7 +301,7 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={menuIcon2} />
             <ModalContainer_Title>Subscription Node</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>

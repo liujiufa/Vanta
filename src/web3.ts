@@ -279,4 +279,18 @@ export class Contracts {
       )
       .send({ from: addr, gasPrice: "5000000000" });
   }
+  // swap 查询代币价格
+  getAmountsOut(addr: string, amountIn: string, addressArr: Array<string>) {
+    this.verification("IPancakeRouter02");
+    let amountIned = Web3.utils.toWei(amountIn);
+    return this.contract.IPancakeRouter02?.methods
+      .getAmountsOut(amountIned, addressArr)
+      .call({ from: addr });
+  }
+  unStake(addr: string, data: string) {
+    this.verification("lpContract");
+    return this.contract.lpContract?.methods
+      .unStake(data)
+      .send({ from: addr, gasPrice: "5000000000" });
+  }
 }

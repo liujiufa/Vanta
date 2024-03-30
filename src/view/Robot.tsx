@@ -50,7 +50,12 @@ import {
   SmallOutLinkIcon,
   ZeroStrokeIcon,
 } from "../assets/image/homeBox";
-import { DemonIcon, MyQuotaIcon } from "../assets/image/RobotBox";
+import {
+  DemonIcon,
+  ManagementRewardsIcon,
+  MyQuotaIcon,
+  PerformanceRewardsIcon,
+} from "../assets/image/RobotBox";
 import { NodeInfo_Mid_Rule } from "./SubscriptionNode";
 import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
@@ -296,6 +301,9 @@ const ModalContainer_Title_Container_Participate = styled(
   ModalContainer_Title_Container
 )`
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
+  > svg {
+    margin-right: 12px;
+  }
 `;
 
 const NodeInfo_Top_LotteryGame_Info = styled.div`
@@ -618,7 +626,7 @@ const MyQuotaIconBox = styled(MyQuotaIcon)`
 `;
 
 const QuotaSubscriptionIconBox = styled(QuotaSubscriptionIcon)`
-  margin-right: 12px;
+  /* margin-right: 12px; */
 `;
 
 const InputContainer_Bottom = styled(FlexSBCBox)`
@@ -849,7 +857,7 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
-            <QuotaSubscriptionIconBox />
+            <ManagementRewardsIcon />
             <ModalContainer_Title>Management rewards</ModalContainer_Title>
             <FinancialRecords
               onClick={() => {
@@ -901,7 +909,7 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
-            <QuotaSubscriptionIconBox />
+            <PerformanceRewardsIcon />
             <ModalContainer_Title>Performance rewards</ModalContainer_Title>
             <FinancialRecords
               onClick={() => {

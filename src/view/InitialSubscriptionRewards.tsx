@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  getCardPioneerRecord,
-  getRobotManageAwardRecord,
-  getRobotPerformanceAwardRecord,
+  getLpUserAwardRecord,
+  getPledgeOrderRecord,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -32,7 +31,7 @@ import {
   FlexSBCBox,
   FlexSCBox,
 } from "../components/FlexBox";
-import { Carousel, Modal, Tooltip } from "antd";
+import { Carousel, Modal, Switch, Tooltip } from "antd";
 import { useGetReward } from "../hooks/useGetReward";
 import { Contracts } from "../web3";
 import logo from "../assets/image/logo.png";
@@ -287,6 +286,12 @@ const Award_Record_Content_Record_Content_Item = styled.div`
     &:last-child {
       margin-bottom: 0;
     }
+    .ant-switch {
+      background: #333333;
+    }
+    .ant-switch-checked {
+      background: #d56819;
+    }
   }
 `;
 const Get_Record_Content_Record_Content_Item = styled(
@@ -376,13 +381,18 @@ const LotteryContainer_Btn = styled(Btn)`
   color: #ffffff;
 `;
 
+const MySwitch = styled(Switch)``;
+
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
+
+  const { state: stateObj } = useLocation();
+  const [ActiveTab, setActiveTab] = useState<any>(
+    Number((stateObj as any)?.type) ?? 1
+  );
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -390,193 +400,210 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
-  const { state: stateObj } = useLocation();
-  //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
-  //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
+
+  //1:认购奖励财务记录 2:NFT奖励领取记录
+  const recordType: number = Number((stateObj as any)?.recordType);
+  const onChange = (checked: boolean) => {
+    if (Number(SubTab) !== 0) return;
+  };
   const TypeObj = {
-    1: "推荐奖励",
-    2: "管理奖励",
-    3: "平级奖励",
-    4: "领取奖励",
-    5: "业绩明星奖励",
-    6: "直推明星奖励",
-    7: "NFT团队明星奖励",
+    1: "质押中",
+    2: "待赎回",
+    3: "已赎回",
   };
 
   const subTabArr = {
     1: [
-      { key: 0, name: "All" },
-      { key: 1, name: "Recommendation Award" },
-      { key: 2, name: "Management Award" },
-      { key: 0, name: "Level Award" },
+      { key: -1, name: "All" },
+      { key: 0, name: "Pledge in progress" },
+      { key: 1, name: "To Be Redeemed" },
+      { key: 2, name: "Redeemed" },
     ],
-    2: [
-      { key: 0, name: "All" },
-      { key: 5, name: "Performance Star Award" },
-      { key: 6, name: "Directly promoted star award" },
-      { key: 7, name: "NFT team star" },
-    ],
-  };
-  // type:3 NFT先锋奖励记录
-  const recordType: number = Number((stateObj as any)?.type);
-  const getAwardRecord = (type: any) => {
-    if (recordType === 1) {
-      getRobotManageAwardRecord(type).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    } else if (recordType === 2) {
-      getRobotPerformanceAwardRecord(type).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    } else if (recordType === 3) {
-      getCardPioneerRecord(1).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    }
   };
 
-  const getGetRecord = useCallback(() => {
-    if (recordType === 1) {
-      getRobotManageAwardRecord(4).then((res: any) => {
+  const getInitData = (type: number) => {
+    if (Number(ActiveTab) === 1) {
+      getPledgeOrderRecord(type).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
-    } else if (recordType === 2) {
-      getRobotPerformanceAwardRecord(8).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    } else if (recordType === 3) {
-      getCardPioneerRecord(2).then((res: any) => {
+    } else if (Number(ActiveTab) === 2) {
+      getPledgeOrderRecord(2).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
     }
-  }, [ActiveTab]);
+  };
+  // NFT奖励领取记录
+  const getNFTRewardRecord = useCallback(() => {
+    getLpUserAwardRecord(32).then((res: any) => {
+      if (res.code === 200) {
+        setRecordList(res?.data);
+      }
+    });
+  }, [state.token]);
 
   useEffect(() => {
     if (state.token) {
-      if (Number(ActiveTab) === 1) {
-        return getAwardRecord(SubTab);
-      } else if (Number(ActiveTab) === 2) {
-        return getGetRecord();
-      }
+      getInitData(SubTab);
+      getNFTRewardRecord();
     }
-  }, [state.token, SubTab, ActiveTab]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
+  }, [state.token, ActiveTab, SubTab]);
 
   const StateObj = (type: number) => {
-    if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+    if (type === 0) {
+      return <span style={{ color: "#D56819" }}>Pledge in progress</span>;
+    } else if (type === 1) {
+      return <span style={{ color: "#D56819" }}>To be redeemed</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>redeemed</span>;
     }
   };
 
   return (
     <NodeContainerBox>
-      <NodeRecord>
-        <NodeRecord_Tab>
-          <NodeRecord_Tab_Item
-            className={Number(ActiveTab) === 1 ? "activeTab" : "tab"}
-            onClick={() => {
-              setActiveTab(1);
-            }}
-          >
-            Award record
-          </NodeRecord_Tab_Item>
-          <NodeRecord_Tab_Item
-            className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
-            onClick={() => {
-              setActiveTab(2);
-            }}
-          >
-            Get records
-          </NodeRecord_Tab_Item>
-        </NodeRecord_Tab>
-        <NodeRecord_Content>
-          {Number(ActiveTab) === 1 && (
-            <Award_Record_Content>
-              <Award_Record_Content_Tab_Content>
-                {subTabArr[recordType ?? 1]?.map((item: any) => (
-                  <Award_Record_Content_Tab_Item
-                    className={
-                      Number(SubTab) === item?.key ? "activeSubTab" : ""
-                    }
-                    onClick={() => {
-                      setSubTab(item?.key);
-                    }}
-                  >
-                    {item?.name}
-                  </Award_Record_Content_Tab_Item>
-                ))}
-                {/* <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(1);
-                  }}
-                >
-                  Recommendation Award
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(2);
-                  }}
-                >
-                  Management Award
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(3);
-                  }}
-                >
-                  Level Award
-                </Award_Record_Content_Tab_Item> */}
-              </Award_Record_Content_Tab_Content>
-              <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Award_Record_Content_Record_Content_Item key={index}>
-                      <div>
-                        Reward type <span>{TypeObj[item?.businessType]}</span>
-                      </div>
-                      <div>
-                        Time{" "}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        Quantity Issued (MBK){" "}
-                        <span>{decimalNum(item?.amount, 2)}</span>
-                      </div>
-                    </Award_Record_Content_Record_Content_Item>
-                  ))
-                ) : (
-                  <NoData></NoData>
-                )}
-              </Award_Record_Content_Record_Content>
-            </Award_Record_Content>
-          )}
-          {Number(ActiveTab) === 2 && (
+      {Number(recordType) === 1 ? (
+        <NodeRecord>
+          <NodeRecord_Tab>
+            <NodeRecord_Tab_Item
+              className={Number(ActiveTab) === 1 ? "activeTab" : "tab"}
+              onClick={() => {
+                setActiveTab(1);
+              }}
+            >
+              Pledge record
+            </NodeRecord_Tab_Item>
+            <NodeRecord_Tab_Item
+              className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
+              onClick={() => {
+                setActiveTab(2);
+              }}
+            >
+              redemption record
+            </NodeRecord_Tab_Item>
+          </NodeRecord_Tab>
+          <NodeRecord_Content>
+            {Number(ActiveTab) === 1 && (
+              <Award_Record_Content>
+                <Award_Record_Content_Tab_Content>
+                  {subTabArr[recordType ?? 1]?.map((item: any, index: any) => (
+                    <Award_Record_Content_Tab_Item
+                      key={index}
+                      className={
+                        Number(SubTab) === item?.key ? "activeSubTab" : ""
+                      }
+                      onClick={() => {
+                        setSubTab(item?.key);
+                      }}
+                    >
+                      {item?.name}
+                    </Award_Record_Content_Tab_Item>
+                  ))}
+                </Award_Record_Content_Tab_Content>
+                <Award_Record_Content_Record_Content>
+                  {RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Award_Record_Content_Record_Content_Item key={index}>
+                        <div>
+                          Pledge ID <span>{item?.orderNo}</span>
+                        </div>
+                        <div>
+                          Pledge time{" "}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          Pledge Quantity(MBK){" "}
+                          <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          Pledge Amount(USDT)
+                          <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          MBK Price(MBK)
+                          <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          Pledge cycle<span>{item?.cycle ?? 0} DAY</span>
+                        </div>
+                        <div>
+                          Reinvestment at maturity
+                          <span>
+                            {" "}
+                            <MySwitch
+                              defaultChecked
+                              checked={!!item?.isReinvest}
+                              onChange={onChange}
+                            />
+                          </span>
+                        </div>
+                        <div>
+                          maturity Time
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.endTime)
+                            )}
+                          </span>
+                        </div>
+
+                        <div>State{StateObj(item?.status)}</div>
+                        <div>
+                          Transaction hash
+                          <span>{AddrHandle(item?.pledgeHash, 6, 6)}</span>
+                        </div>
+                      </Award_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )}
+                </Award_Record_Content_Record_Content>
+              </Award_Record_Content>
+            )}
+            {Number(ActiveTab) === 2 && (
+              <Award_Record_Content>
+                <Award_Record_Content_Record_Content>
+                  {RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          redemption time<span>2023-12-23 12:23</span>
+                        </div>
+                        <div>
+                          Redemption Quantity(MBK)
+                          <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          Corresponding Pledge ID<span>{item?.orderNo}</span>
+                        </div>
+                        <div>State{StateObj(2)}</div>
+                        <div>
+                          Transaction hash
+                          <span>{AddrHandle(item?.redemptionHash, 6, 6)}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )}
+                </Award_Record_Content_Record_Content>
+              </Award_Record_Content>
+            )}
+          </NodeRecord_Content>
+        </NodeRecord>
+      ) : (
+        <NodeRecord>
+          <NodeRecord_Content>
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
                 {RecordList?.length > 0 ? (
@@ -586,18 +613,19 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Time
+                        time
                         <span>
                           {" "}
                           {dateFormat(
-                            "YYYY-mm-dd HH:MM",
+                            "YYYY-mm-dd HH:MM:SS",
                             new Date(item?.createTime)
                           )}
                         </span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>{decimalNum(item?.amount, 2)}</span>
+                        Amount(MBK)<span>{item?.amount ?? 0}</span>
                       </div>
+
                       <div>State{StateObj(2)}</div>
                       <div>
                         Transaction hash
@@ -610,60 +638,9 @@ export default function Rank() {
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
-          )}
-        </NodeRecord_Content>
-      </NodeRecord>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>
-              {t("Lottery is being drawn")}
-            </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-
-          <ModalContainer_Content>
-            <LotteryContainer>
-              <LodingModeBox>
-                <img src={lodingModal} alt="" />
-              </LodingModeBox>
-              {true ? (
-                <div>
-                  Congratulations <span>First Prize 3000MBK</span>
-                </div>
-              ) : (
-                "The lottery is in progress, please wait."
-              )}
-              <LotteryContainer_Btn>
-                View the list of winners
-              </LotteryContainer_Btn>
-            </LotteryContainer>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
+          </NodeRecord_Content>
+        </NodeRecord>
+      )}
     </NodeContainerBox>
   );
 }

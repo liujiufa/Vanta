@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { getTeamData, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -33,6 +30,8 @@ import {
 } from "../Layout/MainLayout";
 import copyIcon from "../assets/image/Invite/copyIcon.svg";
 import DirectPushListIcon from "../assets/image/Invite/DirectPushListIcon.svg";
+import { menuIcon4 } from "../assets/image/homeBox";
+import copyFun from "copy-to-clipboard";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -142,7 +141,9 @@ const NodeInfo_Mid = styled(FlexBox)`
     }
   }
 `;
-export const DirectPush_Title_Container = styled(ModalContainer_Title_Container)`
+export const DirectPush_Title_Container = styled(
+  ModalContainer_Title_Container
+)`
   margin: 16px 10px 16px 0px;
 `;
 
@@ -222,7 +223,7 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [TeamData, setTeamData] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -231,22 +232,29 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
 
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getTeamData().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setTeamData(res?.data);
       }
     });
   };
+  function invitation(value: any) {
+    if (!account) {
+      return addMessage(t("Please link wallet"));
+    } else {
+      copyFun(window.location.origin + "/" + value);
+      addMessage(t("Copied successfully"));
+    }
+  }
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
@@ -255,24 +263,28 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={menuIcon4} />
             <ModalContainer_Title>My Team</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
             Number of Team
-            <span>36 people</span>
+            <span>{TeamData?.teamNum ?? 0} people</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
             Number of Direct Referrals
-            <span>36 people</span>
+            <span>{TeamData?.refereeNum ?? 0} people</span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
           Invitation link:
           <div>
-            <div>https://www.mbk.com/regster=id?1 </div>
-            <img src={copyIcon} alt="" />
+            <div>
+              {window.location.origin +
+                "/" +
+                AddrHandle(account as string, 6, 6)}
+            </div>
+            <img src={copyIcon} alt="" onClick={() => invitation(account)} />
           </div>
         </NodeInfo_Mid>
       </NodeInfo>
@@ -280,46 +292,36 @@ export default function Rank() {
         <img src={DirectPushListIcon} />
         <ModalContainer_Title>Direct Push list</ModalContainer_Title>
       </DirectPush_Title_Container>
-      <DirectPush_Content_Container>
-        <DirectPush_Content_Container_Header>
-          <div>Address</div>
-          <div>
-            Performance <div>USDT</div>
-          </div>
-          <div>
-            Community <div>USDT</div>
-          </div>
-          <div>Node</div>
-          <div>Community</div>
-          <div>NFT</div>
-        </DirectPush_Content_Container_Header>
-        <DirectPush_Content_Container_Content>
-          <DirectPush_Content_Container_Content_Item>
-            <div>0x12....14</div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div>yes</div>
-            <div>yes</div>
-          </DirectPush_Content_Container_Content_Item>
-          <DirectPush_Content_Container_Content_Item>
-            <div>0x12....14</div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div>yes</div>
-            <div>yes</div>
-          </DirectPush_Content_Container_Content_Item>
-          <DirectPush_Content_Container_Content_Item>
-            <div>0x12....14</div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div>yes</div>
-            <div>yes</div>
-          </DirectPush_Content_Container_Content_Item>
-        </DirectPush_Content_Container_Content>
-      </DirectPush_Content_Container>
+      {TeamData?.list?.length > 0 ? (
+        <DirectPush_Content_Container>
+          <DirectPush_Content_Container_Header>
+            <div>Address</div>
+            <div>
+              Performance <div>USDT</div>
+            </div>
+            <div>
+              Community <div>USDT</div>
+            </div>
+            <div>Node</div>
+            <div>Community</div>
+            <div>NFT</div>
+          </DirectPush_Content_Container_Header>
+          <DirectPush_Content_Container_Content>
+            {TeamData?.list?.map((item: any, index: any) => (
+              <DirectPush_Content_Container_Content_Item key={index}>
+                <div>{AddrHandle(item?.userAddress, 4, 4)}</div>
+                <div>{item?.personalPerformance ?? 0}</div>
+                <div>{item?.communityPerformance ?? 0}</div>
+                <div>{!!item?.isNode ? "yes" : "no"}</div>
+                <div>{!!item?.isCommunity ? "yes" : "no"}</div>
+                <div>{!!item?.isNft ? "yes" : "no"}</div>
+              </DirectPush_Content_Container_Content_Item>
+            ))}
+          </DirectPush_Content_Container_Content>
+        </DirectPush_Content_Container>
+      ) : (
+        <NoData />
+      )}
     </NodeContainerBox>
   );
 }

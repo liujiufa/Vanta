@@ -187,7 +187,7 @@ const HomeContainerBox_Content_Bg3 = styled.div`
 const Award_Record_Content = styled.div`
   width: 100%;
 `;
-const Award_Record_Content_Record_Content = styled.div`
+export const Award_Record_Content_Record_Content = styled.div`
   > div {
     /* border-bottom: 1px solid rgba(213, 104, 25, 0.2); */
   }
@@ -259,7 +259,7 @@ const LotteryContainer_Btn = styled(Btn)`
   color: #ffffff;
 `;
 
-const Award_Record_Content_Title_Content = styled(FlexSBCBox)`
+export const Award_Record_Content_Title_Content = styled(FlexSBCBox)`
   padding: 0px 15px;
   > div {
     flex: 1;
@@ -286,7 +286,7 @@ const Award_Record_Content_Title_Content = styled(FlexSBCBox)`
   }
 `;
 
-const Award_Record_Content_Record_Box = styled.div`
+export const Award_Record_Content_Record_Box = styled.div`
   width: 100%;
   padding: 10px 0px;
 `;
@@ -330,7 +330,7 @@ export default function Rank() {
   // 1机器人业绩明星 2机器人-直推明星 3机器人-NFT团队明星 4-质押业绩明星 5-质押直推明星 6-质押NFT团队明星 7NFT-先锋排名
   const getInitData = () => {
     getRobotRankRecord({
-      month: DateString?.getMonth(),
+      month: DateString?.getMonth() + 1,
       type: recordType === 1 ? ActiveTab : Number(ActiveTab) + 3,
       year: DateString?.getFullYear(),
     }).then((res: any) => {

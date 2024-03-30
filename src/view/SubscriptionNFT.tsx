@@ -41,6 +41,7 @@ import yesIcon from "../assets/image/Subscription/yesIcon.svg";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { useInputValue } from "../hooks/useInputValue";
+import { NFTIcon } from "../assets/image/NFTBox";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -297,7 +298,7 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={NFTIcon} />
             <ModalContainer_Title>Subscription NFT</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>

@@ -46,6 +46,7 @@ import { useInputValue } from "../hooks/useInputValue";
 import closeIcon from "../assets/image/closeIcon.svg";
 import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
+import { menuIcon3 } from "../assets/image/homeBox";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -458,7 +459,7 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={menuIcon3} />
             <ModalContainer_Title>Subscription Community</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
@@ -565,7 +566,7 @@ export default function Rank() {
             />
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
+            <img src={menuIcon3} alt="" />
             <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>

@@ -294,3 +294,85 @@ export function getPioneerInfo() {
     method: "get",
   });
 }
+export function getLpUserInfo() {
+  return axois.request({
+    url: `/card/getLpUserInfo`,
+    method: "get",
+  });
+}
+// NFT分红记录，0:全部 20NFT-LP加权 21-NFT平均分配 22-NFT小区加权 23-NFT团队明星奖 24-NFT分红账户领取记录 25-NFT激活记录
+export function getCardAwardRecord(type: any) {
+  return axois.request({
+    url: `/card/getCardAwardRecord/${type}`,
+    method: "get",
+  });
+}
+export function getCardBuyRecord() {
+  return axois.request({
+    url: `/card/getCardBuyRecord`,
+    method: "get",
+  });
+}
+
+// 40-LP赎回记录 28-NFT -LP分红记录 29NFT-LP奖励领取记录 30-提取已解锁   32-NFT在认购奖励记录领取
+export function getLpUserAwardRecord(type: any) {
+  return axois.request({
+    url: `/card/getLpUserAwardRecord/${type}`,
+    method: "get",
+  });
+}
+
+export function redemptionLp(data: any) {
+  return axois.request({
+    url: `/card/redemptionLp`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+// 获取LP质押记录 0质押中 1待赎回 2已赎回
+export function getLpUserPledgeRecord(type: -1 | 0 | 1 | 2) {
+  return axois.request({
+    url: `/card/getLpUserPledgeRecord/${type}`,
+    method: "get",
+  });
+}
+export function getExchangeRecord() {
+  return axois.request({
+    url: `/user/getExchangeRecord`,
+    method: "get",
+  });
+}
+export function getFirstRoundAccountInfo() {
+  return axois.request({
+    url: `/card/getFirstRoundAccountInfo`,
+    method: "get",
+  });
+}
+export function getSubscriptionAccountInfo() {
+  return axois.request({
+    url: `/card/getSubscriptionAccountInfo`,
+    method: "get",
+  });
+}
+// NFT先锋奖励记录
+export function getCardPioneerRecord(type: 1 | 2) {
+  return axois.request({
+    url: `/card/getCardPioneerRecord/${type}`,
+    method: "get",
+  });
+}
+
+export function getTeamData() {
+  return axois.request({
+    url: `/user/getTeamData`,
+    method: "get",
+  });
+}
+export function getInsureStatus() {
+  return axois.request({
+    url: `/insure/status`,
+    method: "get",
+  });
+}

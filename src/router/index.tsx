@@ -32,6 +32,13 @@ const SubscriptionNFT = React.lazy(() => import("../view/SubscriptionNFT"));
 const PledgeEarningsRecord = React.lazy(
   () => import("../view/PledgeEarningsRecord")
 );
+const NFTAwardRecord = React.lazy(() => import("../view/NFTAwardRecord"));
+const LPPledgeAwardRecord = React.lazy(
+  () => import("../view/LPPledgeAwardRecord")
+);
+const InitialSubscriptionRewards = React.lazy(
+  () => import("../view/InitialSubscriptionRewards")
+);
 export default function Router() {
   return (
     <Suspense fallback={<PageLoding></PageLoding>}>
@@ -77,6 +84,15 @@ export default function Router() {
             ></Route>
             <Route path="NFT" element={<NFT />}></Route>
             <Route path="SubscriptionNFT" element={<SubscriptionNFT />}></Route>
+            <Route path="NFTAwardRecord" element={<NFTAwardRecord />}></Route>
+            <Route
+              path="LPPledgeAwardRecord"
+              element={<LPPledgeAwardRecord />}
+            ></Route>
+            <Route
+              path="InitialSubscriptionRewards"
+              element={<InitialSubscriptionRewards />}
+            ></Route>
           </Route>
           <Route path="" element={<Home />}></Route>
         </Route>

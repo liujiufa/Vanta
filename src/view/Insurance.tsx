@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { getInsureStatus, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -35,6 +32,10 @@ import copyIcon from "../assets/image/Invite/copyIcon.svg";
 import DirectPushListIcon from "../assets/image/Invite/DirectPushListIcon.svg";
 import announcementIcon from "../assets/image/Home/announcementIcon.svg";
 import { HelpIcon, menuIcon7 } from "../assets/image/homeBox";
+import useTime from "../hooks/useTime";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -46,7 +47,7 @@ const NodeInfo = styled.div`
   border: 1px solid rgba(213, 104, 25, 0.2);
 `;
 
-export  const NodeInfo_Top_Rule = styled(FlexECBox)`
+export const NodeInfo_Top_Rule = styled(FlexECBox)`
   position: absolute;
   top: 5px;
   right: 5px;
@@ -291,52 +292,55 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [InsureStatus, setInsureStatus] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-
+  const [diffTime, status, initDiffTime, setDiffTime] = useTime({
+    initDiffTime: 0,
+  });
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getInsureStatus().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setInsureStatus(res?.data);
+        setDiffTime(Number(res?.data?.timestamp));
       }
     });
   };
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
   return (
     <NodeContainerBox>
       <NodeInfo>
-        {false ? (
+        {Number(InsureStatus?.status) !== 3 ? (
           <NodeInfo_Top>
             <NodeInfo_Top_Rule>
-              <HelpIconAuto /> Rule
-        export      </NodeInfo_Top_Rule>
+              <HelpIconAuto /> Rule export{" "}
+            </NodeInfo_Top_Rule>
             <ModalContainer_Title_Container>
               <img src={menuIcon7} />
               <ModalContainer_Title>Insurance Status</ModalContainer_Title>
             </ModalContainer_Title_Container>
 
-            {false ? (
+            {Number(InsureStatus?.status) !== 2 ? (
               <NodeInfo_Top_Tip>Enter single normally</NodeInfo_Top_Tip>
             ) : (
               <NodeInfo_Top_Tip>
-                <div> The allocation mechanism will start after</div> 23:59:59
+                <div> The allocation mechanism will start after</div>{" "}
+                {dayjs?.duration(diffTime, "seconds").format("HH:mm:ss")}
               </NodeInfo_Top_Tip>
             )}
 
@@ -351,14 +355,14 @@ export default function Rank() {
         ) : (
           <>
             <NodeInfo_Bottom_Box>
-         export       <NodeInfo_Top_Rule>
-                <HelpIconAuto /> Rule
-          export      </NodeInfo_Top_Rule>
+              export{" "}
+              <NodeInfo_Top_Rule>
+                <HelpIconAuto /> Rule export{" "}
+              </NodeInfo_Top_Rule>
               <ModalContainer_Title_Container>
                 <img src={menuIcon7} />
                 <ModalContainer_Title>Insurance Status</ModalContainer_Title>
               </ModalContainer_Title_Container>
-
               <NodeInfo_Bottom_Box_Tip>
                 <div> Compensated and pending</div>{" "}
                 <div>

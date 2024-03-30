@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  userInfo,
-} from "../API/index";
+import { userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -12,7 +10,7 @@ import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
 import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ContainerBox,
   FlexBox,
@@ -37,6 +35,10 @@ import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
 import { Button, DatePicker, Space, Toast } from "antd-mobile";
 import { useSelectDate } from "../hooks/useSelectDate";
+import {
+  Award_Record_Content_Record_Box,
+  Award_Record_Content_Title_Content,
+} from "./RankRecord";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -95,8 +97,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -327,10 +329,12 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
   const [visible, setVisible] = useState(false);
-  const CustomRender = useSelectDate();
-
+  const { DatePickerComponent } = useSelectDate();
+  const { state: stateObj } = useLocation();
+  // 2:小区新增业绩排名
+  const recordType: number = Number((stateObj as any)?.recordType);
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    userInfo().then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
@@ -339,143 +343,79 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      //getInitData();
     }
   }, [state.token, ActiveTab]);
 
-  useEffect(() => {
-    if (account) {
-      // Contracts.example
-      //   .balanceOf(account as string, "LPToken")
-      //   .then((res: any) => {
-      //     setBalance(EthertoWei(res ?? "0"));
-      //     Contracts.example
-      //       .queryUsdtAmountByLPAmount(
-      //         account as string,
-      //         EthertoWei(res ?? "0") + ""
-      //       )
-      //       .then((res: any) => {
-      //         console.log(res, "er");
-      //         setInputValueAmount(EthertoWei(res ?? "0"));
-      //       });
-      //   });
-    }
-  }, [account]);
   return (
     <NodeContainerBox>
       <NodeRecord>
         <NodeRecord_Date_Select>
-          <CustomRender />
+          <DatePickerComponent />
         </NodeRecord_Date_Select>
-        <NodeRecord_Content>
-          <Award_Record_Content>
-            <Award_Record_Content_Tab_Content>
-              <Award_Record_Content_Tab_Item
-                className={Number(SubTab) === 0 ? "activeSubTab" : ""}
-                onClick={() => {
-                  setSubTab(0);
-                }}
-              >
-                All
-              </Award_Record_Content_Tab_Item>
-              <Award_Record_Content_Tab_Item
-                className={Number(SubTab) === 1 ? "activeSubTab" : ""}
-                onClick={() => {
-                  setSubTab(1);
-                }}
-              >
-                First prize
-              </Award_Record_Content_Tab_Item>
-              <Award_Record_Content_Tab_Item
-                className={Number(SubTab) === 2 ? "activeSubTab" : ""}
-                onClick={() => {
-                  setSubTab(2);
-                }}
-              >
-                Second prize
-              </Award_Record_Content_Tab_Item>
-              <Award_Record_Content_Tab_Item
-                className={Number(SubTab) === 3 ? "activeSubTab" : ""}
-                onClick={() => {
-                  setSubTab(3);
-                }}
-              >
-                Third prize
-              </Award_Record_Content_Tab_Item>
-            </Award_Record_Content_Tab_Content>
-            <Award_Record_Content_Record_Content>
-              {true ? (
-                [1, 2, 3, 4, 5].map((item: any, index: any) => (
-                  <Award_Record_Content_Record_Content_Item key={index}>
-                    <div>
-                      Reward type <span>LP weighted</span>
-                    </div>
-                    <div>
-                      Time <span>2023-12-23 12:23</span>
-                    </div>
-                    <div>
-                      Quantity Issued (MBK) <span>2000.00</span>
-                    </div>
-                  </Award_Record_Content_Record_Content_Item>
-                ))
-              ) : (
-                <NoData></NoData>
-              )}
-            </Award_Record_Content_Record_Content>
-          </Award_Record_Content>
-        </NodeRecord_Content>
+        {
+          <NodeRecord_Content>
+            <Award_Record_Content>
+              <Award_Record_Content_Tab_Content>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 0 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(0);
+                  }}
+                >
+                  All
+                </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(1);
+                  }}
+                >
+                  First prize
+                </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(2);
+                  }}
+                >
+                  Second prize
+                </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(3);
+                  }}
+                >
+                  Third prize
+                </Award_Record_Content_Tab_Item>
+              </Award_Record_Content_Tab_Content>
+              <Award_Record_Content>
+                <Award_Record_Content_Title_Content>
+                  <div>address</div>
+                  <div>bonus</div>
+                  <div>Awards</div>
+                </Award_Record_Content_Title_Content>
+                <Award_Record_Content_Record_Content>
+                  <Award_Record_Content_Record_Box>
+                    {RecordList?.length > 0 ? (
+                      RecordList?.map((item: any, index: any) => (
+                        <Award_Record_Content_Record_Content_Item key={index}>
+                          <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                          <div>{NumSplic(item?.performance, 2)}</div>
+                          <div>{item?.rankNo}</div>
+                        </Award_Record_Content_Record_Content_Item>
+                      ))
+                    ) : (
+                      <NoData></NoData>
+                    )}
+                  </Award_Record_Content_Record_Box>
+                </Award_Record_Content_Record_Content>
+              </Award_Record_Content>
+            </Award_Record_Content>
+          </NodeRecord_Content>
+        }
       </NodeRecord>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>
-              {t("Lottery is being drawn")}
-            </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-
-          <ModalContainer_Content>
-            <LotteryContainer>
-              <LodingModeBox>
-                <img src={lodingModal} alt="" />
-              </LodingModeBox>
-              {true ? (
-                <div>
-                  Congratulations <span>First Prize 3000MBK</span>
-                </div>
-              ) : (
-                "The lottery is in progress, please wait."
-              )}
-              <LotteryContainer_Btn>
-                View the list of winners
-              </LotteryContainer_Btn>
-            </LotteryContainer>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
     </NodeContainerBox>
   );
 }

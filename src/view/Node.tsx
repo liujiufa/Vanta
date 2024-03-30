@@ -45,6 +45,7 @@ import {
 import closeIcon from "../assets/image/closeIcon.svg";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
+import { menuIcon2 } from "../assets/image/homeBox";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -551,7 +552,7 @@ export default function Rank() {
       return (
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={menuIcon2} />
             <ModalContainer_Title>My Node </ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Mid_Content>
@@ -567,7 +568,7 @@ export default function Rank() {
       return (
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={menuIcon2} />
             <ModalContainer_Title>My Node </ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Top_Tip>
@@ -586,7 +587,7 @@ export default function Rank() {
       return (
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
-            <img src={logo} />
+            <img src={menuIcon2} />
             <ModalContainer_Title>My Node </ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
@@ -818,7 +819,7 @@ export default function Rank() {
             />
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
+            <img src={menuIcon2} alt="" />
             <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>

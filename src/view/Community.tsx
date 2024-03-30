@@ -45,6 +45,7 @@ import {
 import closeIcon from "../assets/image/closeIcon.svg";
 import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
+import { menuIcon3 } from "../assets/image/homeBox";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -459,7 +460,7 @@ export default function Rank() {
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  
+
   const typeObj = {
     34: "社区激活记录",
     35: "社区LP加权奖励",
@@ -493,7 +494,6 @@ export default function Rank() {
     }
   };
 
-
   useEffect(() => {
     if (token) {
       getInitData();
@@ -520,7 +520,7 @@ export default function Rank() {
         {!!MyCommunity?.unlock ? (
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
-              <img src={logo} />
+              <img src={menuIcon3} />
               <ModalContainer_Title>My Community</ModalContainer_Title>
             </ModalContainer_Title_Container>
             <NodeInfo_Mid_Content>
@@ -534,7 +534,7 @@ export default function Rank() {
         ) : (
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
-              <img src={logo} />
+              <img src={menuIcon3} />
               <ModalContainer_Title>My Community</ModalContainer_Title>
             </ModalContainer_Title_Container>
             <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
@@ -735,8 +735,6 @@ export default function Rank() {
           )}
         </NodeRecord_Content>
       </NodeRecord>
-
-      
     </NodeContainerBox>
   );
 }

@@ -40,10 +40,10 @@ import { Contracts } from "../web3";
 import bannerImg1 from "../assets/image/Home/bannerImg1.png";
 import announcementIcon from "../assets/image/Home/announcementIcon.svg";
 import outLinkIcon from "../assets/image/Home/outLinkIcon.svg";
-import menuIcon1 from "../assets/image/Home/menuIcon1.png";
-import menuIcon7 from "../assets/image/Home/menuIcon7.png";
+
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import coinIcon from "../assets/image/Home/coinIcon.svg";
+import { menuIcon1, menuIcon2, menuIcon3, menuIcon4, menuIcon5, menuIcon6, menuIcon7, menuIcon8 } from "../assets/image/homeBox";
 
 const HomeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -410,13 +410,13 @@ export default function Rank() {
 
   const MenuListArr = [
     { img: menuIcon1, name: "Subscription", route: "Robot" },
-    { img: menuIcon1, name: "Node", route: "Node" },
-    { img: menuIcon1, name: "Community", route: "Community" },
-    { img: menuIcon1, name: "Invite", route: "Invite" },
-    { img: menuIcon1, name: "Exchange", route: "Exchange" },
-    { img: menuIcon1, name: "Swap", route: "Swap" },
+    { img: menuIcon2, name: "Node", route: "Node" },
+    { img: menuIcon3, name: "Community", route: "Community" },
+    { img: menuIcon4, name: "Invite", route: "Invite" },
+    { img: menuIcon5, name: "Exchange", route: "Exchange" },
+    { img: menuIcon6, name: "Swap", route: "Swap" },
     { img: menuIcon7, name: "Insurance", route: "Insurance" },
-    { img: menuIcon1, name: "More", route: "More" },
+    { img: menuIcon8, name: "More", route: "More" },
   ];
 
   const getInitData = () => {

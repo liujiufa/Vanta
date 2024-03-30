@@ -1,10 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  getCardPioneerRecord,
-  getRobotManageAwardRecord,
-  getRobotPerformanceAwardRecord,
-  userInfo,
-} from "../API/index";
+import React, { useState, useEffect } from "react";
+import { getCardAwardRecord, getCardBuyRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -19,10 +14,9 @@ import {
   NumSplic,
   addMessage,
   dateFormat,
-  decimalNum,
 } from "../utils/tool";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ContainerBox,
   FlexBox,
@@ -51,6 +45,20 @@ const NodeContainerBox = styled(ContainerBox)`
   padding: 0px;
 `;
 
+const NodeInfo = styled.div`
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(213, 104, 25, 0.2);
+`;
+
+const NodeInfo_Top = styled(FlexBox)`
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid rgba(213, 104, 25, 0.2);
+`;
+
 const Btn = styled(FlexCCBox)`
   padding: 10px 15px;
   font-family: "PingFang SC";
@@ -72,6 +80,7 @@ const NodeRecord = styled.div`
 `;
 
 const NodeRecord_Tab = styled(FlexSBCBox)`
+  overflow-x: auto;
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
   > div {
     display: flex;
@@ -198,10 +207,9 @@ const Award_Record_Content = styled.div`
   width: 100%;
 `;
 const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
-  overflow-x: auto;
   width: 100%;
   padding: 10px 15px;
-
+  overflow: auto;
   > div {
     white-space: nowrap;
     font-family: "PingFang SC";
@@ -390,25 +398,14 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
-  const { state: stateObj } = useLocation();
-  //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
-  //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
-  const TypeObj = {
-    1: "推荐奖励",
-    2: "管理奖励",
-    3: "平级奖励",
-    4: "领取奖励",
-    5: "业绩明星奖励",
-    6: "直推明星奖励",
-    7: "NFT团队明星奖励",
-  };
 
   const subTabArr = {
     1: [
       { key: 0, name: "All" },
-      { key: 1, name: "Recommendation Award" },
-      { key: 2, name: "Management Award" },
-      { key: 0, name: "Level Award" },
+      { key: 20, name: "LP Weighted" },
+      { key: 21, name: "Equally Distributed" },
+      { key: 22, name: "Cell Weighting" },
+      { key: 23, name: "Team Star Award" },
     ],
     2: [
       { key: 0, name: "All" },
@@ -417,66 +414,39 @@ export default function Rank() {
       { key: 7, name: "NFT team star" },
     ],
   };
-  // type:3 NFT先锋奖励记录
-  const recordType: number = Number((stateObj as any)?.type);
-  const getAwardRecord = (type: any) => {
-    if (recordType === 1) {
-      getRobotManageAwardRecord(type).then((res: any) => {
+
+  const getInitData = (type: number) => {
+    if (Number(ActiveTab) === 1) {
+      getCardAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
-    } else if (recordType === 2) {
-      getRobotPerformanceAwardRecord(type).then((res: any) => {
+    } else if (Number(ActiveTab) === 2) {
+      getCardAwardRecord(24).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
-    } else if (recordType === 3) {
-      getCardPioneerRecord(1).then((res: any) => {
+    } else if (Number(ActiveTab) === 3) {
+      getCardBuyRecord().then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (Number(ActiveTab) === 4) {
+      getCardAwardRecord(25).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
     }
   };
-
-  const getGetRecord = useCallback(() => {
-    if (recordType === 1) {
-      getRobotManageAwardRecord(4).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    } else if (recordType === 2) {
-      getRobotPerformanceAwardRecord(8).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    } else if (recordType === 3) {
-      getCardPioneerRecord(2).then((res: any) => {
-        if (res.code === 200) {
-          setRecordList(res?.data);
-        }
-      });
-    }
-  }, [ActiveTab]);
-
   useEffect(() => {
     if (state.token) {
-      if (Number(ActiveTab) === 1) {
-        return getAwardRecord(SubTab);
-      } else if (Number(ActiveTab) === 2) {
-        return getGetRecord();
-      }
+      getInitData(SubTab);
     }
-  }, [state.token, SubTab, ActiveTab]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
+  }, [state.token, ActiveTab, SubTab]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
@@ -496,7 +466,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Award record
+            NFT dividends
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -506,12 +476,28 @@ export default function Rank() {
           >
             Get records
           </NodeRecord_Tab_Item>
+          <NodeRecord_Tab_Item
+            className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
+            onClick={() => {
+              setActiveTab(3);
+            }}
+          >
+            Subscription record
+          </NodeRecord_Tab_Item>
+          <NodeRecord_Tab_Item
+            className={Number(ActiveTab) === 4 ? "activeTab" : "tab"}
+            onClick={() => {
+              setActiveTab(4);
+            }}
+          >
+            Activition record
+          </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
           {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
-                {subTabArr[recordType ?? 1]?.map((item: any) => (
+                {subTabArr[ActiveTab]?.map((item: any) => (
                   <Award_Record_Content_Tab_Item
                     className={
                       Number(SubTab) === item?.key ? "activeSubTab" : ""
@@ -523,50 +509,33 @@ export default function Rank() {
                     {item?.name}
                   </Award_Record_Content_Tab_Item>
                 ))}
-                {/* <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(1);
-                  }}
-                >
-                  Recommendation Award
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(2);
-                  }}
-                >
-                  Management Award
-                </Award_Record_Content_Tab_Item>
-                <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
-                  onClick={() => {
-                    setSubTab(3);
-                  }}
-                >
-                  Level Award
-                </Award_Record_Content_Tab_Item> */}
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
                 {RecordList?.length > 0 ? (
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>{TypeObj[item?.businessType]}</span>
+                        Reward type{" "}
+                        <span>
+                          {
+                            subTabArr[ActiveTab]?.find(
+                              (item: any) =>
+                                Number(item?.key) === Number(item?.businessType)
+                            )?.name
+                          }
+                        </span>
                       </div>
                       <div>
                         Time{" "}
                         <span>
                           {dateFormat(
-                            "YYYY-mm-dd HH:MM",
+                            "YYYY-mm-dd HH:MM:SS",
                             new Date(item?.createTime)
                           )}
                         </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK){" "}
-                        <span>{decimalNum(item?.amount, 2)}</span>
+                        Quantity Issued (MBK) <span>{item?.amount ?? 0}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -576,6 +545,7 @@ export default function Rank() {
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
           )}
+
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
@@ -586,18 +556,99 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Time
+                        Collection time
                         <span>
-                          {" "}
                           {dateFormat(
-                            "YYYY-mm-dd HH:MM",
+                            "YYYY-mm-dd HH:MM:SS",
                             new Date(item?.createTime)
                           )}
                         </span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>{decimalNum(item?.amount, 2)}</span>
+                        Quantity(MBK)<span>{item?.amount ?? 0}</span>
                       </div>
+                      <div>State{StateObj(2)}</div>
+                      <div>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                      </div>
+                    </Get_Record_Content_Record_Content_Item>
+                  ))
+                ) : (
+                  <NoData></NoData>
+                )}
+              </Award_Record_Content_Record_Content>
+            </Award_Record_Content>
+          )}
+
+          {Number(ActiveTab) === 3 && (
+            <Award_Record_Content>
+              <Award_Record_Content_Record_Content>
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
+                    <Get_Record_Content_Record_Content_Item
+                      key={index}
+                      type={1}
+                    >
+                      <div>
+                        Subscription time
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
+                      </div>
+                      <div>
+                        Pay Amount(USDT)<span>{item?.payAmount ?? 0}</span>
+                      </div>
+                      <div>
+                        Quantity(MBK)<span>{item?.payNum ?? 0}</span>
+                      </div>
+
+                      <div>
+                        MBK Price(USDT)<span>{item?.coinPrice ?? 0}</span>
+                      </div>
+                      <div>State{StateObj(2)}</div>
+                      <div>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                      </div>
+                    </Get_Record_Content_Record_Content_Item>
+                  ))
+                ) : (
+                  <NoData></NoData>
+                )}
+              </Award_Record_Content_Record_Content>
+            </Award_Record_Content>
+          )}
+
+          {Number(ActiveTab) === 4 && (
+            <Award_Record_Content>
+              <Award_Record_Content_Record_Content>
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
+                    <Get_Record_Content_Record_Content_Item
+                      key={index}
+                      type={1}
+                    >
+                      <div>
+                        Type<span>activation</span>
+                      </div>
+                      <div>
+                        time
+                        <span>
+                          {" "}
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
+                      </div>
+                      <div>
+                        Pay Amount(MBK)<span>{item?.amount ?? 0}</span>
+                      </div>
+
                       <div>State{StateObj(2)}</div>
                       <div>
                         Transaction hash

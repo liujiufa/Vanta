@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { userInfo } from "../API/index";
+import { getExchangeRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -13,6 +13,8 @@ import {
   EthertoWei,
   NumSplic,
   addMessage,
+  dateFormat,
+  decimalNum,
   showLoding,
 } from "../utils/tool";
 import { useTranslation } from "react-i18next";
@@ -45,6 +47,7 @@ import {
 import { useInputValue } from "../hooks/useInputValue";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
+import { throttle } from "lodash";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
@@ -180,35 +183,39 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const {
-    Price,
-    InputValueAmountValue,
-    InputValueAmount,
-    MaxFun,
-    InputValueFun,
-  } = useInputValue();
+  const [Price, setPrice] = useState<any>("0");
+  const [InputValue1, setInputValue1] = useState<any>("");
+  const [InputValue2, setInputValue2] = useState<any>("");
+  const [swapType, setSwapType] = useState<any>(1);
+
   const {
     TOKENBalance,
     TOKENAllowance,
     handleApprove,
     handleTransaction,
     handleUSDTRefresh,
-  } = useUSDTGroup(contractAddress?.IPancakeRouter02, "MBK");
+  } = useUSDTGroup(
+    contractAddress?.IPancakeRouter02,
+    Number(swapType) === 1 ? "USDT" : "MBK"
+  );
+  const SwapObj = {
+    1: [contractAddress?.USDT, contractAddress?.MBK],
+    2: [contractAddress?.MBK, contractAddress?.USDT],
+  };
 
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getExchangeRecord().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setRecordList(res?.data);
       }
     });
   };
 
+  // 1:USDT=>MBK 2:MBK=>USDT
   const SwapFun = (value: string) => {
     if (!account) return;
     if (Number(value) <= 0) return;
@@ -226,14 +233,14 @@ export default function Rank() {
           );
       } catch (error: any) {
         showLoding(false);
-        return addMessage("激活失败");
+        return addMessage("兑换失败");
       }
       showLoding(false);
       if (!!res?.status) {
         call();
-        addMessage("激活成功");
+        addMessage("兑换成功");
       } else {
-        addMessage("激活失败");
+        addMessage("兑换失败");
       }
     });
   };
@@ -242,61 +249,135 @@ export default function Rank() {
     if (type === 1) {
       return <span style={{ color: "#D56819" }}>Confirming</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>Confirming</span>;
+      return <span style={{ color: "#0256FF" }}>success</span>;
+    }
+  };
+
+  const getVilifyState = throttle(async (value: string) => {
+    if (!account) return;
+    return Contracts.example.getAmountsOut(
+      account as string,
+      value,
+      SwapObj[swapType ?? 1]
+    );
+  }, 1000);
+
+  const InputValueFun = async (e: any) => {
+    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
+    if (Number(swapType) === 1) {
+      setInputValue1(value);
+      if (Number(value) > 0) {
+        getVilifyState(value)?.then((res: any) => {
+          setInputValue2(decimalNum(EthertoWei(res[1] ?? "0"), 2));
+        });
+      }
+    } else if (Number(swapType) === 2) {
+      setInputValue2(value);
+      if (Number(value) > 0) {
+        getVilifyState(value)?.then((res: any) => {
+          setInputValue1(decimalNum(EthertoWei(res[1] ?? "0"), 2));
+        });
+      }
+    }
+  };
+
+  const SelectPrice = () => {
+    Contracts.example
+      .getAmountsOut(account as string, "1", SwapObj[swapType])
+      ?.then((res: any) => {
+        console.log(res, "price");
+
+        setPrice(decimalNum(EthertoWei(res[1] ?? "0"), 2));
+      });
+  };
+
+  const CoinTopBox = (type: number) => {
+    if (type === 1) {
+      return (
+        <CoinBox_Item>
+          <img src={logo} />
+          <div>USDT</div>
+          <input
+            type="number"
+            placeholder="Please enter quantity"
+            value={InputValue1}
+            onChange={InputValueFun}
+          />
+        </CoinBox_Item>
+      );
+    } else if (type === 2) {
+      return (
+        <CoinBox_Item>
+          <img src={logo} />
+          <div>MBK</div>
+          <input
+            type="number"
+            value={InputValue2}
+            placeholder="Please enter quantity"
+            onChange={InputValueFun}
+          />
+        </CoinBox_Item>
+      );
     }
   };
 
   useEffect(() => {
     if (state.token) {
-      //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token]);
 
   useEffect(() => {
     if (account) {
-      // Contracts.example
-      //   .balanceOf(account as string, "LPToken")
-      //   .then((res: any) => {
-      //     setBalance(EthertoWei(res ?? "0"));
-      //     Contracts.example
-      //       .queryUsdtAmountByLPAmount(
-      //         account as string,
-      //         EthertoWei(res ?? "0") + ""
-      //       )
-      //       .then((res: any) => {
-      //         console.log(res, "er");
-      //         setInputValueAmount(EthertoWei(res ?? "0"));
-      //       });
-      //   });
+      SelectPrice();
     }
-  }, [account]);
+  }, [account, swapType]);
 
   return (
     <NodeContainerBox>
       <NodeInfo>
         <NodeInfo_Top>
           <CoinBox>
-            <CoinBox_Item>
+            {/* <CoinBox_Item>
               <img src={logo} />
               <div>USDT</div>
-              <input type="number" placeholder="Please enter quantity" />
-            </CoinBox_Item>
-
+              <input
+                type="number"
+                placeholder="Please enter quantity"
+                onClick={InputValueFun}
+              />
+            </CoinBox_Item> */}
+            {CoinTopBox(Number(swapType))}
             <CoinBox_Transfer>
-              <img src={transferIcon} alt="" />
-              1MBK={Price ?? "--"}USDT
+              <img
+                src={transferIcon}
+                alt=""
+                onClick={() => {
+                  setSwapType(Number(swapType) === 1 ? 2 : 1);
+                }}
+              />
+              {Number(swapType) === 1
+                ? `1USDT=${Price ?? "--"}MBK`
+                : `1MBK=${Price ?? "--"}USDT`}
             </CoinBox_Transfer>
-            <CoinBox_Item>
+            {CoinTopBox(Number(swapType) === 1 ? 2 : 1)}
+
+            {/* <CoinBox_Item>
               <img src={logo} />
               <div>MBK</div>
-              <input type="number" placeholder="Please enter quantity" />
-            </CoinBox_Item>
+              <input
+                type="number"
+                readOnly={true}
+                placeholder="Please enter quantity"
+              />
+            </CoinBox_Item> */}
           </CoinBox>
         </NodeInfo_Top>
 
         <NodeInfo_Bottom
           onClick={() => {
-            SwapFun("50");
+            let amount = Number(swapType) === 1 ? InputValue1 : InputValue2;
+            SwapFun(String(amount));
           }}
         >
           exchange
@@ -308,21 +389,30 @@ export default function Rank() {
       </DirectPush_Title_Container>
       <Award_Record_Content>
         <Award_Record_Content_Record_Content>
-          {true ? (
-            [1, 2, 3, 4, 5].map((item: any, index: any) => (
+          {RecordList?.length > 0 ? (
+            RecordList?.map((item: any, index: any) => (
               <Get_Record_Content_Record_Content_Item key={index} type={1}>
                 <div>
-                  Type <span>Subscription</span>
+                  Time{" "}
+                  <span>
+                    {dateFormat(
+                      "YYYY-mm-dd HH:MM:SS",
+                      new Date(item?.createTime)
+                    )}
+                  </span>
                 </div>
                 <div>
-                  Time <span>2023-12-23 12:23</span>
+                  From (USDT) <span>{item?.formCoin}</span>
                 </div>
                 <div>
-                  Payment amount(USDT) <span>2000.00</span>
+                  To (MBK) <span>{item?.toCoin}</span>
                 </div>
-                <div>State{StateObj(1)}</div>
                 <div>
-                  Transaction hash<span>0x085.....f350f1c3</span>
+                  MBK price(USDT) <span>{item?.coinPrice}</span>
+                </div>
+                <div>State{StateObj(2)}</div>
+                <div>
+                  Transaction hash<span>{AddrHandle(item?.txId, 6, 6)}</span>
                 </div>
               </Get_Record_Content_Record_Content_Item>
             ))

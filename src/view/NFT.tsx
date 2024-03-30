@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { getMyCardInfo, getPioneerInfo, userInfo } from "../API/index";
+import {
+  getFirstRoundAccountInfo,
+  getLpUserInfo,
+  getMyCardInfo,
+  getPioneerInfo,
+  getSubscriptionAccountInfo,
+  redemptionLp,
+  userInfo,
+} from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -13,6 +21,7 @@ import {
   EthertoWei,
   NumSplic,
   addMessage,
+  dateFormat,
   decimalNum,
   showLoding,
 } from "../utils/tool";
@@ -27,7 +36,7 @@ import {
   FlexSBCBox,
   FlexSCBox,
 } from "../components/FlexBox";
-import { Carousel, Dropdown, Modal, Tooltip } from "antd";
+import { Carousel, Dropdown, Menu, Modal, Tooltip } from "antd";
 import { useGetReward } from "../hooks/useGetReward";
 import { Contracts } from "../web3";
 import logo from "../assets/image/logo.png";
@@ -36,11 +45,21 @@ import {
   ModalContainer_Title_Container,
 } from "../Layout/MainLayout";
 import closeIcon from "../assets/image/closeIcon.svg";
-import { NFTImg } from "../assets/image/NFTBox";
+import {
+  LPPledgeIcon,
+  NFTIcon,
+  NFTImg,
+  PledgeLPIcon,
+  SubscriptionRewardsIcon,
+} from "../assets/image/NFTBox";
 import { NodeInfo_Mid_Conditions } from "./SubscriptionNode";
 import { ErrorIcon, YesIcon } from "../assets/image/SubscriptionBox";
 import { HelpIconAuto, NodeInfo_Top_Rule } from "./Insurance";
-import { ParticipateGameIcon, SmallOutLinkIcon } from "../assets/image/homeBox";
+import {
+  ParticipateGameIcon,
+  SmallOutLinkIcon,
+  StakingMiningIcon,
+} from "../assets/image/homeBox";
 import { DropDownIcon } from "../assets/image/commonBox";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
@@ -667,13 +686,17 @@ export default function Rank() {
   const [RecordList, setRecordList] = useState<any>([]);
   const [MyCardInfo, setMyCardInfo] = useState<any>({});
   const [PioneerInfo, setPioneerInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
-  const [SubTab, setSubTab] = useState<any>(1);
+  const [LpUserInfo, setLpUserInfo] = useState<any>({});
+  const [FirstRoundAccountInfo, setFirstRoundAccountInfo] = useState<any>({});
+  const [SubscriptionAccountInfo, setSubscriptionAccountInfo] = useState<any>(
+    {}
+  );
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [Days, setDays] = useState<any>(20);
+  const [InputValueAmount, setInputValueAmount] = useState<any>("");
   const [ActivationModal, setActivationModal] = useState(false);
   const [ActiveNFTModal, setActiveNFTModal] = useState(false);
   const [isDropDownShow, setIsDropDownShow] = useState(false);
@@ -692,13 +715,18 @@ export default function Rank() {
     handleTransaction: MBK_USDT_handleTransaction,
     handleUSDTRefresh: MBK_USDT_handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.lpContract, "MBK_USDT");
+  const changeTime = (item: any) => {
+    setDays(item?.key);
+  };
 
   const items = [
-    { key: "20", label: "20DAY" },
-    { key: "28", label: "28DAY" },
-    { key: "56", label: "56DAY" },
-    { key: "84", label: "84DAY" },
+    { key: "20", label: <div>20DAY</div> },
+    { key: "28", label: <div>28DAY</div> },
+    { key: "56", label: <div>56DAY</div> },
+    { key: "84", label: <div>84DAY</div> },
   ];
+  const menu = <Menu onClick={changeTime} items={items} />;
+
   const getInitData = () => {
     getMyCardInfo().then((res: any) => {
       if (res.code === 200) {
@@ -708,6 +736,21 @@ export default function Rank() {
     getPioneerInfo().then((res: any) => {
       if (res.code === 200) {
         setPioneerInfo(res?.data);
+      }
+    });
+    getLpUserInfo().then((res: any) => {
+      if (res.code === 200) {
+        setLpUserInfo(res?.data);
+      }
+    });
+    getFirstRoundAccountInfo().then((res: any) => {
+      if (res.code === 200) {
+        setFirstRoundAccountInfo(res?.data);
+      }
+    });
+    getSubscriptionAccountInfo().then((res: any) => {
+      if (res.code === 200) {
+        setSubscriptionAccountInfo(res?.data);
       }
     });
   };
@@ -727,6 +770,7 @@ export default function Rank() {
       if (!!res?.status) {
         call();
         setActiveNFTModal(false);
+        getInitData();
         addMessage("激活成功");
       } else {
         addMessage("激活失败");
@@ -752,12 +796,45 @@ export default function Rank() {
       showLoding(false);
       if (!!res?.status) {
         call();
-        setActiveNFTModal(false);
+        setPledgeLPModal(false);
         addMessage("质押LP成功");
       } else {
         addMessage("质押LP失败");
       }
     });
+  };
+
+  const unStakeLPFun = async (value: number) => {
+    // if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.isHoldNft)
+    //   return addMessage("未满足认购条件");
+    if (Number(value) <= 0) return;
+    if (!state.token) return;
+
+    let res: any;
+    try {
+      showLoding(true);
+      let item: any = await redemptionLp({});
+      if (item?.code === 200 && item?.data) {
+        console.log(item?.data, "1212");
+        res = await Contracts.example?.unStake(account as string, item?.data);
+      }
+    } catch (error: any) {
+      showLoding(false);
+      return addMessage("赎回失败");
+    }
+
+    showLoding(false);
+    if (!!res?.status) {
+      Navigate("/View/Node");
+      addMessage("赎回成功");
+    } else {
+      addMessage("赎回失败");
+    }
+  };
+
+  const InputValueFun = async (e: any) => {
+    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
+    setInputValueAmount(value);
   };
 
   useEffect(() => {
@@ -789,7 +866,7 @@ export default function Rank() {
               <ModalContainer_Title_Container_Box>
                 <ModalContainer_Title_Container_Box_Left>
                   <ModalContainer_Title_Container>
-                    <img src={logo} />
+                    <img src={NFTIcon} />
                     <ModalContainer_Title>My NFT </ModalContainer_Title>
                   </ModalContainer_Title_Container>
                   <ModalContainer_SubTitle>
@@ -804,13 +881,21 @@ export default function Rank() {
 
             <Active_NodeInfo_BtnBox>
               <div
-                // onClick={() => {
-                //   setActiveNFTModal(true);
-                // }}
+              // onClick={() => {
+              //   setActiveNFTModal(true);
+              // }}
               >
                 receive
               </div>
-              <div>Record</div>
+              <div
+                onClick={() => {
+                  Navigate("/View/NFTAwardRecord", {
+                    state: { recordType: 1 },
+                  });
+                }}
+              >
+                Record
+              </div>
             </Active_NodeInfo_BtnBox>
             <NodeInfo_Bottom_NFT>
               <NodeInfo_Bottom_Item>
@@ -837,8 +922,14 @@ export default function Rank() {
                 <ModalContainer_Title_Container_Participate>
                   <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
                   <ModalContainer_Title>NFT Pioneer</ModalContainer_Title>
-                  <FinancialRecords>
-                    Financial records <SmallOutLinkIconBox />
+                  <FinancialRecords
+                    onClick={() => {
+                      Navigate("/View/Announcement", {
+                        state: { recordType: 2 },
+                      });
+                    }}
+                  >
+                    小区新增业绩排名 <SmallOutLinkIconBox />
                   </FinancialRecords>
                 </ModalContainer_Title_Container_Participate>
                 <NodeInfo_Bottom_NFT>
@@ -862,7 +953,15 @@ export default function Rank() {
               </NodeInfo_Top_LotteryGame>
               <BtnBox>
                 <div>receive</div>
-                <div>Record</div>
+                <div
+                  onClick={() => {
+                    Navigate("/View/SubscriptionQuotaAwardRecord", {
+                      state: { type: 3 },
+                    });
+                  }}
+                >
+                  Record
+                </div>
               </BtnBox>
             </NodeInfo>
           ) : (
@@ -905,7 +1004,7 @@ export default function Rank() {
                 <HelpIconAuto /> Rule
               </NodeInfo_Top_Rule>
               <ModalContainer_Title_Container>
-                <img src={logo} />
+                <img src={LPPledgeIcon} />
                 <ModalContainer_Title>LP pledge dividends</ModalContainer_Title>
               </ModalContainer_Title_Container>
 
@@ -926,20 +1025,16 @@ export default function Rank() {
             </NodeInfo_Top>
             <NodeInfo_Bottom>
               <NodeInfo_Bottom_Item>
-                Prize pool funds
-                <span>3000 MBK</span>
+                Cumulative dividends
+                <span>{LpUserInfo?.totalDrawAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                My LP quantity
-                <span>3000 LP</span>
+                Dividends to be received
+                <span>{LpUserInfo?.amount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Community subscription performance
-                <span>3000 USDT</span>
-              </NodeInfo_Bottom_Item>
-              <NodeInfo_Bottom_Item>
-                Accumulated NFT equity rewards
-                <span>3000 MBK</span>
+                Looking forward to redeeming LP
+                <span>{LpUserInfo?.maturityRedemptionNum ?? 0} LP</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom>
             <BtnBox>
@@ -950,15 +1045,27 @@ export default function Rank() {
               >
                 Pledge
               </div>
-              <div>Redeem</div>
-              <div>receive</div>
-              <div>Record</div>
+              <div
+                onClick={() => {
+                  unStakeLPFun(LpUserInfo?.maturityRedemptionNum ?? 0);
+                }}
+              >
+                Redeem
+              </div>
+              <div onClick={() => {}}>receive</div>
+              <div
+                onClick={() => {
+                  Navigate("/View/LPPledgeAwardRecord");
+                }}
+              >
+                Record
+              </div>
             </BtnBox>
           </NodeInfo>
           <NodeInfo>
             <NodeInfo_Top_NFT_Pioneer>
               <ModalContainer_Title_Container>
-                <img src={logo} />
+                <img src={SubscriptionRewardsIcon} />
                 <ModalContainer_Title>
                   Subscription Rewards
                 </ModalContainer_Title>
@@ -968,50 +1075,84 @@ export default function Rank() {
               Initial subscription rewards
               <NodeInfo_Bottom_Item>
                 Rewards to be Unlocked
-                <span>3000 MBK</span>
+                <span>{SubscriptionAccountInfo?.freezeAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Unlocking Rewards
-                <span>3000 MBK</span>
+                <span>
+                  {Number(SubscriptionAccountInfo?.totalAmount ?? 0) -
+                    Number(SubscriptionAccountInfo?.freezeAmount ?? 0) ??
+                    0}{" "}
+                  MBK
+                </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Unlocked To be Collected
-                <span>3000 MBK</span>
+                <span>{SubscriptionAccountInfo?.amount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_Subscription_Rewards>
             <BtnBox>
-              <div>Staking</div>
+              <div
+                onClick={() => {
+                  Navigate("/View/Pledge");
+                }}
+              >
+                Staking
+              </div>
               <div>extract</div>
-              <div>Record</div>
+              <div
+                onClick={() => {
+                  Navigate("/View/InitialSubscriptionRewards", {
+                    state: { recordType: 1 },
+                  });
+                }}
+              >
+                Record
+              </div>
             </BtnBox>
             <NodeInfo_Bottom_Subscription_Rewards1>
               Initial subscription rewards
               <NodeInfo_Bottom_Item>
                 Rewards to be Unlocked
-                <span>3000 MBK</span>
+                <span>{FirstRoundAccountInfo?.unLockNum ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Unlock Deadline
-                <span>2023-12-23 12:23</span>
+                <span>
+                  {dateFormat(
+                    "YYYY-mm-dd HH:MM:SS",
+                    new Date(FirstRoundAccountInfo?.unlockEndTime)
+                  )}
+                </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Add new robot performance
-                <span>3000 MBK</span>
+                <span>
+                  {FirstRoundAccountInfo?.communityAddPerformance ?? 0} MBK
+                </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Expiration unlock quantity
-                <span>3000 MBK</span>
+                <span>{FirstRoundAccountInfo?.maturityUnlockNum ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_Subscription_Rewards1>
             <To_Be_Collected>
               To Be Collected(MBK)
               <div>
-                3000 <span>MBK</span>
+                {FirstRoundAccountInfo?.amount ?? 0} <span>MBK</span>
               </div>
             </To_Be_Collected>
             <BtnBox>
               <div>extract Unlocked</div>
-              <div>Record</div>
+              <div
+                onClick={() => {
+                  Navigate("/View/InitialSubscriptionRewards", {
+                    state: { recordType: 2 },
+                  });
+                }}
+              >
+                Record
+              </div>
             </BtnBox>
           </NodeInfo>
         </>
@@ -1023,7 +1164,7 @@ export default function Rank() {
             <ModalContainer_Title_Container_Box>
               <ModalContainer_Title_Container_Box_Left>
                 <ModalContainer_Title_Container>
-                  <img src={logo} />
+                  <img src={NFTIcon} />
                   <ModalContainer_Title>My NFT </ModalContainer_Title>
                 </ModalContainer_Title_Container>
                 <ModalContainer_SubTitle>
@@ -1044,7 +1185,13 @@ export default function Rank() {
             >
               Active
             </div>
-            <div>Record</div>
+            <div
+              onClick={() => {
+                Navigate("/View/NFTAwardRecord");
+              }}
+            >
+              Record
+            </div>
           </Active_NodeInfo_BtnBox>
           <NodeInfo_Bottom_NFT>
             <NodeInfo_Bottom_Item>
@@ -1071,7 +1218,7 @@ export default function Rank() {
         <NodeInfo>
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
-              <img src={logo} />
+              <img src={NFTIcon} />
               <ModalContainer_Title>My NFT </ModalContainer_Title>
             </ModalContainer_Title_Container>
             <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
@@ -1104,287 +1251,6 @@ export default function Rank() {
         </NodeInfo>
       );
     }
-
-    // if (!isLockNft)
-    //   return (
-    //     <NodeInfo>
-    //       <Active_NodeInfo_Top>
-    //         <ModalContainer_Title_Container_Box>
-    //           <ModalContainer_Title_Container_Box_Left>
-    //             <ModalContainer_Title_Container>
-    //               <img src={logo} />
-    //               <ModalContainer_Title>My NFT </ModalContainer_Title>
-    //             </ModalContainer_Title_Container>
-    //             <ModalContainer_SubTitle>
-    //               You have purchased a node and are waiting to be activated
-    //             </ModalContainer_SubTitle>
-    //           </ModalContainer_Title_Container_Box_Left>
-    //           <NFTContainer>
-    //             <img src={NFTImg} alt="" />
-    //           </NFTContainer>
-    //         </ModalContainer_Title_Container_Box>
-    //       </Active_NodeInfo_Top>
-
-    //       <Active_NodeInfo_BtnBox>
-    //         <div
-    //           onClick={() => {
-    //             setActiveNFTModal(true);
-    //           }}
-    //         >
-    //           Active
-    //         </div>
-    //         <div>Record</div>
-    //       </Active_NodeInfo_BtnBox>
-    //       <NodeInfo_Bottom_NFT>
-    //         <NodeInfo_Bottom_Item>
-    //           Prize pool funds
-    //           <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           My LP quantity
-    //           <span>{MyCardInfo?.myLpNum ?? 0} LP</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Community subscription performance
-    //           <span>{MyCardInfo?.communityPerformance ?? 0} USDT</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Accumulated NFT equity rewards
-    //           <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //       </NodeInfo_Bottom_NFT>
-    //     </NodeInfo>
-    //   );
-
-    // return (
-    //   <>
-    //     {" "}
-    //     <NodeInfo>
-    //       <Active_NodeInfo_Top>
-    //         <ModalContainer_Title_Container_Box>
-    //           <ModalContainer_Title_Container_Box_Left>
-    //             <ModalContainer_Title_Container>
-    //               <img src={logo} />
-    //               <ModalContainer_Title>My NFT </ModalContainer_Title>
-    //             </ModalContainer_Title_Container>
-    //             <ModalContainer_SubTitle>
-    //               You have purchased a node and are waiting to be activated
-    //             </ModalContainer_SubTitle>
-    //           </ModalContainer_Title_Container_Box_Left>
-    //           <NFTContainer>
-    //             <img src={NFTImg} alt="" />
-    //           </NFTContainer>
-    //         </ModalContainer_Title_Container_Box>
-    //       </Active_NodeInfo_Top>
-
-    //       <Active_NodeInfo_BtnBox>
-    //         <div
-    //           onClick={() => {
-    //             setActiveNFTModal(true);
-    //           }}
-    //         >
-    //           Active
-    //         </div>
-    //         <div>Record</div>
-    //       </Active_NodeInfo_BtnBox>
-    //       <NodeInfo_Bottom_NFT>
-    //         <NodeInfo_Bottom_Item>
-    //           Prize pool funds
-    //           <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           My LP quantity
-    //           <span>{MyCardInfo?.myLpNum ?? 0} LP</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Community subscription performance
-    //           <span>{MyCardInfo?.communityPerformance ?? 0} USDT</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Accumulated NFT equity rewards
-    //           <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //       </NodeInfo_Bottom_NFT>
-    //     </NodeInfo>
-    //     {!!PioneerInfo?.isHoldNft && !!PioneerInfo?.isSatisfyNftCommunity ? (
-    //       <NodeInfo>
-    //         <NodeInfo_Top_LotteryGame>
-    //           <ModalContainer_Title_Container_Participate>
-    //             <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
-    //             <ModalContainer_Title>NFT Pioneer</ModalContainer_Title>
-    //             <FinancialRecords>
-    //               Financial records <SmallOutLinkIconBox />
-    //             </FinancialRecords>
-    //           </ModalContainer_Title_Container_Participate>
-    //           <NodeInfo_Bottom_NFT>
-    //             <NodeInfo_Bottom_Item>
-    //               New subscription results
-    //               <span>{PioneerInfo?.thisMonthAddPerformance ?? 0} USDT</span>
-    //             </NodeInfo_Bottom_Item>
-    //             <NodeInfo_Bottom_Item>
-    //               Community performance
-    //               <span>{PioneerInfo?.totalAmount ?? 0} MBK</span>
-    //             </NodeInfo_Bottom_Item>
-    //           </NodeInfo_Bottom_NFT>
-    //           <To_Be_Collected>
-    //             Released and pending for claim
-    //             <div>
-    //               {PioneerInfo?.amount ?? 0} <span>MBK</span>
-    //             </div>
-    //           </To_Be_Collected>
-    //         </NodeInfo_Top_LotteryGame>
-    //         <BtnBox>
-    //           <div>receive</div>
-    //           <div>Record</div>
-    //         </BtnBox>
-    //       </NodeInfo>
-    //     ) : (
-    //       <NodeInfo>
-    //         <NodeInfo_Top_LotteryGame>
-    //           <ModalContainer_Title_Container>
-    //             <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
-    //             <ModalContainer_Title>NFT Pioneer</ModalContainer_Title>
-    //           </ModalContainer_Title_Container>
-    //           <NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame>
-    //             Upgrade conditions not met
-    //           </NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame>
-    //           <NodeInfo_Mid_Conditions>
-    //             Conditions for becoming an NFT pioneer
-    //             <div>
-    //               <img
-    //                 src={!!PioneerInfo?.isHoldNft ? yesIcon : errorIcon}
-    //                 alt=""
-    //               />
-    //               Hold NFT yourself
-    //             </div>
-    //             <div>
-    //               <img
-    //                 src={
-    //                   !!PioneerInfo?.isSatisfyNftCommunity ? yesIcon : errorIcon
-    //                 }
-    //                 alt=""
-    //               />
-    //               The community subscribed for more than 30 NFTs
-    //             </div>
-    //           </NodeInfo_Mid_Conditions>
-    //         </NodeInfo_Top_LotteryGame>
-    //       </NodeInfo>
-    //     )}
-    //     <NodeInfo>
-    //       <NodeInfo_Top>
-    //         <NodeInfo_Top_Rule>
-    //           <HelpIconAuto /> Rule
-    //         </NodeInfo_Top_Rule>
-    //         <ModalContainer_Title_Container>
-    //           <img src={logo} />
-    //           <ModalContainer_Title>LP pledge dividends</ModalContainer_Title>
-    //         </ModalContainer_Title_Container>
-
-    //         <Purchase_Lottery_Entry>
-    //           Purchase lottery entry
-    //           <Purchase_Lottery_Entry_Content>
-    //             <Purchase_Lottery_Entry_Item>
-    //               28Days 10000LP
-    //             </Purchase_Lottery_Entry_Item>
-    //             <Purchase_Lottery_Entry_Item>
-    //               56Days 10000LP
-    //             </Purchase_Lottery_Entry_Item>
-    //             <Purchase_Lottery_Entry_Item>
-    //               84Days 10000LP
-    //             </Purchase_Lottery_Entry_Item>
-    //           </Purchase_Lottery_Entry_Content>
-    //         </Purchase_Lottery_Entry>
-    //       </NodeInfo_Top>
-    //       <NodeInfo_Bottom>
-    //         <NodeInfo_Bottom_Item>
-    //           Prize pool funds
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           My LP quantity
-    //           <span>3000 LP</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Community subscription performance
-    //           <span>3000 USDT</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Accumulated NFT equity rewards
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //       </NodeInfo_Bottom>
-    //       <BtnBox>
-    //         <div
-    //           onClick={() => {
-    //             setPledgeLPModal(true);
-    //           }}
-    //         >
-    //           Pledge
-    //         </div>
-    //         <div>Redeem</div>
-    //         <div>receive</div>
-    //         <div>Record</div>
-    //       </BtnBox>
-    //     </NodeInfo>
-    //     <NodeInfo>
-    //       <NodeInfo_Top_NFT_Pioneer>
-    //         <ModalContainer_Title_Container>
-    //           <img src={logo} />
-    //           <ModalContainer_Title>Subscription Rewards</ModalContainer_Title>
-    //         </ModalContainer_Title_Container>
-    //       </NodeInfo_Top_NFT_Pioneer>
-    //       <NodeInfo_Bottom_Subscription_Rewards>
-    //         Initial subscription rewards
-    //         <NodeInfo_Bottom_Item>
-    //           Rewards to be Unlocked
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Unlocking Rewards
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Unlocked To be Collected
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //       </NodeInfo_Bottom_Subscription_Rewards>
-    //       <BtnBox>
-    //         <div>Staking</div>
-    //         <div>extract</div>
-    //         <div>Record</div>
-    //       </BtnBox>
-    //       <NodeInfo_Bottom_Subscription_Rewards1>
-    //         Initial subscription rewards
-    //         <NodeInfo_Bottom_Item>
-    //           Rewards to be Unlocked
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Unlock Deadline
-    //           <span>2023-12-23 12:23</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Add new robot performance
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //         <NodeInfo_Bottom_Item>
-    //           Expiration unlock quantity
-    //           <span>3000 MBK</span>
-    //         </NodeInfo_Bottom_Item>
-    //       </NodeInfo_Bottom_Subscription_Rewards1>
-    //       <To_Be_Collected>
-    //         To Be Collected(MBK)
-    //         <div>
-    //           3000 <span>MBK</span>
-    //         </div>
-    //       </To_Be_Collected>
-    //       <BtnBox>
-    //         <div>extract Unlocked</div>
-    //         <div>Record</div>
-    //       </BtnBox>
-    //     </NodeInfo>
-    //   </>
-    // );
   };
 
   return (
@@ -1411,19 +1277,19 @@ export default function Rank() {
               src={closeIcon}
               alt=""
               onClick={() => {
-                setActivationModal(false);
+                setPledgeLPModal(false);
               }}
             />
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
+            <img src={PledgeLPIcon} alt="" />
             <ModalContainer_Title>{t("Pledge LP")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
             <InputBox_Item_First>
               Pledge cycle
               <Dropdown
-                menu={{ items }}
+                overlay={menu}
                 placement="bottom"
                 onVisibleChange={(open: boolean) => {
                   setIsDropDownShow(open);
@@ -1432,7 +1298,7 @@ export default function Rank() {
               >
                 <InputBox>
                   <div>
-                    <input type="" value={"20DAY"} readOnly={true} />
+                    <input type="" value={Days + "DAY"} readOnly={true} />
                   </div>{" "}
                   <div>
                     <DropDownIcon
@@ -1446,17 +1312,28 @@ export default function Rank() {
               Pledge quantity
               <InputBox>
                 <div>
-                  <input type="" /> MBK_USDT_LP
+                  <input
+                    type=""
+                    value={InputValueAmount}
+                    onChange={InputValueFun}
+                  />{" "}
+                  MBK_USDT_LP
                 </div>{" "}
-                <div>MAX</div>
+                <div
+                  onClick={() => {
+                    setInputValueAmount(MBK_USDT_TOKENBalance);
+                  }}
+                >
+                  MAX
+                </div>
               </InputBox>
             </InputBox_Item_Last>
             <BalanceBox>
-              wallet balance: <span>100,000.00</span>MBK
+              wallet balance: <span>{MBK_USDT_TOKENBalance ?? 0}</span>MBK
             </BalanceBox>
             <UpBtn
               onClick={() => {
-                stakeLPFun("1", 28);
+                stakeLPFun(String(InputValueAmount), Number(Days));
               }}
             >
               Sure
@@ -1490,7 +1367,7 @@ export default function Rank() {
             />
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
+            <StakingMiningIcon />
             <ModalContainer_Title>{t("Staking Mining")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
@@ -1564,7 +1441,7 @@ export default function Rank() {
             />
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
+            <img src={NFTIcon} alt="" />
             <ModalContainer_Title>{t("NFT Activation")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
