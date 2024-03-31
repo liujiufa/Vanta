@@ -800,6 +800,25 @@ export default function Rank() {
     });
   };
 
+  // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
+  // * 3-质押奖励账户 4-质押赎回账户 5-质押管理奖励账户 6质押业绩账户
+  // * 7NFT-分红账户 8NFT-先峰账户 9NFT-认购奖励 10NFT-首轮在认购奖励 11LP分红账户
+  // * 12-社区奖励账户
+  // * 13-游戏账户
+  // * 14-零撸账户
+  // * 15-节点奖励账户
+  // * 16-保险池赔付账户
+  const getRewardFun = (value: any, type: any) => {
+    if (Number(value) <= 0) return addMessage("无法领取");
+    getReward(
+      type,
+      () => {
+        getInitData();
+      },
+      "awardPoolContract"
+    );
+  };
+
   useEffect(() => {
     if (state.token) {
       getInitData();
@@ -870,7 +889,13 @@ export default function Rank() {
           </NodeInfo_Top_Management_Reward>
 
           <Receive_Record_Container>
-            <div>Receive</div>
+            <div
+              onClick={() => {
+                getRewardFun(PledgeUserInfo?.amount ?? 0, 3);
+              }}
+            >
+              Receive
+            </div>
             <div
               onClick={() => {
                 Navigate("/View/PledgeEarningsRecord", {
@@ -911,7 +936,13 @@ export default function Rank() {
             </InputContainer>
           </NodeInfo_Top_Management_Info_Bottom>
 
-          <GetRewardBtn>redemption</GetRewardBtn>
+          <GetRewardBtn
+            onClick={() => {
+              getRewardFun(TRedemptionAccountInfo?.freezeAmount ?? 0, 4);
+            }}
+          >
+            redemption
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
 
@@ -1054,7 +1085,13 @@ export default function Rank() {
               {PledgeManageAward?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
-          <GetRewardBtn>receive</GetRewardBtn>
+          <GetRewardBtn
+            onClick={() => {
+              getRewardFun(PledgeManageAward?.amount ?? 0, 5);
+            }}
+          >
+            receive
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
 
@@ -1094,7 +1131,13 @@ export default function Rank() {
               {PledgePerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
-          <GetRewardBtn>receive</GetRewardBtn>
+          <GetRewardBtn
+            onClick={() => {
+              getRewardFun(PledgePerformanceAwardInfo?.amount ?? 0, 6);
+            }}
+          >
+            receive
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
       {/*recordType 1:认购机器人明星排名 2:质押明星排名*/}

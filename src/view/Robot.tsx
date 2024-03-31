@@ -716,7 +716,14 @@ export default function Rank() {
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
   const getRewardFun = (value: any, type: any) => {
-    getReward(type, () => {}, "RewardDistribute");
+    if (Number(value) <= 0) return addMessage("无法领取");
+    getReward(
+      type,
+      () => {
+        getInitData();
+      },
+      "awardPoolContract"
+    );
   };
 
   useEffect(() => {
@@ -957,7 +964,13 @@ export default function Rank() {
               {RobotPerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
           </NodeInfo_Top_Management_Reward>
-          <GetRewardBtn>receive</GetRewardBtn>
+          <GetRewardBtn
+            onClick={() => {
+              getRewardFun(RobotPerformanceAwardInfo?.amount ?? 0, 2);
+            }}
+          >
+            receive
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
       {/*recordType 1:认购机器人明星排名 2:质押明星排名*/}

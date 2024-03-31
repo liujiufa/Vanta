@@ -600,7 +600,7 @@ export default function Rank() {
                     <div>${item?.price}</div>
                   </HotQuotes_Content_Item_Right_Top>
                   <HotQuotes_Content_Item_Right_Buttom add={true}>
-                    {item?.apiSymbol}
+                    {item?.apiSymbol ?? "-"}
                     <div>{item?.changeRate}%</div>
                   </HotQuotes_Content_Item_Right_Buttom>
                 </HotQuotes_Content_Item_Right>

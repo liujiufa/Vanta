@@ -642,7 +642,7 @@ const MainLayout: React.FC = () => {
       String(name) === "/" ||
       String(name) === "PLEDGE" ||
       String(name) === "NFT" ||
-      String(name) === "Chat"
+      String(name) === "CHAT"
     ) {
       return (
         <LogoContainer
@@ -672,13 +672,11 @@ const MainLayout: React.FC = () => {
       );
     }
   };
-
-  useEffect(() => {
-    console.log(web3React?.account, String(initalToken) === null, "wo");
-    if (!web3React?.account) {
-      return setSelectWallet(true);
+  const allModalFun = async () => {
+    if (initalToken) {
+      return setSelectWallet(false);
     } else if (!!token) {
-      Contracts.example
+      return await Contracts.example
         .isBind(web3React?.account as string, "Referrer")
         .then((res: any) => {
           if (res) {
@@ -687,8 +685,15 @@ const MainLayout: React.FC = () => {
             setBindModal(true);
           }
         });
+    } else {
+      setSelectWallet(true);
     }
-  }, [web3React?.account, SelectWallet, token, BindModal]);
+  };
+
+  useEffect(() => {
+    console.log(web3React?.account, initalToken, "wo");
+    allModalFun();
+  }, [web3React?.account, SelectWallet, token, initalToken, BindModal]);
 
   useEffect(() => {
     console.log(pathname, location.pathname, "pathname");

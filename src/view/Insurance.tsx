@@ -329,6 +329,25 @@ export default function Rank() {
     });
   };
 
+  // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
+  // * 3-质押奖励账户 4-质押赎回账户 5-质押管理奖励账户 6质押业绩账户
+  // * 7NFT-分红账户 8NFT-先峰账户 9NFT-认购奖励 10NFT-首轮在认购奖励 11LP分红账户
+  // * 12-社区奖励账户
+  // * 13-游戏账户
+  // * 14-零撸账户
+  // * 15-节点奖励账户
+  // * 16-保险池赔付账户
+  const getRewardFun = (value: any, type: any) => {
+    if (Number(value) <= 0) return addMessage("无法领取");
+    getReward(
+      type,
+      () => {
+        getInitData();
+      },
+      "awardPoolContract"
+    );
+  };
+
   useEffect(() => {
     if (state.token) {
       getInitData();
@@ -396,10 +415,16 @@ export default function Rank() {
               <NodeInfo_Bottom_Box_Tip>
                 <div> Compensated and pending</div>{" "}
                 <div>
-                  {InsureStatus?.waitReceiveAmount} <span>mbk</span>
+                  {InsureStatus?.waitReceiveAmount ?? 0} <span>mbk</span>
                 </div>
               </NodeInfo_Bottom_Box_Tip>
-              <ReceiveBtn>receive</ReceiveBtn>
+              <ReceiveBtn
+                onClick={() => {
+                  getRewardFun(InsureStatus?.waitReceiveAmount ?? 0, 16);
+                }}
+              >
+                receive
+              </ReceiveBtn>
             </NodeInfo_Bottom_Box>
             <NodeInfo_Bottom_Bottom_Box>
               <Pool_Amount>

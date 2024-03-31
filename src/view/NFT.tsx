@@ -832,6 +832,25 @@ export default function Rank() {
     }
   };
 
+  // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
+  // * 3-质押奖励账户 4-质押赎回账户 5-质押管理奖励账户 6质押业绩账户
+  // * 7NFT-分红账户 8NFT-先峰账户 9NFT-认购奖励 10NFT-首轮在认购奖励 11LP分红账户
+  // * 12-社区奖励账户
+  // * 13-游戏账户
+  // * 14-零撸账户
+  // * 15-节点奖励账户
+  // * 16-保险池赔付账户
+  const getRewardFun = (value: any, type: any) => {
+    if (Number(value) <= 0) return addMessage("无法领取");
+    getReward(
+      type,
+      () => {
+        getInitData();
+      },
+      "awardPoolContract"
+    );
+  };
+
   const InputValueFun = async (e: any) => {
     let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
     setInputValueAmount(value);
@@ -870,7 +889,7 @@ export default function Rank() {
                     <ModalContainer_Title>My NFT </ModalContainer_Title>
                   </ModalContainer_Title_Container>
                   <ModalContainer_SubTitle>
-                    You have purchased a node and are waiting to be activated
+                    To Be Collected(MBK):{MyCardInfo?.amount ?? 0}
                   </ModalContainer_SubTitle>
                 </ModalContainer_Title_Container_Box_Left>
                 <NFTContainer>
@@ -881,9 +900,9 @@ export default function Rank() {
 
             <Active_NodeInfo_BtnBox>
               <div
-              // onClick={() => {
-              //   setActiveNFTModal(true);
-              // }}
+                onClick={() => {
+                  getRewardFun(MyCardInfo?.amount ?? 0, 7);
+                }}
               >
                 receive
               </div>
@@ -952,7 +971,13 @@ export default function Rank() {
                 </To_Be_Collected>
               </NodeInfo_Top_LotteryGame>
               <BtnBox>
-                <div>receive</div>
+                <div
+                  onClick={() => {
+                    getRewardFun(PioneerInfo?.amount ?? 0 ?? 0, 8);
+                  }}
+                >
+                  receive
+                </div>
                 <div
                   onClick={() => {
                     Navigate("/View/SubscriptionQuotaAwardRecord", {
@@ -1052,7 +1077,13 @@ export default function Rank() {
               >
                 Redeem
               </div>
-              <div onClick={() => {}}>receive</div>
+              <div
+                onClick={() => {
+                  getRewardFun(LpUserInfo?.amount ?? 0, 11);
+                }}
+              >
+                receive
+              </div>
               <div
                 onClick={() => {
                   Navigate("/View/LPPledgeAwardRecord");
@@ -1094,7 +1125,13 @@ export default function Rank() {
               >
                 Staking
               </div>
-              <div>extract</div>
+              <div
+                onClick={() => {
+                  getRewardFun(SubscriptionAccountInfo?.amount ?? 0, 9);
+                }}
+              >
+                extract
+              </div>
               <div
                 onClick={() => {
                   Navigate("/View/InitialSubscriptionRewards", {
@@ -1138,7 +1175,13 @@ export default function Rank() {
               </div>
             </To_Be_Collected>
             <BtnBox>
-              <div>extract Unlocked</div>
+              <div
+                onClick={() => {
+                  getRewardFun(FirstRoundAccountInfo?.amount ?? 0, 10);
+                }}
+              >
+                extract Unlocked
+              </div>
               <div
                 onClick={() => {
                   Navigate("/View/InitialSubscriptionRewards", {

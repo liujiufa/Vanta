@@ -3,10 +3,13 @@ import { t } from "i18next";
 import { drawAward, receive } from "../API";
 import { addMessage, showLoding } from "../utils/tool";
 import { Contracts } from "../web3";
+import { useSelector } from "react-redux";
 export const useGetReward = () => {
+  const token = useSelector<any>((state) => state?.token);
   const { account } = useWeb3React();
   function getReward(incomeType: any, callbackFun: any, contractName: string) {
     if (!account) return addMessage(t("Please link wallet"));
+    if (!token) return addMessage(t("请先登录"));
     if (!incomeType) return addMessage(t("failed"));
     drawAward({
       type: incomeType,

@@ -550,6 +550,25 @@ export default function Rank() {
     setInputValueAmount(value);
   };
 
+  // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
+  // * 3-质押奖励账户 4-质押赎回账户 5-质押管理奖励账户 6质押业绩账户
+  // * 7NFT-分红账户 8NFT-先峰账户 9NFT-认购奖励 10NFT-首轮在认购奖励 11LP分红账户
+  // * 12-社区奖励账户
+  // * 13-游戏账户
+  // * 14-零撸账户
+  // * 15-节点奖励账户
+  // * 16-保险池赔付账户
+  const getRewardFun = (value: any, type: any) => {
+    if (Number(value) <= 0) return addMessage("无法领取");
+    getReward(
+      type,
+      () => {
+        getInitData();
+      },
+      "gameContract"
+    );
+  };
+
   useEffect(() => {
     if (token) {
       getInitData();
@@ -650,7 +669,11 @@ export default function Rank() {
               {GameProfit?.waitReceiveAmount ?? 0} <span>mbk</span>
             </div>
           </NodeInfo_Top_LotteryGame_Reward>
-          <GetRewardBtn>reward</GetRewardBtn>
+          <GetRewardBtn 
+            onClick={() => {
+              getRewardFun(GameProfit?.waitReceiveAmount ?? 0,13);
+            }}
+          >reward</GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
       <Goto
