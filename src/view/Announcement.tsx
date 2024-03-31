@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { hitRecord, userInfo } from "../API/index";
+import { getRobotRankRecord, hitRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -333,13 +333,25 @@ export default function Rank() {
   // 2:小区新增业绩排名 1:游戏抽奖开奖结果公示
   const recordType: number = Number((stateObj as any)?.recordType);
   const getInitData = () => {
-    hitRecord({ date: DateString, level: SubTab, myself: false }).then(
-      (res: any) => {
+    if (Number(recordType) === 1) {
+      hitRecord({ date: DateString, level: SubTab, myself: false }).then(
+        (res: any) => {
+          if (res.code === 200) {
+            setRecordList(res?.data);
+          }
+        }
+      );
+    } else {
+      getRobotRankRecord({
+        month: DateString?.getMonth() + 1,
+        type: 7,
+        year: DateString?.getFullYear(),
+      }).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
-      }
-    );
+      });
+    }
   };
 
   useEffect(() => {
@@ -417,7 +429,7 @@ export default function Rank() {
         ) : (
           <NodeRecord_Content>
             <Award_Record_Content>
-              <Award_Record_Content_Tab_Content>
+              {/* <Award_Record_Content_Tab_Content>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 0 ? "activeSubTab" : ""}
                   onClick={() => {
@@ -450,12 +462,12 @@ export default function Rank() {
                 >
                   Third prize
                 </Award_Record_Content_Tab_Item>
-              </Award_Record_Content_Tab_Content>
+              </Award_Record_Content_Tab_Content> */}
               <Award_Record_Content>
                 <Award_Record_Content_Title_Content>
                   <div>address</div>
-                  <div>bonus</div>
-                  <div>Awards</div>
+                  <div>Subscription Robot(USDT)</div>
+                  <div>Ranking</div>
                 </Award_Record_Content_Title_Content>
                 <Award_Record_Content_Record_Content>
                   <Award_Record_Content_Record_Box>

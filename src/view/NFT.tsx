@@ -1079,12 +1079,7 @@ export default function Rank() {
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Unlocking Rewards
-                <span>
-                  {Number(SubscriptionAccountInfo?.totalAmount ?? 0) -
-                    Number(SubscriptionAccountInfo?.freezeAmount ?? 0) ??
-                    0}{" "}
-                  MBK
-                </span>
+                <span>{SubscriptionAccountInfo?.totalAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 Unlocked To be Collected

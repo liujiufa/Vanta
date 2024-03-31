@@ -419,6 +419,7 @@ export default function Rank() {
       { key: 1, name: "To Be Redeemed" },
       { key: 2, name: "Redeemed" },
     ],
+    2: [],
   };
 
   const getInitData = (type: number) => {
@@ -429,7 +430,7 @@ export default function Rank() {
         }
       });
     } else if (Number(ActiveTab) === 2) {
-      getPledgeOrderRecord(2).then((res: any) => {
+      getLpUserAwardRecord(30).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
@@ -447,8 +448,11 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-      getInitData(SubTab);
-      getNFTRewardRecord();
+      if (Number(recordType) === 1) {
+        getInitData(SubTab);
+      } else if (Number(recordType) === 2) {
+        getNFTRewardRecord();
+      }
     }
   }, [state.token, ActiveTab, SubTab]);
 
@@ -577,15 +581,20 @@ export default function Rank() {
                         type={1}
                       >
                         <div>
-                          redemption time<span>2023-12-23 12:23</span>
+                          time
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
                         </div>
                         <div>
                           Redemption Quantity(MBK)
-                          <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
+                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                         </div>
-                        <div>
-                          Corresponding Pledge ID<span>{item?.orderNo}</span>
-                        </div>
+
                         <div>State{StateObj(2)}</div>
                         <div>
                           Transaction hash

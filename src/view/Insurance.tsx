@@ -370,7 +370,7 @@ export default function Rank() {
 
             <Pool_Amount>
               <div>Insurance Pool Amount</div>
-              {InsureStatus?.waitReceiveAmount} MBK
+              {InsureStatus?.poolNum ?? 0} MBK
             </Pool_Amount>
             <NodeInfo_Top_Message>
               {dateFormat(
@@ -403,7 +403,7 @@ export default function Rank() {
             <NodeInfo_Bottom_Bottom_Box>
               <Pool_Amount>
                 <div>Insurance Pool Amount</div>
-                100000 MBK
+                {InsureStatus?.poolNum ?? 0} MBK
               </Pool_Amount>
               <NodeInfo_Top_Message>
                 {dateFormat(

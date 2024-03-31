@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -147,8 +144,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -395,7 +392,7 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    userInfo().then((res: any) => {
       if (res.code === 200) {
         setUserInfo(res?.data);
       }
@@ -404,13 +401,12 @@ export default function Rank() {
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      //getInitData();
     }
   }, [state.token, ActiveTab]);
 
   useEffect(() => {
     if (account) {
-       
     }
   }, [account]);
 
