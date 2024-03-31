@@ -228,7 +228,7 @@ export default function Rank() {
             account as string,
             value,
             0,
-            [contractAddress?.MBK, contractAddress?.USDT],
+            SwapObj[swapType ?? 1],
             Number(new Date().valueOf()) + 1000
           );
       } catch (error: any) {
@@ -286,7 +286,6 @@ export default function Rank() {
       .getAmountsOut(account as string, "1", SwapObj[swapType])
       ?.then((res: any) => {
         console.log(res, "price");
-
         setPrice(decimalNum(EthertoWei(res[1] ?? "0"), 2));
       });
   };
@@ -402,10 +401,10 @@ export default function Rank() {
                   </span>
                 </div>
                 <div>
-                  From (USDT) <span>{item?.formCoin}</span>
+                  From (USDT) <span>{item?.formNum}</span>
                 </div>
                 <div>
-                  To (MBK) <span>{item?.toCoin}</span>
+                  To (MBK) <span>{item?.toNum}</span>
                 </div>
                 <div>
                   MBK price(USDT) <span>{item?.coinPrice}</span>

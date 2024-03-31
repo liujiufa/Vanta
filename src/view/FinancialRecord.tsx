@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { userInfo } from "../API/index";
+import { getGameDrawRecord, getGameRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -8,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -76,6 +82,23 @@ const NodeRecord = styled.div`
 const NodeRecord_Tab = styled(FlexSBCBox)`
   overflow-x: auto;
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+    /**/
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(213, 104, 25, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d56819;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
   > div {
     display: flex;
     justify-content: center;
@@ -203,8 +226,25 @@ const Award_Record_Content = styled.div`
 const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
   width: 100%;
   padding: 10px 15px;
-
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+    /**/
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(213, 104, 25, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d56819;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
   > div {
+    white-space: nowrap;
     font-family: "PingFang SC";
     font-size: 12px;
     font-weight: normal;
@@ -383,7 +423,7 @@ export default function Rank() {
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
+  const [ActiveTab, setActiveTab] = useState<any>(-1);
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -391,19 +431,34 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
+
   const getInitData = () => {
-    userInfo().then((res: any) => {
-      if (res.code === 200) {
-        setUserInfo(res?.data);
-      }
-    });
+    if (Number(ActiveTab) === -1) {
+      getGameRecord(ActiveTab).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (Number(ActiveTab) === 0) {
+      getGameRecord(SubTab).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (Number(ActiveTab) === 1) {
+      getGameDrawRecord().then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    }
   };
 
   useEffect(() => {
     if (state.token) {
-      //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
+  }, [state.token, ActiveTab, SubTab]);
 
   useEffect(() => {
     if (account) {
@@ -423,49 +478,56 @@ export default function Rank() {
       <NodeRecord>
         <NodeRecord_Tab>
           <NodeRecord_Tab_Item
-            className={Number(ActiveTab) === 1 ? "activeTab" : "tab"}
+            className={Number(ActiveTab) === -1 ? "activeTab" : "tab"}
             onClick={() => {
-              setActiveTab(1);
+              setActiveTab(-1);
             }}
           >
             Purchase qualifications
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
-            className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
+            className={Number(ActiveTab) === 0 ? "activeTab" : "tab"}
             onClick={() => {
-              setActiveTab(2);
+              setActiveTab(0);
             }}
           >
             Distribute winning prizes
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
-            className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
+            className={Number(ActiveTab) === 1 ? "activeTab" : "tab"}
             onClick={() => {
-              setActiveTab(3);
+              setActiveTab(1);
             }}
           >
             Receive funds
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
-          {Number(ActiveTab) === 1 && (
+          {Number(ActiveTab) === -1 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
                     >
                       <div>
-                        Collection time<span>2023-12-23 12:23</span>
+                        time
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime ?? 0)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Pledge Quantity(MBK)<span>2000.00</span>
+                        Quantity(MBK)<span>{item?.payAmount ?? 0}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))
@@ -475,7 +537,7 @@ export default function Rank() {
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
           )}
-          {Number(ActiveTab) === 2 && (
+          {Number(ActiveTab) === 0 && (
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
                 <Award_Record_Content_Tab_Item
@@ -510,19 +572,33 @@ export default function Rank() {
                 >
                   Third prize
                 </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 4 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(4);
+                  }}
+                >
+                  Four prize
+                </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>LP weighted</span>
+                        Reward type <span>{item?.businessType}等奖</span>
                       </div>
                       <div>
-                        Time <span>2023-12-23 12:23</span>
+                        Time{" "}
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime ?? 0)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK) <span>2000.00</span>
+                        Quantity Issued (MBK) <span>{item?.amount ?? 0}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -533,7 +609,7 @@ export default function Rank() {
             </Award_Record_Content>
           )}
 
-          {Number(ActiveTab) === 3 && (
+          {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
                 {true ? (
@@ -543,14 +619,22 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Collection time<span>2023-12-23 12:23</span>
+                        Collection time
+                        <span>
+                          {" "}
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM:SS",
+                            new Date(item?.createTime ?? 0)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Pledge Quantity(MBK)<span>2000.00</span>
+                        Quantity(MBK)<span>{item?.amount ?? 0}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))

@@ -784,8 +784,6 @@ export default function Rank() {
           num: value,
         });
         if (item?.code === 200 && item?.data) {
-          console.log(item?.data, "1212");
-
           res = await Contracts.example?.stake(account as string, item?.data);
         }
       } catch (error: any) {

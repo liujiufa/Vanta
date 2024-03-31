@@ -517,7 +517,7 @@ export default function Rank() {
             {" "}
             {dateFormat("HH:MM:SS", new Date(LatestRecord?.createTime))}{" "}
             {AddrHandle(LatestRecord?.userAddress, 6, 6)} pledge value{" "}
-            {LatestRecord?.pledgeNum}MBK
+            {LatestRecord?.pledgeNum} USDT
           </div>
           {/* <div>12:24:46 0x12ds....fdee pledge value 3000USDT</div> */}
         </ActionList>

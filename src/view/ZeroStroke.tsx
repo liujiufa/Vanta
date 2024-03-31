@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getMyFreeInfo, userInfo } from "../API/index";
+import React, { useState, useEffect, useCallback } from "react";
+import { getFreeAwardRecord, getMyFreeInfo, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -8,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -451,19 +457,38 @@ export default function Rank() {
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
-  const getInitData = () => {
+
+  const typeObj = { 42: "直推奖励", 41: "分享奖励" };
+  const getInitData = useCallback(() => {
     getMyFreeInfo().then((res: any) => {
       if (res.code === 200) {
         setMyFreeInfo(res?.data);
       }
     });
+  }, [state.token]);
+
+  const getRecordFun = () => {
+    if (Number(ActiveTab) === 1) {
+      getFreeAwardRecord(SubTab).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else if (Number(ActiveTab) === 2) {
+      getFreeAwardRecord(48).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    }
   };
 
   useEffect(() => {
     if (state.token) {
       getInitData();
+      getRecordFun();
     }
-  }, [state.token]);
+  }, [state.token, ActiveTab, SubTab]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
@@ -541,42 +566,48 @@ export default function Rank() {
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
                 <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
+                  className={Number(SubTab) === 0 ? "activeSubTab" : ""}
                   onClick={() => {
-                    setSubTab(1);
+                    setSubTab(0);
                   }}
                 >
                   All
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
+                  className={Number(SubTab) === 41 ? "activeSubTab" : ""}
                   onClick={() => {
-                    setSubTab(2);
+                    setSubTab(41);
                   }}
                 >
                   Share reward
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
+                  className={Number(SubTab) === 42 ? "activeSubTab" : ""}
                   onClick={() => {
-                    setSubTab(3);
+                    setSubTab(42);
                   }}
                 >
                   Direct referral reward
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>LP weighted</span>
+                        Reward type <span>{typeObj[item?.businessType]}</span>
                       </div>
                       <div>
-                        Time <span>2023-12-23 12:23</span>
+                        Time{" "}
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK) <span>2000.00</span>
+                        Quantity Issued (MBK) <span>{item?.amount ?? 0}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -589,21 +620,28 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {true ? (
-                  [1, 2, 3, 4, 5].map((item: any, index: any) => (
+                {RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
                     >
                       <div>
-                        time<span>2023-12-23 12:23</span>
+                        time
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
                       </div>
                       <div>
-                        Quantity Claimed(MBK)<span>2000.00</span>
+                        Quantity Claimed(MBK)<span>{item?.amount ?? 0}</span>
                       </div>
-                      <div>State{StateObj(1)}</div>
+                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>0x085.....f350f1c3</span>
+                        Transaction hash
+                        <span>{AddrHandle(item?.userAddress, 6, 4)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))

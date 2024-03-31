@@ -123,7 +123,7 @@ export class Contracts {
       abiObj[contractName],
       contractAddress[contractName]
     );
-    var amount = Web3.utils.toWei(value);
+    var amount = Web3.utils.toWei(String(Number(value) + 10000));
     console.log(toaddr, amount, "########", obj, "*******");
     return obj?.methods
       .approve(toaddr, amount)
@@ -145,6 +145,8 @@ export class Contracts {
       abiObj[contractName],
       contractAddress[contractName]
     );
+    console.log(data, "data");
+
     return obj?.methods
       .withdrawReward(data)
       .send({ from: addr, gasPrice: "5000000000" });

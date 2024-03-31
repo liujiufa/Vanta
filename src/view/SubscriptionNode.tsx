@@ -255,8 +255,8 @@ export default function Rank() {
   };
 
   const buyNodeFun = (value: string) => {
-    // if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.isHoldNft)
-    //   return addMessage("未满足认购条件");
+    if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.isHoldNft)
+      return addMessage("未满足认购条件");
     if (Number(value) <= 0) return;
     if (!state.token) return;
 

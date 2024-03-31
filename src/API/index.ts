@@ -376,9 +376,9 @@ export function getInsureStatus() {
     method: "get",
   });
 }
-export function getInsureRank() {
+export function getInsureResult() {
   return axois.request({
-    url: `/insure/rank`,
+    url: `/insure/getInsureResult`,
     method: "get",
   });
 }
@@ -397,6 +397,39 @@ export function getGamePoolInfo() {
 export function hitRecord(data: any) {
   return axois.request({
     url: `/game/hitRecord`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+// 42-零撸动态直推记录
+// //48-零撸账户奖励领取 41-零撸分享记录
+export function getFreeAwardRecord(type: 0 | 48 | 42 | 41) {
+  return axois.request({
+    url: `/free/getFreeAwardRecord/${type}`,
+    method: "get",
+  });
+}
+
+// -1参与记录 0发放中奖所有记录 1-4对应等级
+export function getGameRecord(type: -1 | 0 | 1 | 2 | 3 | 4) {
+  return axois.request({
+    url: `/game/getGameRecord/${type}`,
+    method: "get",
+  });
+}
+
+export function getGameDrawRecord() {
+  return axois.request({
+    url: `/game/getGameDrawRecord`,
+    method: "get",
+  });
+}
+
+export function drawAward(data: any) {
+  return axois.request({
+    url: `/user/drawAward`,
     method: "post",
     data: {
       ...data,

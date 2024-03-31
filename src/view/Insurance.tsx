@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   getInsureRank,
+  getInsureResult,
   getInsureStatus,
   latestRecord,
   userInfo,
@@ -341,7 +342,7 @@ export default function Rank() {
   }, [state.token, diffTime]);
 
   useEffect(() => {
-    getInsureRank().then((res: any) => {
+    getInsureResult().then((res: any) => {
       setInsureRank(res?.data ?? []);
     });
   }, []);
@@ -440,7 +441,7 @@ export default function Rank() {
               <div>{Number(index) + 1}</div>
               <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
               <div>{item?.pledgeAmount ?? 0}</div>
-              <div></div>
+              <div>{item?.multiple ?? 0}</div>
             </DirectPush_Content_Container_Content_Item>
           ))}
         </DirectPush_Content_Container_Content>

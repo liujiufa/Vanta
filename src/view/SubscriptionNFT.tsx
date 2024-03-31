@@ -314,7 +314,7 @@ export default function Rank() {
         <NodeInfo_Top>
           <NodeInfo_Bottom_Item_First>
             Number of subscription rounds
-            <span>第{CardBase?.roundNum ?? "-"}轮</span>
+            <span>Round{CardBase?.roundNum ?? "-"}</span>
           </NodeInfo_Bottom_Item_First>
           <NodeInfo_Bottom_Item_First>
             Subscription quantity

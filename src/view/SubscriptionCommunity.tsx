@@ -527,14 +527,14 @@ export default function Rank() {
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            // if (
-            //   !!CommunitySoldBase?.isSatisfy &&
-            //   !!CommunitySoldBase?.CommunitySoldBase
-            // ) {
-            setActivationModal(true);
-            // } else {
-            //   return addMessage("未达到激活条件");
-            // }
+            if (
+              !!CommunitySoldBase?.isSatisfy &&
+              !!CommunitySoldBase?.CommunitySoldBase
+            ) {
+              setActivationModal(true);
+            } else {
+              return addMessage("未达到激活条件");
+            }
           }}
         >
           Subscription
@@ -582,8 +582,7 @@ export default function Rank() {
                 // BindFun();
                 activationFun(
                   decimalNum(
-                    Number(CommunitySoldBase?.currentPrice) / Number(Price) +
-                      500,
+                    Number(CommunitySoldBase?.currentPrice) / Number(Price),
                     2
                   ) + ""
                 );

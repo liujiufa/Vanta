@@ -8,6 +8,7 @@ import nodeContract from "./ABI/Node.json";
 import communityContract from "./ABI/Community.json";
 import gameContract from "./ABI/Game.json";
 import IPancakeRouter02 from "./ABI/IPancakeRouter02.json";
+import awardPoolContract from "./ABI/RewardDistribute.json";
 
 // 正式
 export const LOCAL_KEY = "MBAS_LANG";
@@ -16,7 +17,7 @@ export const isMain = false;
 // export let baseUrl: string = isMain ? 'http://120.79.67.226:16088/' : 'http://192.168.2.114:16088/';
 export let baseUrl: string = isMain
   ? "http://47.76.173.162:18888/"
-  : "http://192.168.2.183:18888/";
+  : "http://47.76.173.162:18888/";
 // export let baseUrl: string = isMain ? window.location.origin + '/user/' : 'http://120.79.67.226:13777/';
 export let ContractUrl: string = isMain
   ? "https://bscscan.com/address/"
@@ -47,6 +48,7 @@ export const abiObj: abiObjType = {
   communityContract: communityContract,
   gameContract: gameContract,
   IPancakeRouter02: IPancakeRouter02,
+  awardPoolContract: awardPoolContract,
 };
 
 export const Main: contractAddressType = {
@@ -67,6 +69,7 @@ const Test = {
   communityContract: "0x2DA540558f1e1fB972fe14d517Bc332091625FCb",
   gameContract: "0x12de9Df69B3351010BE8B5454FBe0baFC877353a",
   IPancakeRouter02: "0xD99D1c33F9fC3444f8101754aBC46c52416550D1",
+  awardPoolContract: "0x136Bd3d3bcc52eA3B4F7fFA7EB9f0f6a55e82AA4",
 };
 
 export const contractAddress: contractAddressType = isMain ? Main : Test;

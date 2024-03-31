@@ -88,6 +88,23 @@ const NodeRecord = styled.div`
 const NodeRecord_Tab = styled(FlexSBCBox)`
   overflow-x: auto;
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+    /**/
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(213, 104, 25, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d56819;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
   > div {
     display: flex;
     justify-content: center;
@@ -216,6 +233,22 @@ const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
   width: 100%;
   padding: 10px 15px;
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+    /**/
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(213, 104, 25, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d56819;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
   > div {
     white-space: nowrap;
     font-family: "PingFang SC";
@@ -530,7 +563,7 @@ export default function Rank() {
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
                         Pledge ID
-                        <span>{item?.lpBaseId}</span>
+                        <span>{item?.orderNo}</span>
                       </div>
                       <div>
                         Time{" "}

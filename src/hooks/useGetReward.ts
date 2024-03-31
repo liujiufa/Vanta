@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { t } from "i18next";
-import { receive } from "../API";
+import { drawAward, receive } from "../API";
 import { addMessage, showLoding } from "../utils/tool";
 import { Contracts } from "../web3";
 export const useGetReward = () => {
@@ -8,8 +8,8 @@ export const useGetReward = () => {
   function getReward(incomeType: any, callbackFun: any, contractName: string) {
     if (!account) return addMessage(t("Please link wallet"));
     if (!incomeType) return addMessage(t("failed"));
-    receive({
-      incomeType: incomeType,
+    drawAward({
+      type: incomeType,
     }).then(async (res: any) => {
       showLoding(true);
       if (res?.code === 200) {
@@ -20,7 +20,7 @@ export const useGetReward = () => {
             res?.data,
             contractName
           );
-        } catch (error: any){
+        } catch (error: any) {
           showLoding(false);
         }
         showLoding(false);

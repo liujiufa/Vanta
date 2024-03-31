@@ -505,7 +505,7 @@ export default function Rank() {
     if (token) {
       getRecordData();
     }
-  }, [token, SubTab]);
+  }, [token, SubTab, ActiveTab]);
 
   const StateObj = (type: number) => {
     if (type === 1) {

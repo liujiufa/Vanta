@@ -52,6 +52,7 @@ import {
   BgIcon,
   MetaMaskIcon,
   OkxIcon,
+  ReturnIcon,
   TpIcon,
 } from "../assets/image/layoutBox";
 const { Header, Content, Footer, Sider } = Layout;
@@ -428,6 +429,19 @@ const WalletItem = styled(FlexCCBox)`
     margin-bottom: 0px;
   }
 `;
+const ReturnContainer = styled(FlexSBCBox)`
+  font-family: PingFang SC;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: normal;
+  letter-spacing: 0em;
+
+  font-variation-settings: "opsz" auto;
+  color: #ffffff;
+  > svg {
+    margin-right: 10px;
+  }
+`;
 
 const MainLayout: React.FC = () => {
   const web3 = new Web3();
@@ -447,10 +461,6 @@ const MainLayout: React.FC = () => {
   const initalToken = localStorage.getItem(
     (web3React.account as string)?.toLowerCase()
   );
-
-  useEffect(() => {
-    connectWallet && connectWallet();
-  }, [connectWallet]);
 
   let tag = web3.utils.isAddress(window.location.pathname.slice(1));
   if (tag) {
@@ -579,6 +589,10 @@ const MainLayout: React.FC = () => {
                 web3React.account as string
               )
             );
+            localStorage.setItem(
+              (web3React.account as string)?.toLowerCase(),
+              res.data.token
+            );
           } else {
             showLoding(false);
             addMessage(res.msg);
@@ -623,18 +637,58 @@ const MainLayout: React.FC = () => {
     await LoginFun();
   };
 
+  const ReturnBox = (name: any) => {
+    if (
+      String(name) === "/" ||
+      String(name) === "PLEDGE" ||
+      String(name) === "NFT" ||
+      String(name) === "Chat"
+    ) {
+      return (
+        <LogoContainer
+          onClick={() => {
+            Navigate("/View/");
+          }}
+        ></LogoContainer>
+      );
+    } else if (!!name) {
+      return (
+        <ReturnContainer
+          onClick={() => {
+            Navigate(-1);
+          }}
+        >
+          <ReturnIcon />
+          {name}
+        </ReturnContainer>
+      );
+    } else {
+      return (
+        <LogoContainer
+          onClick={() => {
+            Navigate("/View/");
+          }}
+        ></LogoContainer>
+      );
+    }
+  };
+
   useEffect(() => {
-    if (!web3React?.account) return;
-    Contracts.example
-      .isBind(web3React?.account as string, "Referrer")
-      .then((res: any) => {
-        if (res) {
-          setBindModal(false);
-        } else {
-          setBindModal(true);
-        }
-      });
-  }, [web3React?.account, BindModal]);
+    console.log(web3React?.account, String(initalToken) === null, "wo");
+    if (!web3React?.account) {
+      return setSelectWallet(true);
+    } else if (!!token) {
+      Contracts.example
+        .isBind(web3React?.account as string, "Referrer")
+        .then((res: any) => {
+          if (res) {
+            setBindModal(false);
+          } else {
+            setBindModal(true);
+          }
+        });
+    }
+  }, [web3React?.account, SelectWallet, token, BindModal]);
 
   useEffect(() => {
     console.log(pathname, location.pathname, "pathname");
@@ -652,16 +706,31 @@ const MainLayout: React.FC = () => {
     }
   }, [refereeUserAddress]);
 
+  useEffect(() => {
+    if (!!initalToken) {
+      dispatch(
+        createLoginSuccessAction(initalToken, web3React.account as string)
+      );
+    }
+  }, [initalToken]);
+
+  useEffect(() => {
+    connectWallet && connectWallet();
+  }, [connectWallet]);
+
   return (
     <MyLayout>
       {/* <BgBox2></BgBox2> */}
       <HeaderContainer>
         <div className="HeaderNav">
-          <LogoContainer
-            onClick={() => {
-              Navigate("/View/");
-            }}
-          ></LogoContainer>
+          {/* {
+            <LogoContainer
+              onClick={() => {
+                Navigate("/View/");
+              }}
+            ></LogoContainer>
+          } */}
+          {ReturnBox(String(pathname)?.slice(1))}
 
           <SetBox>
             {token ? (

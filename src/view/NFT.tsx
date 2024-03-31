@@ -695,7 +695,7 @@ export default function Rank() {
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
-  const [Days, setDays] = useState<any>(20);
+  const [Days, setDays] = useState<any>(28);
   const [InputValueAmount, setInputValueAmount] = useState<any>("");
   const [ActivationModal, setActivationModal] = useState(false);
   const [ActiveNFTModal, setActiveNFTModal] = useState(false);
@@ -720,7 +720,7 @@ export default function Rank() {
   };
 
   const items = [
-    { key: "20", label: <div>20DAY</div> },
+    // { key: "20", label: <div>20DAY</div> },
     { key: "28", label: <div>28DAY</div> },
     { key: "56", label: <div>56DAY</div> },
     { key: "84", label: <div>84DAY</div> },
@@ -1324,7 +1324,7 @@ export default function Rank() {
               </InputBox>
             </InputBox_Item_Last>
             <BalanceBox>
-              wallet balance: <span>{MBK_USDT_TOKENBalance ?? 0}</span>MBK
+              wallet balance: <span>{MBK_USDT_TOKENBalance ?? 0}</span>MBK_USDT
             </BalanceBox>
             <UpBtn
               onClick={() => {
