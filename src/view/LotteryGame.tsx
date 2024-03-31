@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { joinGame, userInfo } from "../API/index";
+import {
+  getGamePoolInfo,
+  getGameProfit,
+  joinGame,
+  userInfo,
+} from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -480,14 +485,15 @@ export default function Rank() {
   const { account } = useWeb3React();
   const token = useSelector<any>((state) => state.token);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [GameProfit, setGameProfit] = useState<any>({});
+  const [GamePoolInfo, setGamePoolInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const [SubTab, setSubTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [InputValueAmount, setInputValueAmount] = useState<any>("");
   const [ActivationModal, setActivationModal] = useState(false);
   const {
     TOKENBalance,
@@ -497,9 +503,14 @@ export default function Rank() {
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.gameContract, "MBK");
   const getInitData = () => {
-    userInfo().then((res: any) => {
+    getGameProfit().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setGameProfit(res?.data);
+      }
+    });
+    getGamePoolInfo().then((res: any) => {
+      if (res.code === 200) {
+        setGamePoolInfo(res?.data);
       }
     });
   };
@@ -534,11 +545,16 @@ export default function Rank() {
       }
     });
   };
+  const InputValueFun = async (e: any) => {
+    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
+    setInputValueAmount(value);
+  };
 
   useEffect(() => {
-    if (account) {
+    if (token) {
+      getInitData();
     }
-  }, [account]);
+  }, [token]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
@@ -559,15 +575,15 @@ export default function Rank() {
 
           <NodeInfo_Top_Item>
             <div>Amount participated</div>
-            100000 MBK
+            {GameProfit?.useAmount ?? 0} MBK
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>Profit And Loss Amount</div>
-            10000 MBK
+            {GameProfit?.profitAmount ?? 0} MBK
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>Profit and Loss Ratio</div>
-            +20%
+            {GameProfit?.profitRate ?? 0}%
           </NodeInfo_Top_Item>
         </NodeInfo_Top>
       </NodeInfo>
@@ -577,7 +593,11 @@ export default function Rank() {
           <ModalContainer_Title_Container_Participate>
             <img src={ParticipateGameIcon} />
             <ModalContainer_Title>Participate in the game</ModalContainer_Title>
-            <FinancialRecords>
+            <FinancialRecords
+              onClick={() => {
+                Navigate("/View/FinancialRecord");
+              }}
+            >
               Financial records <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
@@ -586,11 +606,16 @@ export default function Rank() {
               Purchase lottery entry
               <InputBox>
                 <div>
-                  <input type="" /> MBK
+                  <input
+                    type=""
+                    value={InputValueAmount}
+                    onChange={InputValueFun}
+                  />{" "}
+                  MBK
                 </div>{" "}
                 <div
                   onClick={() => {
-                    joinInGameFun("100");
+                    joinInGameFun(String(InputValueAmount));
                   }}
                 >
                   Buy now
@@ -599,18 +624,18 @@ export default function Rank() {
               <BalanceBox_InputContainer>
                 wallet balance{" "}
                 <div>
-                  100,000.00 <span>mbk</span>
+                  {TOKENBalance} <span>mbk</span>
                 </div>
               </BalanceBox_InputContainer>
             </InputContainer>
 
             <NodeInfo_Top_Item>
               <div>Today's new jackpot amount</div>
-              120000 MBK
+              {GamePoolInfo?.todayAddPoolAmount ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>total jackpot amount for this round</div>
-              10000 MBK
+              {GamePoolInfo?.todayGamePoolAmount ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Pending Reward</div>
@@ -622,13 +647,19 @@ export default function Rank() {
           <NodeInfo_Top_LotteryGame_Reward>
             Pending Reward
             <div>
-              0 <span>mbk</span>
+              {GameProfit?.waitReceiveAmount ?? 0} <span>mbk</span>
             </div>
           </NodeInfo_Top_LotteryGame_Reward>
           <GetRewardBtn>reward</GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
-      <Goto>Announcement of lottery results &gt;&gt; </Goto>
+      <Goto
+        onClick={() => {
+          Navigate("/View/Announcement", { state: { recordType: 1 } });
+        }}
+      >
+        Announcement of lottery results &gt;&gt;{" "}
+      </Goto>
       <NodeInfo>
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
@@ -638,11 +669,11 @@ export default function Rank() {
           <NodeInfo_Top_ReservePool>
             <NodeInfo_Top_Item>
               <div>Today's reserve pool addition</div>
-              120000 MBK
+              {GamePoolInfo?.todayAddReadyPoolAmount ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>Total reserve pool amount</div>
-              10000 MBK
+              {GamePoolInfo?.readyPoolTotalAmount ?? 0} MBK
             </NodeInfo_Top_Item>
           </NodeInfo_Top_ReservePool>
         </NodeInfo_Top_LotteryGame>

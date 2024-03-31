@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { getInsureStatus, userInfo } from "../API/index";
+import {
+  getInsureRank,
+  getInsureStatus,
+  latestRecord,
+  userInfo,
+} from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -8,7 +13,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -291,8 +302,9 @@ export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
-  const [RecordList, setRecordList] = useState<any>([]);
+  const [InsureRank, setInsureRank] = useState<any>([]);
   const [InsureStatus, setInsureStatus] = useState<any>({});
+  const [LastRecord, setLastRecord] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -309,6 +321,11 @@ export default function Rank() {
         setDiffTime(Number(res?.data?.timestamp));
       }
     });
+    latestRecord({}).then((res: any) => {
+      if (res.code === 200) {
+        setLastRecord(res?.data);
+      }
+    });
   };
 
   useEffect(() => {
@@ -322,6 +339,12 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token, diffTime]);
+
+  useEffect(() => {
+    getInsureRank().then((res: any) => {
+      setInsureRank(res?.data ?? []);
+    });
+  }, []);
 
   return (
     <NodeContainerBox>
@@ -347,10 +370,15 @@ export default function Rank() {
 
             <Pool_Amount>
               <div>Insurance Pool Amount</div>
-              100000 MBK
+              {InsureStatus?.waitReceiveAmount} MBK
             </Pool_Amount>
             <NodeInfo_Top_Message>
-              12:24:46 0x12ds....fdee pledge value 3000USDT
+              {dateFormat(
+                "YYYY-mm-dd HH:MM:SS",
+                new Date(LastRecord?.createTime)
+              )}{" "}
+              {AddrHandle(LastRecord?.userAddress, 6, 4)} pledge value
+              {LastRecord?.pledgeAmount ?? 0}USDT
             </NodeInfo_Top_Message>
           </NodeInfo_Top>
         ) : (
@@ -367,7 +395,7 @@ export default function Rank() {
               <NodeInfo_Bottom_Box_Tip>
                 <div> Compensated and pending</div>{" "}
                 <div>
-                  3,000.00 <span>mbk</span>
+                  {InsureStatus?.waitReceiveAmount} <span>mbk</span>
                 </div>
               </NodeInfo_Bottom_Box_Tip>
               <ReceiveBtn>receive</ReceiveBtn>
@@ -378,7 +406,12 @@ export default function Rank() {
                 100000 MBK
               </Pool_Amount>
               <NodeInfo_Top_Message>
-                12:24:46 0x12ds....fdee pledge value 3000USDT
+                {dateFormat(
+                  "YYYY-mm-dd HH:MM:SS",
+                  new Date(LastRecord?.createTime)
+                )}{" "}
+                {AddrHandle(LastRecord?.userAddress, 6, 4)} pledge value
+                {LastRecord?.pledgeAmount ?? 0}USDT
               </NodeInfo_Top_Message>
             </NodeInfo_Bottom_Bottom_Box>
           </>
@@ -395,31 +428,21 @@ export default function Rank() {
           <div>Number</div>
           <div>Address</div>
           <div>
-            Current <div>pledge</div>{" "}
+            Current <div>pledge（USDT）</div>{" "}
           </div>
           <div>
             Compensation <div>multiple</div>
           </div>
         </DirectPush_Content_Container_Header>
         <DirectPush_Content_Container_Content>
-          <DirectPush_Content_Container_Content_Item>
-            <div>1</div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </DirectPush_Content_Container_Content_Item>
-          <DirectPush_Content_Container_Content_Item>
-            <div>2</div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </DirectPush_Content_Container_Content_Item>
-          <DirectPush_Content_Container_Content_Item>
-            <div>3</div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </DirectPush_Content_Container_Content_Item>
+          {InsureRank?.map((item: any, index: any) => (
+            <DirectPush_Content_Container_Content_Item key={index}>
+              <div>{Number(index) + 1}</div>
+              <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
+              <div>{item?.pledgeAmount ?? 0}</div>
+              <div></div>
+            </DirectPush_Content_Container_Content_Item>
+          ))}
         </DirectPush_Content_Container_Content>
       </DirectPush_Content_Container>
     </NodeContainerBox>

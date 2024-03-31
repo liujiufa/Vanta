@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { userInfo } from "../API/index";
+import { hitRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -320,7 +320,6 @@ export default function Rank() {
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
@@ -329,23 +328,24 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
   const [visible, setVisible] = useState(false);
-  const { DatePickerComponent } = useSelectDate();
+  const { DatePickerComponent, setPrecision, DateString } = useSelectDate();
   const { state: stateObj } = useLocation();
-  // 2:小区新增业绩排名
+  // 2:小区新增业绩排名 1:游戏抽奖开奖结果公示
   const recordType: number = Number((stateObj as any)?.recordType);
   const getInitData = () => {
-    userInfo().then((res: any) => {
-      if (res.code === 200) {
-        setUserInfo(res?.data);
+    hitRecord({ date: DateString, level: SubTab, myself: false }).then(
+      (res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
       }
-    });
+    );
   };
 
   useEffect(() => {
-    if (state.token) {
-      //getInitData();
-    }
-  }, [state.token, ActiveTab]);
+    getInitData();
+    if (Number(recordType) === 1) return setPrecision("day");
+  }, [SubTab, recordType]);
 
   return (
     <NodeContainerBox>
@@ -353,7 +353,68 @@ export default function Rank() {
         <NodeRecord_Date_Select>
           <DatePickerComponent />
         </NodeRecord_Date_Select>
-        {
+        {Number(recordType) === 1 ? (
+          <NodeRecord_Content>
+            <Award_Record_Content>
+              <Award_Record_Content_Tab_Content>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 0 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(0);
+                  }}
+                >
+                  All
+                </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(1);
+                  }}
+                >
+                  First prize
+                </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 2 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(2);
+                  }}
+                >
+                  Second prize
+                </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 3 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(3);
+                  }}
+                >
+                  Third prize
+                </Award_Record_Content_Tab_Item>
+              </Award_Record_Content_Tab_Content>
+              <Award_Record_Content>
+                <Award_Record_Content_Title_Content>
+                  <div>address</div>
+                  <div>bonus</div>
+                  <div>Awards</div>
+                </Award_Record_Content_Title_Content>
+                <Award_Record_Content_Record_Content>
+                  <Award_Record_Content_Record_Box>
+                    {RecordList?.length > 0 ? (
+                      RecordList?.map((item: any, index: any) => (
+                        <Award_Record_Content_Record_Content_Item key={index}>
+                          <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                          <div>{NumSplic(item?.hitAmount, 2)}</div>
+                          <div>{item?.level}等</div>
+                        </Award_Record_Content_Record_Content_Item>
+                      ))
+                    ) : (
+                      <NoData></NoData>
+                    )}
+                  </Award_Record_Content_Record_Box>
+                </Award_Record_Content_Record_Content>
+              </Award_Record_Content>
+            </Award_Record_Content>
+          </NodeRecord_Content>
+        ) : (
           <NodeRecord_Content>
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
@@ -414,7 +475,7 @@ export default function Rank() {
               </Award_Record_Content>
             </Award_Record_Content>
           </NodeRecord_Content>
-        }
+        )}
       </NodeRecord>
     </NodeContainerBox>
   );

@@ -64,6 +64,7 @@ const MyDatePicker = styled(DatePicker)`
 export function useSelectDate() {
   const [visible, setVisible] = useState(false);
   const [DateString, setDateString] = useState<any>(new Date());
+  const [Precision, setPrecision] = useState<any>("month");
   // const [];
   const labelRenderer = useCallback((type, data) => {
     switch (type) {
@@ -96,7 +97,7 @@ export function useSelectDate() {
         onClose={() => setVisible(false)}
         defaultValue={now}
         max={now}
-        precision="month"
+        precision={Precision}
         onConfirm={(val) => {
           Toast.show(val.toDateString());
           setDateString(val);
@@ -108,5 +109,5 @@ export function useSelectDate() {
     </>
   );
 
-  return { DatePickerComponent, DateString, setDateString };
+  return { DatePickerComponent, DateString, setDateString, setPrecision };
 }

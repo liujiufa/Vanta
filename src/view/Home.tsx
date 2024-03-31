@@ -43,7 +43,16 @@ import outLinkIcon from "../assets/image/Home/outLinkIcon.svg";
 
 import helpIcon from "../assets/image/Home/helpIcon.svg";
 import coinIcon from "../assets/image/Home/coinIcon.svg";
-import { menuIcon1, menuIcon2, menuIcon3, menuIcon4, menuIcon5, menuIcon6, menuIcon7, menuIcon8 } from "../assets/image/homeBox";
+import {
+  menuIcon1,
+  menuIcon2,
+  menuIcon3,
+  menuIcon4,
+  menuIcon5,
+  menuIcon6,
+  menuIcon7,
+  menuIcon8,
+} from "../assets/image/homeBox";
 
 const HomeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -515,7 +524,11 @@ export default function Rank() {
       )}
 
       <RewardContainer>
-        <RewardItem>
+        <RewardItem
+          onClick={() => {
+            Navigate("/View/ZeroStroke");
+          }}
+        >
           <RewardItem_Rule>
             <img src={helpIcon} alt="" />
             Rule
@@ -540,7 +553,12 @@ export default function Rank() {
             </RewardItem_Info_Item>
           </RewardItem_Info>
         </RewardItem>
-        <RewardItem>
+
+        <RewardItem
+          onClick={() => {
+            Navigate("/View/LotteryGame");
+          }}
+        >
           <RewardItem_Rule>
             <img src={helpIcon} alt="" />
             Rule

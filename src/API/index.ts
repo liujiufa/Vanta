@@ -376,3 +376,30 @@ export function getInsureStatus() {
     method: "get",
   });
 }
+export function getInsureRank() {
+  return axois.request({
+    url: `/insure/rank`,
+    method: "get",
+  });
+}
+export function getGameProfit() {
+  return axois.request({
+    url: `/game/profit`,
+    method: "get",
+  });
+}
+export function getGamePoolInfo() {
+  return axois.request({
+    url: `/game/poolInfo`,
+    method: "get",
+  });
+}
+export function hitRecord(data: any) {
+  return axois.request({
+    url: `/game/hitRecord`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}

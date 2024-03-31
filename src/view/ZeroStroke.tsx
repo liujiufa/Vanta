@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  
-  userInfo,
-} from "../API/index";
+import { getMyFreeInfo, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -73,7 +70,7 @@ const NodeInfo_Top_Btn = styled(Btn)`
 `;
 
 const NodeInfo_Bottom = styled(FlexCCBox)`
-  padding: 11px;
+  padding: 0px 11px;
   border-top: 1px solid rgba(213, 104, 25, 0.2);
 
   font-family: PingFang SC;
@@ -85,6 +82,15 @@ const NodeInfo_Bottom = styled(FlexCCBox)`
 
   font-variation-settings: "opsz" auto;
   color: #d56819;
+  > div {
+    padding: 11px 0px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    &:first-child {
+      border-right: 1px solid rgba(213, 104, 25, 0.2);
+    }
+  }
 `;
 
 const NodeRecord = styled.div`
@@ -161,8 +167,8 @@ const ModalContainer = styled(FlexBox)`
 
 const ModalContainer_Close = styled(FlexCCBox)`
   position: absolute;
-    z-index: 100;
-top: 10px;
+  z-index: 100;
+  top: 10px;
   right: 10px;
 `;
 
@@ -431,13 +437,12 @@ const NodeInfo_Mid = styled(FlexSBCBox)`
   }
 `;
 
-
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
+  const [MyFreeInfo, setMyFreeInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
   const [SubTab, setSubTab] = useState<any>(1);
   const { width } = useViewport();
@@ -447,24 +452,18 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
   const getInitData = () => {
-    userInfo({}).then((res: any) => {
+    getMyFreeInfo().then((res: any) => {
       if (res.code === 200) {
-        setUserInfo(res?.data);
+        setMyFreeInfo(res?.data);
       }
     });
   };
 
   useEffect(() => {
     if (state.token) {
-       //getInitData();
+      getInitData();
     }
-  }, [state.token, ActiveTab]);
-
-  useEffect(() => {
-    if (account) {
-       
-    }
-  }, [account]);
+  }, [state.token]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
@@ -488,24 +487,34 @@ export default function Rank() {
 
           <NodeInfo_Top_Item>
             <div>Recommended Active Users</div>
-            20 pcs
+            {MyFreeInfo?.validUserCount ?? 0} pcs
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>Sharing Rewards</div>
-            10000 MBK
+            {MyFreeInfo?.shareAmount ?? 0} MBK
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>Direct Referral Rewards</div>
-            10000 MBK
+            {MyFreeInfo?.refereeAmount ?? 0} MBK
           </NodeInfo_Top_Item>
         </NodeInfo_Top>
         <NodeInfo_Mid>
           <div>Released and pending for claim</div>
           <div>
-            0 <span>MBK</span>
+            {MyFreeInfo?.waitReceiveAmount ?? 0} <span>MBK</span>
           </div>
         </NodeInfo_Mid>
-        <NodeInfo_Bottom>Released after activation</NodeInfo_Bottom>
+        <NodeInfo_Bottom>
+          <div
+            onClick={() => {
+              Navigate("/View/Pledge");
+            }}
+          >
+            {" "}
+            activation
+          </div>
+          <div> Claim</div>
+        </NodeInfo_Bottom>
       </NodeInfo>
 
       <NodeRecord>
