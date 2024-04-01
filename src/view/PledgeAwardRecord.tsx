@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPledgeOrderRecord, userInfo } from "../API/index";
+import { getPledgeOrderRecord, getPledgeUserAwardRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -439,7 +439,7 @@ export default function Rank() {
         }
       });
     } else if (Number(ActiveTab) === 2) {
-      getPledgeOrderRecord(2).then((res: any) => {
+      getPledgeUserAwardRecord(50).then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }

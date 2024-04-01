@@ -224,7 +224,7 @@ export function getMyNodeInfo() {
     method: "get",
   });
 }
-export function getPledgeUserAwardRecord(type: 9 | 10) {
+export function getPledgeUserAwardRecord(type: 9 | 10 | 50) {
   return axois.request({
     url: `/pledge/getPledgeUserAwardRecord/${type}`,
     method: "get",
