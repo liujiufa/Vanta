@@ -156,8 +156,25 @@ const Award_Record_Content = styled.div`
 const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
   width: 100%;
   padding: 10px 15px;
-
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+    /**/
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(213, 104, 25, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d56819;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
   > div {
+    white-space: nowrap;
     font-family: "PingFang SC";
     font-size: 12px;
     font-weight: normal;

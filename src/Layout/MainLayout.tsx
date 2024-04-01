@@ -951,15 +951,27 @@ const MainLayout: React.FC = () => {
               <MetaMaskIcon />
               MetaMask
             </WalletItem>
-            <WalletItem>
+            <WalletItem
+              onClick={() => {
+                ConnectWalletFun(1);
+              }}
+            >
               <OkxIcon />
               OKX
             </WalletItem>
-            <WalletItem>
+            <WalletItem
+              onClick={() => {
+                ConnectWalletFun(1);
+              }}
+            >
               <BgIcon />
               Bitget Wallet
             </WalletItem>
-            <WalletItem>
+            <WalletItem
+              onClick={() => {
+                ConnectWalletFun(1);
+              }}
+            >
               <TpIcon />
               TP wallet
             </WalletItem>

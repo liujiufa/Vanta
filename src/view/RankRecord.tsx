@@ -260,7 +260,7 @@ const LotteryContainer_Btn = styled(Btn)`
 `;
 
 export const Award_Record_Content_Title_Content = styled(FlexSBCBox)`
-  padding: 0px 15px;
+  padding: 10px 15px;
   > div {
     flex: 1;
     text-align: center;
