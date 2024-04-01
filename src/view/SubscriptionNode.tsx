@@ -323,7 +323,7 @@ export default function Rank() {
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
             <HelpIcon />
-            rule
+            {t("12")}
           </NodeInfo_Mid_Rule>
           <NodeInfo_Mid_Conditions>
             Subscription conditions

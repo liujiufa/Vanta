@@ -418,14 +418,14 @@ export default function Rank() {
   }, []);
 
   const MenuListArr = [
-    { img: menuIcon1, name: "Subscription", route: "Robot" },
-    { img: menuIcon2, name: "Node", route: "Node" },
-    { img: menuIcon3, name: "Community", route: "Community" },
-    { img: menuIcon4, name: "Invite", route: "Invite" },
-    { img: menuIcon5, name: "Exchange", route: "Exchange" },
+    { img: menuIcon1, name: "4", route: "Robot" },
+    { img: menuIcon2, name: "5", route: "Node" },
+    { img: menuIcon3, name: "6", route: "Community" },
+    { img: menuIcon4, name: "7", route: "Invite" },
+    { img: menuIcon5, name: "8", route: "Exchange" },
     { img: menuIcon6, name: "Swap", route: "Swap" },
-    { img: menuIcon7, name: "Insurance", route: "Insurance" },
-    { img: menuIcon8, name: "More", route: "More" },
+    { img: menuIcon7, name: "9", route: "Insurance" },
+    { img: menuIcon8, name: "10", route: "More" },
   ];
 
   const getInitData = () => {
@@ -507,17 +507,18 @@ export default function Rank() {
             }}
           >
             <img src={item?.img} alt="" />
-            {item?.name}
+            {t(item?.name)}
           </MenuList_Item>
         ))}
       </MenuList>
       {LatestRecord?.createTime && (
         <ActionList>
           <div>
-            {" "}
-            {dateFormat("HH:MM:SS", new Date(LatestRecord?.createTime))}{" "}
-            {AddrHandle(LatestRecord?.userAddress, 6, 6)} pledge value{" "}
-            {LatestRecord?.pledgeNum} USDT
+            {t("21", {
+              time: dateFormat("HH:MM:SS", new Date(LatestRecord?.createTime)),
+              address: AddrHandle(LatestRecord?.userAddress, 6, 6),
+              num: LatestRecord?.pledgeNum,
+            })}
           </div>
           {/* <div>12:24:46 0x12ds....fdee pledge value 3000USDT</div> */}
         </ActionList>
@@ -531,22 +532,19 @@ export default function Rank() {
         >
           <RewardItem_Rule>
             <img src={helpIcon} alt="" />
-            Rule
+            {t("12")}
           </RewardItem_Rule>
-          <RewardItem_Title>Zero Lu MBK</RewardItem_Title>
-          <RewardItem_Subtitle>
-            Register to participate, and you can enjoy rewards even if you
-            haven’t activated it.
-          </RewardItem_Subtitle>
+          <RewardItem_Title>{t("11")} MBK</RewardItem_Title>
+          <RewardItem_Subtitle>{t("13")}</RewardItem_Subtitle>
           <RewardItem_Info>
             <RewardItem_Info_Item>
-              Zero referral rewards
+              {t("14")}
               <RewardItem_Info_Item_Value>
                 {decimalNum(MyFreeInfo?.refereeAmount, 2) ?? 0} <span>MBK</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
-              Zero dynamic rewards
+              {t("15")}
               <RewardItem_Info_Item_Value>
                 {decimalNum(MyFreeInfo?.shareAmount, 2) ?? 0} <span>MBK</span>
               </RewardItem_Info_Item_Value>
@@ -561,23 +559,20 @@ export default function Rank() {
         >
           <RewardItem_Rule>
             <img src={helpIcon} alt="" />
-            Rule
+            {t("12")}
           </RewardItem_Rule>
-          <RewardItem_Title>Lottery game</RewardItem_Title>
-          <RewardItem_Subtitle>
-            Lottery is drawn every day, and the fund pool is accumulated on a
-            rolling basis
-          </RewardItem_Subtitle>
+          <RewardItem_Title>{t("16")}</RewardItem_Title>
+          <RewardItem_Subtitle>{t("17")}</RewardItem_Subtitle>
           <RewardItem_Info>
             <RewardItem_Info_Item>
-              Prize distribution yesterday
+              {t("18")}
               <RewardItem_Info_Item_Value>
                 {decimalNum(MyFreeInfo?.yesterdayLotteryAmount, 2) ?? 0}{" "}
                 <span>MBK</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
-              Prize pool funds
+              {t("19")}
               <RewardItem_Info_Item_Value>
                 {decimalNum(MyFreeInfo?.todayPoolAmount, 2) ?? 0}{" "}
                 <span>MBK</span>
@@ -588,7 +583,7 @@ export default function Rank() {
       </RewardContainer>
 
       <HotQuotes>
-        <HotQuotes_Title>Hot Quotes</HotQuotes_Title>
+        <HotQuotes_Title>{t("20")}</HotQuotes_Title>
         {CoinPriceList?.length > 0 ? (
           <HotQuotes_Content>
             {CoinPriceList?.map((item: any, index: any) => (

@@ -716,7 +716,7 @@ export default function Rank() {
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
   const getRewardFun = (value: any, type: any) => {
-    if (Number(value) <= 0) return addMessage("无法领取");
+    if (Number(value) <= 0) return addMessage(t("27"));
     getReward(
       type,
       () => {
@@ -819,7 +819,7 @@ export default function Rank() {
           <NodeInfo_Top_LotteryGame_Info>
             <InputContainer>
               <NodeInfo_Top_Item>
-                <div>Current price</div>
+                <div>{t("91")}</div>
                 1MBK={Price ?? "--"}USDT
               </NodeInfo_Top_Item>
               <InputBox>
@@ -838,12 +838,12 @@ export default function Rank() {
                     MaxFun(TOKENBalance);
                   }}
                 >
-                  MAX
+                  {t("49")}
                 </div>
               </InputBox>
               <InputContainer_Bottom>
                 <BalanceBox_InputContainer>
-                  wallet balance{" "}
+                  {t("50")}{" "}
                   <div>
                     {TOKENBalance} <span>mbk</span>
                   </div>
@@ -851,7 +851,7 @@ export default function Rank() {
 
                 <NodeInfo_Mid_Rule_Robot>
                   <HelpIcon />
-                  rule
+                  {t("12")}
                 </NodeInfo_Mid_Rule_Robot>
               </InputContainer_Bottom>
             </InputContainer>
@@ -1035,7 +1035,7 @@ export default function Rank() {
               {t("Activation")}
             </UpBtn>
             <BalanceBox>
-              wallet balance: <span>100,000.00</span>MBK
+              {t("50")}: <span>100,000.00</span>MBK
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

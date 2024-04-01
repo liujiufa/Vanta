@@ -474,7 +474,7 @@ const MainLayout: React.FC = () => {
   }
 
   const langArr = [
-    { key: "zh", label: "简体中文" },
+    { key: "zh", label: "中文" },
     // { key: "en", label: "English" },
     // { key: "ja", label: "JA 日本語" },
     // { key: "ko", label: "KO 한국어" },
@@ -739,10 +739,6 @@ const MainLayout: React.FC = () => {
     }
   }, [initalToken]);
 
-  useEffect(() => {
-    connectWallet && connectWallet();
-  }, [connectWallet]);
-
   return (
     <MyLayout>
       {/* <BgBox2></BgBox2> */}
@@ -823,7 +819,7 @@ const MainLayout: React.FC = () => {
               <div className="menuTop">
                 <img src={iconActive("/")} alt="" />
               </div>
-              {t("HOME")}
+              {t("1")}
             </div>
           </div>
           <div
@@ -837,7 +833,7 @@ const MainLayout: React.FC = () => {
               <div className="menuTop">
                 <img src={iconActive("/PLEDGE")} alt="" />
               </div>
-              {t("PLEDGE")}
+              {t("2")}
             </div>
           </div>
           <div
@@ -865,7 +861,7 @@ const MainLayout: React.FC = () => {
               <div className="menuTop">
                 <img src={iconActive("/CHAT")} alt="" />
               </div>
-              {t("CHAT")}
+              {t("3")}
             </div>
           </div>
         </div>

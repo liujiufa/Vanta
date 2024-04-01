@@ -721,9 +721,9 @@ export default function Rank() {
 
   const items = [
     // { key: "20", label: <div>20DAY</div> },
-    { key: "28", label: <div>28DAY</div> },
-    { key: "56", label: <div>56DAY</div> },
-    { key: "84", label: <div>84DAY</div> },
+    { key: "28", label: <div>{t("48", { num: 28 })}</div> },
+    { key: "56", label: <div>{t("48", { num: 56 })}</div> },
+    { key: "84", label: <div>{t("48", { num: 84 })}</div> },
   ];
   const menu = <Menu onClick={changeTime} items={items} />;
 
@@ -764,16 +764,16 @@ export default function Rank() {
         res = await Contracts.example?.active(account as string, tokenId);
       } catch (error: any) {
         showLoding(false);
-        return addMessage("激活失败");
+        return addMessage(t("69"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
         setActiveNFTModal(false);
         getInitData();
-        addMessage("激活成功");
+        addMessage(t("70"));
       } else {
-        addMessage("激活失败");
+        addMessage(t("69"));
       }
     });
   };
@@ -791,15 +791,15 @@ export default function Rank() {
         );
       } catch (error: any) {
         showLoding(false);
-        return addMessage("质押LP失败");
+        return addMessage(t("71"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
         setPledgeLPModal(false);
-        addMessage("质押LP成功");
+        addMessage(t("72"));
       } else {
-        addMessage("质押LP失败");
+        addMessage(t("71"));
       }
     });
   };
@@ -820,15 +820,15 @@ export default function Rank() {
       }
     } catch (error: any) {
       showLoding(false);
-      return addMessage("赎回失败");
+      return addMessage(t("73"));
     }
 
     showLoding(false);
     if (!!res?.status) {
       Navigate("/View/Node");
-      addMessage("赎回成功");
+      addMessage(t("74"));
     } else {
-      addMessage("赎回失败");
+      addMessage(t("73"));
     }
   };
 
@@ -841,7 +841,7 @@ export default function Rank() {
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
   const getRewardFun = (value: any, type: any) => {
-    if (Number(value) <= 0) return addMessage("无法领取");
+    if (Number(value) <= 0) return addMessage(t("27"));
     getReward(
       type,
       () => {
@@ -867,14 +867,6 @@ export default function Rank() {
     }
   }, [account]);
 
-  const StateObj = (type: number) => {
-    if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
-    } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>Confirming</span>;
-    }
-  };
-
   const NFTBox = (isHoldNft: boolean, isLockNft: boolean) => {
     if (!!isLockNft) {
       return (
@@ -886,10 +878,10 @@ export default function Rank() {
                 <ModalContainer_Title_Container_Box_Left>
                   <ModalContainer_Title_Container>
                     <img src={NFTIcon} />
-                    <ModalContainer_Title>My NFT </ModalContainer_Title>
+                    <ModalContainer_Title>{t("75")} </ModalContainer_Title>
                   </ModalContainer_Title_Container>
                   <ModalContainer_SubTitle>
-                    To Be Collected(MBK):{MyCardInfo?.amount ?? 0}
+                    {t("102")}:{MyCardInfo?.amount ?? 0}
                   </ModalContainer_SubTitle>
                 </ModalContainer_Title_Container_Box_Left>
                 <NFTContainer>
@@ -904,7 +896,7 @@ export default function Rank() {
                   getRewardFun(MyCardInfo?.amount ?? 0, 7);
                 }}
               >
-                receive
+                {t("103")}
               </div>
               <div
                 onClick={() => {
@@ -913,24 +905,24 @@ export default function Rank() {
                   });
                 }}
               >
-                Record
+                {t("98")}
               </div>
             </Active_NodeInfo_BtnBox>
             <NodeInfo_Bottom_NFT>
               <NodeInfo_Bottom_Item>
-                Prize pool funds
+                {t("78")}
                 <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                My LP quantity
+                {t("79")}
                 <span>{MyCardInfo?.myLpNum ?? 0} LP</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Community subscription performance
+                {t("80")}
                 <span>{MyCardInfo?.communityPerformance ?? 0} USDT</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Accumulated NFT equity rewards
+                {t("81")}
                 <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_NFT>
@@ -940,7 +932,7 @@ export default function Rank() {
               <NodeInfo_Top_LotteryGame>
                 <ModalContainer_Title_Container_Participate>
                   <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
-                  <ModalContainer_Title>NFT Pioneer</ModalContainer_Title>
+                  <ModalContainer_Title>{t("104")}</ModalContainer_Title>
                   <FinancialRecords
                     onClick={() => {
                       Navigate("/View/Announcement", {
@@ -948,23 +940,23 @@ export default function Rank() {
                       });
                     }}
                   >
-                    小区新增业绩排名 <SmallOutLinkIconBox />
+                    {t("131")} <SmallOutLinkIconBox />
                   </FinancialRecords>
                 </ModalContainer_Title_Container_Participate>
                 <NodeInfo_Bottom_NFT>
                   <NodeInfo_Bottom_Item>
-                    New subscription results
+                    {t("132")}
                     <span>
                       {PioneerInfo?.thisMonthAddPerformance ?? 0} USDT
                     </span>
                   </NodeInfo_Bottom_Item>
                   <NodeInfo_Bottom_Item>
-                    Community performance
+                    {t("133")}
                     <span>{PioneerInfo?.totalAmount ?? 0} MBK</span>
                   </NodeInfo_Bottom_Item>
                 </NodeInfo_Bottom_NFT>
                 <To_Be_Collected>
-                  Released and pending for claim
+                  {t("102")}
                   <div>
                     {PioneerInfo?.amount ?? 0} <span>MBK</span>
                   </div>
@@ -976,7 +968,7 @@ export default function Rank() {
                     getRewardFun(PioneerInfo?.amount ?? 0 ?? 0, 8);
                   }}
                 >
-                  receive
+                  {t("103")}
                 </div>
                 <div
                   onClick={() => {
@@ -985,7 +977,7 @@ export default function Rank() {
                     });
                   }}
                 >
-                  Record
+                  {t("98")}
                 </div>
               </BtnBox>
             </NodeInfo>
@@ -994,19 +986,19 @@ export default function Rank() {
               <NodeInfo_Top_LotteryGame>
                 <ModalContainer_Title_Container>
                   <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
-                  <ModalContainer_Title>NFT Pioneer</ModalContainer_Title>
+                  <ModalContainer_Title>{t("104")}</ModalContainer_Title>
                 </ModalContainer_Title_Container>
                 <NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame>
-                  Upgrade conditions not met
+                  {t("105")}
                 </NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame>
                 <NodeInfo_Mid_Conditions>
-                  Conditions for becoming an NFT pioneer
+                  {t("106")}
                   <div>
                     <img
                       src={!!PioneerInfo?.isHoldNft ? yesIcon : errorIcon}
                       alt=""
                     />
-                    Hold NFT yourself
+                    {t("107")}
                   </div>
                   <div>
                     <img
@@ -1017,7 +1009,7 @@ export default function Rank() {
                       }
                       alt=""
                     />
-                    The community subscribed for more than 30 NFTs
+                    {t("108")}
                   </div>
                 </NodeInfo_Mid_Conditions>
               </NodeInfo_Top_LotteryGame>
@@ -1026,39 +1018,39 @@ export default function Rank() {
           <NodeInfo>
             <NodeInfo_Top>
               <NodeInfo_Top_Rule>
-                <HelpIconAuto /> Rule
+                <HelpIconAuto /> {t("12")}
               </NodeInfo_Top_Rule>
               <ModalContainer_Title_Container>
                 <img src={LPPledgeIcon} />
-                <ModalContainer_Title>LP pledge dividends</ModalContainer_Title>
+                <ModalContainer_Title>{t("109")}</ModalContainer_Title>
               </ModalContainer_Title_Container>
 
               <Purchase_Lottery_Entry>
-                Purchase lottery entry
+                {t("110")}
                 <Purchase_Lottery_Entry_Content>
                   <Purchase_Lottery_Entry_Item>
-                    28Days 10000LP
+                    {t("48", { num: 28 })} 10000LP
                   </Purchase_Lottery_Entry_Item>
                   <Purchase_Lottery_Entry_Item>
-                    56Days 10000LP
+                    {t("48", { num: 56 })} 10000LP
                   </Purchase_Lottery_Entry_Item>
                   <Purchase_Lottery_Entry_Item>
-                    84Days 10000LP
+                    {t("48", { num: 84 })} 10000LP
                   </Purchase_Lottery_Entry_Item>
                 </Purchase_Lottery_Entry_Content>
               </Purchase_Lottery_Entry>
             </NodeInfo_Top>
             <NodeInfo_Bottom>
               <NodeInfo_Bottom_Item>
-                Cumulative dividends
+                {t("111")}
                 <span>{LpUserInfo?.totalDrawAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Dividends to be received
+                {t("112")}
                 <span>{LpUserInfo?.amount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Looking forward to redeeming LP
+                {t("113")}
                 <span>{LpUserInfo?.maturityRedemptionNum ?? 0} LP</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom>
@@ -1068,28 +1060,28 @@ export default function Rank() {
                   setPledgeLPModal(true);
                 }}
               >
-                Pledge
+                {t("114")}
               </div>
               <div
                 onClick={() => {
                   unStakeLPFun(LpUserInfo?.maturityRedemptionNum ?? 0);
                 }}
               >
-                Redeem
+                {t("116")}
               </div>
               <div
                 onClick={() => {
                   getRewardFun(LpUserInfo?.amount ?? 0, 11);
                 }}
               >
-                receive
+                {t("117")}
               </div>
               <div
                 onClick={() => {
                   Navigate("/View/LPPledgeAwardRecord");
                 }}
               >
-                Record
+                {t("98")}
               </div>
             </BtnBox>
           </NodeInfo>
@@ -1097,23 +1089,21 @@ export default function Rank() {
             <NodeInfo_Top_NFT_Pioneer>
               <ModalContainer_Title_Container>
                 <img src={SubscriptionRewardsIcon} />
-                <ModalContainer_Title>
-                  Subscription Rewards
-                </ModalContainer_Title>
+                <ModalContainer_Title>{t("118")}</ModalContainer_Title>
               </ModalContainer_Title_Container>
             </NodeInfo_Top_NFT_Pioneer>
             <NodeInfo_Bottom_Subscription_Rewards>
-              Initial subscription rewards
+              {t("119")}
               <NodeInfo_Bottom_Item>
-                Rewards to be Unlocked
+                {t("120")}
                 <span>{SubscriptionAccountInfo?.freezeAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Unlocking Rewards
+                {t("121")}
                 <span>{SubscriptionAccountInfo?.totalAmount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Unlocked To be Collected
+                {t("122")}
                 <span>{SubscriptionAccountInfo?.amount ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_Subscription_Rewards>
@@ -1123,14 +1113,14 @@ export default function Rank() {
                   Navigate("/View/Pledge");
                 }}
               >
-                Staking
+                {t("123")}
               </div>
               <div
                 onClick={() => {
                   getRewardFun(SubscriptionAccountInfo?.amount ?? 0, 9);
                 }}
               >
-                extract
+                {t("124")}
               </div>
               <div
                 onClick={() => {
@@ -1139,17 +1129,17 @@ export default function Rank() {
                   });
                 }}
               >
-                Record
+                {t("98")}
               </div>
             </BtnBox>
             <NodeInfo_Bottom_Subscription_Rewards1>
-              Initial subscription rewards
+              {t("125")}
               <NodeInfo_Bottom_Item>
-                Rewards to be Unlocked
+                {t("126")}
                 <span>{FirstRoundAccountInfo?.unLockNum ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Unlock Deadline
+                {t("127")}
                 <span>
                   {dateFormat(
                     "YYYY-mm-dd HH:MM:SS",
@@ -1158,18 +1148,18 @@ export default function Rank() {
                 </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Add new robot performance
+                {t("128")}
                 <span>
                   {FirstRoundAccountInfo?.communityAddPerformance ?? 0} MBK
                 </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Expiration unlock quantity
+                {t("129")}
                 <span>{FirstRoundAccountInfo?.maturityUnlockNum ?? 0} MBK</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_Subscription_Rewards1>
             <To_Be_Collected>
-              To Be Collected(MBK)
+              {t("102")}
               <div>
                 {FirstRoundAccountInfo?.amount ?? 0} <span>MBK</span>
               </div>
@@ -1180,7 +1170,7 @@ export default function Rank() {
                   getRewardFun(FirstRoundAccountInfo?.amount ?? 0, 10);
                 }}
               >
-                extract Unlocked
+                {t("130")}
               </div>
               <div
                 onClick={() => {
@@ -1189,7 +1179,7 @@ export default function Rank() {
                   });
                 }}
               >
-                Record
+                {t("98")}
               </div>
             </BtnBox>
           </NodeInfo>
@@ -1203,11 +1193,9 @@ export default function Rank() {
               <ModalContainer_Title_Container_Box_Left>
                 <ModalContainer_Title_Container>
                   <img src={NFTIcon} />
-                  <ModalContainer_Title>My NFT </ModalContainer_Title>
+                  <ModalContainer_Title>{t("75")} </ModalContainer_Title>
                 </ModalContainer_Title_Container>
-                <ModalContainer_SubTitle>
-                  You have purchased a node and are waiting to be activated
-                </ModalContainer_SubTitle>
+                <ModalContainer_SubTitle>{t("96")}</ModalContainer_SubTitle>
               </ModalContainer_Title_Container_Box_Left>
               <NFTContainer>
                 <img src={NFTImg} alt="" />
@@ -1221,31 +1209,31 @@ export default function Rank() {
                 setActiveNFTModal(true);
               }}
             >
-              Active
+              {t("97")}
             </div>
             <div
               onClick={() => {
                 Navigate("/View/NFTAwardRecord");
               }}
             >
-              Record
+              {t("98")}
             </div>
           </Active_NodeInfo_BtnBox>
           <NodeInfo_Bottom_NFT>
             <NodeInfo_Bottom_Item>
-              Prize pool funds
+              {t("78")}
               <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
-              My LP quantity
+              {t("79")}
               <span>{MyCardInfo?.myLpNum ?? 0} LP</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
-              Community subscription performance
+              {t("80")}
               <span>{MyCardInfo?.communityPerformance ?? 0} USDT</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
-              Accumulated NFT equity rewards
+              {t("81")}
               <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
             </NodeInfo_Bottom_Item>
           </NodeInfo_Bottom_NFT>
@@ -1257,32 +1245,32 @@ export default function Rank() {
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
               <img src={NFTIcon} />
-              <ModalContainer_Title>My NFT </ModalContainer_Title>
+              <ModalContainer_Title>{t("75")} </ModalContainer_Title>
             </ModalContainer_Title_Container>
-            <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
+            <NodeInfo_Top_Tip>{t("76")}</NodeInfo_Top_Tip>
             <NodeInfo_Top_Btn
               onClick={() => {
                 Navigate("/View/SubscriptionNFT");
               }}
             >
-              Subscription
+              {t("77")}
             </NodeInfo_Top_Btn>
           </NodeInfo_Top>
           <NodeInfo_Bottom>
             <NodeInfo_Bottom_Item>
-              Prize pool funds
+              {t("78")}
               <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
-              My LP quantity
+              {t("79")}
               <span>{MyCardInfo?.myLpNum ?? 0} LP</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
-              Community subscription performance
+              {t("80")}
               <span>{MyCardInfo?.communityPerformance ?? 0} USDT</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
-              Accumulated NFT equity rewards
+              {t("81")}
               <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
             </NodeInfo_Bottom_Item>
           </NodeInfo_Bottom>
@@ -1321,11 +1309,11 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={PledgeLPIcon} alt="" />
-            <ModalContainer_Title>{t("Pledge LP")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("114")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
             <InputBox_Item_First>
-              Pledge cycle
+              {t("140")}
               <Dropdown
                 overlay={menu}
                 placement="bottom"
@@ -1336,7 +1324,11 @@ export default function Rank() {
               >
                 <InputBox>
                   <div>
-                    <input type="" value={Days + "DAY"} readOnly={true} />
+                    <input
+                      type=""
+                      value={t("48", { num: Days })}
+                      readOnly={true}
+                    />
                   </div>{" "}
                   <div>
                     <DropDownIcon
@@ -1347,7 +1339,7 @@ export default function Rank() {
               </Dropdown>
             </InputBox_Item_First>
             <InputBox_Item_Last>
-              Pledge quantity
+              {t("141")}
               <InputBox>
                 <div>
                   <input
@@ -1362,19 +1354,19 @@ export default function Rank() {
                     setInputValueAmount(MBK_USDT_TOKENBalance);
                   }}
                 >
-                  MAX
+                  {t("49")}
                 </div>
               </InputBox>
             </InputBox_Item_Last>
             <BalanceBox>
-              wallet balance: <span>{MBK_USDT_TOKENBalance ?? 0}</span>MBK_USDT
+              {t("50")}: <span>{MBK_USDT_TOKENBalance ?? 0}</span>MBK_USDT
             </BalanceBox>
             <UpBtn
               onClick={() => {
                 stakeLPFun(String(InputValueAmount), Number(Days));
               }}
             >
-              Sure
+              {t("139")}
             </UpBtn>
           </ModalContainer_Content>
         </ModalContainer>
@@ -1406,51 +1398,51 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <StakingMiningIcon />
-            <ModalContainer_Title>{t("Staking Mining")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("134")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
             <Staking_Mining_Container>
               <NodeInfo_Bottom_Item>
-                Available robot quota x4
+                {t("135")}
                 <span>3000 USDT</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Current Price
+                {t("136")}
                 <span>1MBK=30.00USDT</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
-                Pledge Cycle
+                {t("137")}
                 <span>3000 Day</span>
               </NodeInfo_Bottom_Item>
             </Staking_Mining_Container>
 
             <InputBox_Item_Last>
-              Pledge quantity
+              {/* Pledge quantity */}
               <InputBox>
                 <div>
-                  <input type="" /> MBK_USDT_LP
+                  <input type="" /> MBK
                 </div>{" "}
-                <div>MAX</div>
+                <div>{t("49")}</div>
               </InputBox>
             </InputBox_Item_Last>
             <BalanceBox>
-              wallet balance: <span>100,000.00</span>MBK
+              {t("50")}: <span>100,000.00</span>MBK
               <NodeInfo_Top_Rule_Staking_Mining>
-                <HelpIconAuto /> Rule
+                <HelpIconAuto /> {t("12")}
               </NodeInfo_Top_Rule_Staking_Mining>
             </BalanceBox>
           </ModalContainer_Content>
         </Staking_Mining_Modal_ModalContainer>
         <Staking_Mining_Modal_Bottom>
           <Released_For_Claim>
-            Released and pending for claim
+            {t("138")}
             <div>
               3000 <span>USDT</span>
             </div>
           </Released_For_Claim>
         </Staking_Mining_Modal_Bottom>
         <UpBtn_Container>
-          <UpBtn>pledge</UpBtn>
+          <UpBtn>{t("139")}</UpBtn>
         </UpBtn_Container>
       </Staking_Mining_Modal>
 
@@ -1480,20 +1472,20 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={NFTIcon} alt="" />
-            <ModalContainer_Title>{t("NFT Activation")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("99")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
-            Activation requires destroying MBK
+            {t("100")}
             <span>10</span>
             <UpBtn
               onClick={() => {
                 activeFun("10", MyCardInfo?.tokenId);
               }}
             >
-              {t("activation")}
+              {t("97")}
             </UpBtn>
             <BalanceBox>
-              wallet balance: <span>{decimalNum(TOKENBalance, 2)}</span>MBK
+              {t("50")}: <span>{decimalNum(TOKENBalance, 2)}</span>MBK
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

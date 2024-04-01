@@ -58,6 +58,10 @@ function App() {
     });
   }, [web3React.account]);
 
+  useEffect(() => {
+    connectWallet && connectWallet();
+  }, [connectWallet]);
+
   return (
     <ViewportProvider>
       <div className="App">

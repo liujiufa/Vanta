@@ -299,45 +299,56 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={NFTIcon} />
-            <ModalContainer_Title>Subscription NFT</ModalContainer_Title>
+            <ModalContainer_Title>{t("83")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
-            NFT Total Amount
-            <span>8000 PCS</span>
+            {t("84")}
+            <span>{t("86", { num: 8000 })}</span>
+            {/* <span>8000 PCS</span> */}
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
-            The remaining amount
-            <span>{8000 - Number(NFTPrice?.supply ?? 0)} PCS</span>
+            {t("85")}
+            <span>
+              {t("86", { num: 8000 - Number(NFTPrice?.supply ?? 0) })}
+            </span>
+            {/* <span>{8000 - Number(NFTPrice?.supply ?? 0)} PCS</span> */}
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Top>
           <NodeInfo_Bottom_Item_First>
-            Number of subscription rounds
-            <span>Round{CardBase?.roundNum ?? "-"}</span>
+            {t("87")}
+            <span>{t("88", { num: CardBase?.roundNum ?? "-" })}</span>
+            {/* <span>Round{CardBase?.roundNum ?? "-"}</span> */}
           </NodeInfo_Bottom_Item_First>
           <NodeInfo_Bottom_Item_First>
-            Subscription quantity
-            <span>{CardBase?.roundSupplyNum ?? 0} PCS</span>
+            {t("89")}
+            <span>{t("86", { num: CardBase?.roundSupplyNum ?? 0 })}</span>
+            {/* <span>{CardBase?.roundSupplyNum ?? 0} PCS</span> */}
           </NodeInfo_Bottom_Item_First>
           <NodeInfo_Bottom_Item_First>
-            The remaining amount
+            {t("90")}
             <span>
+              {t("86", {
+                num:
+                  Number(CardBase?.roundSupplyNum ?? 0) -
+                  Number(CardBase?.roundSoldNum ?? 0),
+              })}
+            </span>
+            {/* <span>
               {Number(CardBase?.roundSupplyNum ?? 0) -
                 Number(CardBase?.roundSoldNum ?? 0)}{" "}
               PCS
-            </span>
+            </span> */}
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
           <NodeInfo_Mid_Item_First>
-            Current price
+            {t("91")}
             <span>1MBK={Price ?? "--"}USDT</span>
           </NodeInfo_Mid_Item_First>
-          <NodeInfo_Mid_Title>
-            Current NFT subscription price
-          </NodeInfo_Mid_Title>
+          <NodeInfo_Mid_Title>{t("92")}</NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
             <div>
               {decimalNum(EthertoWei(NFTPrice?.mbkAmount ?? "0"), 2)}{" "}
@@ -350,14 +361,14 @@ export default function Rank() {
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
             <img src={helpIcon} alt="" />
-            rule
+            {t("12")}
           </NodeInfo_Mid_Rule>
 
           {Number(CardBase?.roundNum) === 1 && (
             <NodeInfo_Mid_Conditions>
-              Current subscription rewards
-              <div>1. Initial subscription reward 2000 MBK</div>
-              <div>2. First round subscription reward 2000 MBK</div>
+              {t("93")}
+              <div>{t("94")}</div>
+              <div>{t("95")}</div>
             </NodeInfo_Mid_Conditions>
           )}
         </NodeInfo_Mid>
@@ -366,7 +377,7 @@ export default function Rank() {
             mintFun(EthertoWei(NFTPrice?.mbkAmount ?? "0"));
           }}
         >
-          Subscription
+          {t("77")}
         </NodeInfo_Bottom>
       </NodeInfo>
     </NodeContainerBox>

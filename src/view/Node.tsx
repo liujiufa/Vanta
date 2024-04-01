@@ -504,7 +504,7 @@ export default function Rank() {
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
   const getRewardFun = (value: any, type: any) => {
-    if (Number(value) <= 0) return addMessage("无法领取");
+    if (Number(value) <= 0) return addMessage(t("27"));
     getReward(
       type,
       () => {
@@ -858,7 +858,7 @@ export default function Rank() {
               {t("Activation")}
             </UpBtn>
             <BalanceBox>
-              wallet balance: <span>{TOKENBalance ?? 0}</span>MBK
+              {t("50")}: <span>{TOKENBalance ?? 0}</span>MBK
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

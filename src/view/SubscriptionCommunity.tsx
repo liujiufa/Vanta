@@ -494,10 +494,10 @@ export default function Rank() {
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
             <img src={helpIcon} alt="" />
-            rule
+            {t("12")}
           </NodeInfo_Mid_Rule>
           <NodeInfo_Mid_Item_First>
-            Current price
+            {t("91")}
             <span>1MBK={Price ?? "--"}USDT</span>
           </NodeInfo_Mid_Item_First>
           {/* <NodeInfo_Mid_Item_First>
@@ -591,7 +591,7 @@ export default function Rank() {
               {t("Activation")}
             </UpBtn>
             <BalanceBox>
-              wallet balance: <span>{TOKENBalance}</span>MBK
+              {t("50")}: <span>{TOKENBalance}</span>MBK
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

@@ -508,7 +508,7 @@ export default function Rank() {
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
   const getRewardFun = (value: any, type: any) => {
-    if (Number(value) <= 0) return addMessage("无法领取");
+    if (Number(value) <= 0) return addMessage(t("27"));
     getReward(
       type,
       () => {
@@ -538,7 +538,7 @@ export default function Rank() {
       <NodeInfo>
         <NodeInfo_Top>
           <NodeInfo_Top_Rule>
-            <HelpIconAuto /> Rule
+            <HelpIconAuto /> {t("12")}
           </NodeInfo_Top_Rule>
           <ModalContainer_Title_Container>
             <img src={ZeroStrokeIcon} />
@@ -735,7 +735,7 @@ export default function Rank() {
               {t("Activation")}
             </UpBtn>
             <BalanceBox>
-              wallet balance: <span>100,000.00</span>MBK
+              {t("50")}: <span>100,000.00</span>MBK
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>
