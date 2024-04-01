@@ -582,17 +582,18 @@ const MainLayout: React.FC = () => {
         }).then((res: any) => {
           if (res.code === 200) {
             showLoding(false);
-            setSelectWallet(false);
             dispatch(
               createLoginSuccessAction(
                 res.data.token,
                 web3React.account as string
               )
             );
+
             localStorage.setItem(
               (web3React.account as string)?.toLowerCase(),
               res.data.token
             );
+            setSelectWallet(false);
           } else {
             showLoding(false);
             addMessage(res.msg);
@@ -673,9 +674,22 @@ const MainLayout: React.FC = () => {
     }
   };
   const allModalFun = async () => {
-    if (initalToken) {
-      return setSelectWallet(false);
-    } else if (!!token) {
+    // if (!!token)
+    //   return await Contracts.example
+    //     .isBind(web3React?.account as string, "Referrer")
+    //     .then((res: any) => {
+    //       if (res) {
+    //         setBindModal(false);
+    //       } else {
+    //         setBindModal(true);
+    //       }
+    //     });
+    // if (initalToken) return setSelectWallet(false);
+    // setSelectWallet(true);
+
+    // setBindModal(false);
+    if (!!token) {
+      console.log(222);
       return await Contracts.example
         .isBind(web3React?.account as string, "Referrer")
         .then((res: any) => {
@@ -685,7 +699,13 @@ const MainLayout: React.FC = () => {
             setBindModal(true);
           }
         });
+    } else if (initalToken) {
+      console.log(111);
+
+      return setSelectWallet(false);
     } else {
+      console.log(333);
+
       setSelectWallet(true);
     }
   };
