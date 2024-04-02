@@ -392,7 +392,7 @@ export default function Rank() {
                     setSubTab(0);
                   }}
                 >
-                  All
+                  {t("189")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 1 ? "activeSubTab" : ""}
@@ -400,7 +400,7 @@ export default function Rank() {
                     setSubTab(1);
                   }}
                 >
-                  First prize
+                  {t("286")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 2 ? "activeSubTab" : ""}
@@ -408,7 +408,7 @@ export default function Rank() {
                     setSubTab(2);
                   }}
                 >
-                  Second prize
+                  {t("287")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 3 ? "activeSubTab" : ""}
@@ -416,14 +416,14 @@ export default function Rank() {
                     setSubTab(3);
                   }}
                 >
-                  Third prize
+                  {t("288")}
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content>
                 <Award_Record_Content_Title_Content>
-                  <div>address</div>
-                  <div>bonus</div>
-                  <div>Awards</div>
+                  <div>{t("290")}</div>
+                  <div>{t("291")}</div>
+                  <div>{t("292")}</div>
                 </Award_Record_Content_Title_Content>
                 <Award_Record_Content_Record_Content>
                   <Award_Record_Content_Record_Box>
@@ -432,7 +432,8 @@ export default function Rank() {
                         <Award_Record_Content_Record_Content_Item key={index}>
                           <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
                           <div>{NumSplic(item?.hitAmount, 2)}</div>
-                          <div>{item?.level}等</div>
+                          <div>{t("293", { num: item?.level })}</div>
+                          {/* <div>{item?.level}等</div> */}
                         </Award_Record_Content_Record_Content_Item>
                       ))
                     ) : (
@@ -453,7 +454,7 @@ export default function Rank() {
                     setSubTab(0);
                   }}
                 >
-                  All
+                  {t("189")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 1 ? "activeSubTab" : ""}
@@ -461,7 +462,7 @@ export default function Rank() {
                     setSubTab(1);
                   }}
                 >
-                  First prize
+                  {t("286")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 2 ? "activeSubTab" : ""}
@@ -469,7 +470,7 @@ export default function Rank() {
                     setSubTab(2);
                   }}
                 >
-                  Second prize
+                  {t("287")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 3 ? "activeSubTab" : ""}
@@ -477,14 +478,14 @@ export default function Rank() {
                     setSubTab(3);
                   }}
                 >
-                  Third prize
+                  {t("288")}
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content> */}
               <Award_Record_Content>
                 <Award_Record_Content_Title_Content>
-                  <div>address</div>
-                  <div>Subscription Robot(USDT)</div>
-                  <div>Ranking</div>
+                  <div>{t("290")}</div>
+                  <div>{t("295")}</div>
+                  <div>{t("294")}</div>
                 </Award_Record_Content_Title_Content>
                 <Award_Record_Content_Record_Content>
                   <Award_Record_Content_Record_Box>

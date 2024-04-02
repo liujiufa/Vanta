@@ -367,9 +367,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -412,9 +412,9 @@ export default function Rank() {
           {Number(ActiveTab) === 1 && (
             <Award_Record_Content>
               <Award_Record_Content_Title_Content>
-                <div>address</div>
+                <div>{t("290")}</div>
                 <div>Community(USDT)</div>
-                <div>Ranking</div>
+                <div>{t("294")}</div>
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
@@ -436,9 +436,9 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Title_Content>
-                <div>address</div>
+                <div>{t("290")}</div>
                 <div>Direct Push(USDT)</div>
-                <div>Ranking</div>
+                <div>{t("294")}</div>
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
@@ -460,9 +460,9 @@ export default function Rank() {
           {Number(ActiveTab) === 3 && (
             <Award_Record_Content>
               <Award_Record_Content_Title_Content>
-                <div>address</div>
+                <div>{t("290")}</div>
                 <div>Team(USDT)</div>
-                <div>Ranking</div>
+                <div>{t("294")}</div>
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>

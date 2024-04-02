@@ -475,7 +475,7 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
 
-  const typeObj = { 42: "直推奖励", 41: "分享奖励" };
+  const typeObj = { 42: "260", 41: "261" };
   const getInitData = useCallback(() => {
     getMyFreeInfo().then((res: any) => {
       if (res.code === 200) {
@@ -527,9 +527,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -542,24 +542,24 @@ export default function Rank() {
           </NodeInfo_Top_Rule>
           <ModalContainer_Title_Container>
             <img src={ZeroStrokeIcon} />
-            <ModalContainer_Title>Insurance Status</ModalContainer_Title>
+            <ModalContainer_Title>{t("262")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
 
           <NodeInfo_Top_Item>
-            <div>Recommended Active Users</div>
+            <div>{t("263")}</div>
             {MyFreeInfo?.validUserCount ?? 0} pcs
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
-            <div>Sharing Rewards</div>
+            <div>{t("261")}</div>
             {MyFreeInfo?.shareAmount ?? 0} MBK
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
-            <div>Direct Referral Rewards</div>
+            <div>{t("260")}</div>
             {MyFreeInfo?.refereeAmount ?? 0} MBK
           </NodeInfo_Top_Item>
         </NodeInfo_Top>
         <NodeInfo_Mid>
-          <div>Released and pending for claim</div>
+          <div>{t("264")}</div>
           <div>
             {MyFreeInfo?.waitReceiveAmount ?? 0} <span>MBK</span>
           </div>
@@ -571,7 +571,7 @@ export default function Rank() {
             }}
           >
             {" "}
-            activation
+            {t("265")}
           </div>
           <div
             onClick={() => {
@@ -579,7 +579,7 @@ export default function Rank() {
             }}
           >
             {" "}
-            Claim
+            {t("266")}
           </div>
         </NodeInfo_Bottom>
       </NodeInfo>
@@ -592,7 +592,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Reward record
+            {t("172")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -600,7 +600,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            Claim record
+            {t("173")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -613,7 +613,7 @@ export default function Rank() {
                     setSubTab(0);
                   }}
                 >
-                  All
+                  {t("189")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 41 ? "activeSubTab" : ""}
@@ -621,7 +621,7 @@ export default function Rank() {
                     setSubTab(41);
                   }}
                 >
-                  Share reward
+                  {t("261")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 42 ? "activeSubTab" : ""}
@@ -629,7 +629,7 @@ export default function Rank() {
                     setSubTab(42);
                   }}
                 >
-                  Direct referral reward
+                  {t("260")}
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
@@ -637,10 +637,10 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>{typeObj[item?.businessType]}</span>
+                        {t("193")} <span>{t(typeObj[item?.businessType])}</span>
                       </div>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM",
@@ -649,7 +649,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK) <span>{item?.amount ?? 0}</span>
+                        {t("195")} <span>{item?.amount ?? 0}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -669,7 +669,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        time
+                        {t("196")}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM",
@@ -678,11 +678,15 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity Claimed(MBK)<span>{item?.amount ?? 0}</span>
+                        {t("197")}
+                        <span>{item?.amount ?? 0}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.userAddress, 6, 4)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
@@ -695,51 +699,6 @@ export default function Rank() {
           )}
         </NodeRecord_Content>
       </NodeRecord>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
-          </ModalContainer_Title_Container>
-          <ModalContainer_Content>
-            Activation requires destroying MBK
-            <span>100</span>
-            <UpBtn
-              onClick={() => {
-                // BindFun();
-              }}
-            >
-              {t("Activation")}
-            </UpBtn>
-            <BalanceBox>
-              {t("50")}: <span>100,000.00</span>MBK
-            </BalanceBox>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
     </NodeContainerBox>
   );
 }

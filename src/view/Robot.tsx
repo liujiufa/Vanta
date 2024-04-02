@@ -749,14 +749,14 @@ export default function Rank() {
         res = await Contracts.example?.buyBot(account as string, value);
       } catch (error: any) {
         showLoding(false);
-        return addMessage("购买失败");
+        return addMessage(t("164"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
-        addMessage("购买成功");
+        addMessage(t("165"));
       } else {
-        addMessage("购买失败");
+        addMessage(t("164"));
       }
     });
   };
@@ -769,10 +769,10 @@ export default function Rank() {
             <MyQuota_Box_Left>
               <MyQuota_ModalContainer_Title_Container>
                 <MyQuotaIconBox />
-                <ModalContainer_Title>My Profit and loss</ModalContainer_Title>
+                <ModalContainer_Title>{t("142")}</ModalContainer_Title>
               </MyQuota_ModalContainer_Title_Container>
               <AvailableBox>
-                Available (USDT)
+                {t("144")}
                 <div>
                   {RobotInfo?.amount ?? 0} <span>USDT</span>
                 </div>
@@ -780,7 +780,7 @@ export default function Rank() {
             </MyQuota_Box_Left>
             <MyQuota_BoxDevider />
             <MyQuota_Box_Right>
-              grade
+              {t("143")}
               <div>
                 <DemonIconBox />V{RobotInfo?.teamLevel ?? 0}
               </div>
@@ -788,15 +788,15 @@ export default function Rank() {
           </MyQuota_Box>
           <NodeInfo_Top_Item_Box>
             <NodeInfo_Top_Item>
-              <div>Total subscription quantity</div>
+              <div>{t("145")}</div>
               {RobotInfo?.totalSubscriptionNum ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
-              <div>Total subscription amount</div>
+              <div>{t("146")}</div>
               {RobotInfo?.totalSubscriptionAmount ?? 0} USDT
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
-              <div>Quota used</div>
+              <div>{t("147")}</div>
               {RobotInfo?.usedAmount ?? 0} USDT
             </NodeInfo_Top_Item>
           </NodeInfo_Top_Item_Box>
@@ -807,13 +807,13 @@ export default function Rank() {
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
             <QuotaSubscriptionIconBox />
-            <ModalContainer_Title>Quota subscription</ModalContainer_Title>
+            <ModalContainer_Title>{t("148")}</ModalContainer_Title>
             <FinancialRecords
               onClick={() => {
                 Navigate("/View/SubscriptionQuotaRecord");
               }}
             >
-              Subscription record <SmallOutLinkIconBox />
+              {t("149")} <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
           <NodeInfo_Top_LotteryGame_Info>
@@ -857,7 +857,7 @@ export default function Rank() {
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_LotteryGame_Reward>
-            Pledge value
+            {t("151")}
             <div>
               {InputValueAmountValue} <span>USDT</span>
             </div>
@@ -867,7 +867,7 @@ export default function Rank() {
               buyRobotFun(InputValueAmount);
             }}
           >
-            Subscription
+            {t("152")}
           </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
@@ -876,7 +876,7 @@ export default function Rank() {
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
             <ManagementRewardsIcon />
-            <ModalContainer_Title>Management rewards</ModalContainer_Title>
+            <ModalContainer_Title>{t("153")}</ModalContainer_Title>
             <FinancialRecords
               onClick={() => {
                 Navigate("/View/SubscriptionQuotaAwardRecord", {
@@ -884,19 +884,19 @@ export default function Rank() {
                 });
               }}
             >
-              Award record
+              {t("56")}
               <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
           <NodeInfo_Top_LotteryGame_Info>
             <InputContainer>
               <NodeInfo_Top_Item>
-                <div>Team performance</div>
+                <div>{t("57")}</div>
                 {RobotManageAwardInfo?.teamPerformanceNum ?? 0} MBK(
                 {RobotManageAwardInfo?.teamPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
-                <div>Community performance</div>
+                <div>{t("58")}</div>
                 {RobotManageAwardInfo?.communityPerformanceNum ?? 0} MBK(
                 {RobotManageAwardInfo?.communityPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
@@ -905,17 +905,17 @@ export default function Rank() {
           <NodeInfo_Top_Management_Info>
             <InputContainer>
               <NodeInfo_Top_Item>
-                <div>Referral rewards</div>
+                <div>{t("156")}</div>
                 {RobotManageAwardInfo?.totalRefereeAward ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
-                <div>Management rewards</div>
+                <div>{t("157")}</div>
                 {RobotManageAwardInfo?.totalManageAward ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info>
           <NodeInfo_Top_Management_Reward>
-            To Be Collected(MBK)
+            {t("102")}
             <div>
               {RobotManageAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
@@ -925,7 +925,7 @@ export default function Rank() {
               getRewardFun(RobotManageAwardInfo?.amount ?? 0, 1);
             }}
           >
-            receive
+            {t("103")}
           </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
@@ -934,7 +934,7 @@ export default function Rank() {
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
             <PerformanceRewardsIcon />
-            <ModalContainer_Title>Performance rewards</ModalContainer_Title>
+            <ModalContainer_Title>{t("158")}</ModalContainer_Title>
             <FinancialRecords
               onClick={() => {
                 Navigate("/View/SubscriptionQuotaAwardRecord", {
@@ -942,24 +942,24 @@ export default function Rank() {
                 });
               }}
             >
-              Award record
+              {t("56")}
               <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
           <NodeInfo_Top_LotteryGame_Info>
             <InputContainer>
               <NodeInfo_Top_Item>
-                <div>Performance star rewards</div>
+                <div>{t("159")}</div>
                 {RobotPerformanceAwardInfo?.totalPerformanceStarNum ?? 0} MBK
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
-                <div>Direct promotion star rewards</div>
+                <div>{t("160")}</div>
                 {RobotPerformanceAwardInfo?.totalPerformanceRefereeNum ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_Management_Reward>
-            To Be Collected(MBK)
+            {t("102")}
             <div>
               {RobotPerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
             </div>
@@ -969,7 +969,7 @@ export default function Rank() {
               getRewardFun(RobotPerformanceAwardInfo?.amount ?? 0, 2);
             }}
           >
-            receive
+            {t("103")}
           </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
@@ -979,67 +979,22 @@ export default function Rank() {
           Navigate("/View/RankRecord", { state: { type: 1, recordType: 1 } });
         }}
       >
-        Performance star ranking &gt;&gt;{" "}
+        {t("161")} &gt;&gt;{" "}
       </Goto>
       <Goto
         onClick={() => {
           Navigate("/View/RankRecord", { state: { type: 2, recordType: 1 } });
         }}
       >
-        Directly recommend star ranking &gt;&gt;{" "}
+        {t("162")} &gt;&gt;{" "}
       </Goto>
       <Goto
         onClick={() => {
           Navigate("/View/RankRecord", { state: { type: 3, recordType: 1 } });
         }}
       >
-        NFT team star &gt;&gt;{" "}
+        {t("163")} &gt;&gt;{" "}
       </Goto>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
-          </ModalContainer_Title_Container>
-          <ModalContainer_Content>
-            Activation requires destroying MBK
-            <span>100</span>
-            <UpBtn
-              onClick={() => {
-                // BindFun();
-              }}
-            >
-              {t("Activation")}
-            </UpBtn>
-            <BalanceBox>
-              {t("50")}: <span>100,000.00</span>MBK
-            </BalanceBox>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
     </NodeContainerBox>
   );
 }

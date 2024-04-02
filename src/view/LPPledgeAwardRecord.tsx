@@ -440,13 +440,13 @@ export default function Rank() {
 
   const subTabArr = {
     1: [
-      { key: -1, name: "All" },
+      { key: -1, name: "189" },
       { key: 0, name: "质押中" },
       { key: 1, name: "待赎回 " },
       { key: 2, name: "已赎回" },
     ],
     2: [
-      { key: 0, name: "All" },
+      { key: 0, name: "189" },
       { key: 5, name: "Performance Star Award" },
       { key: 6, name: "Directly promoted star award" },
       { key: 7, name: "NFT team star" },
@@ -488,9 +488,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
   const pledgeStateObj = (type: number) => {
@@ -566,7 +566,7 @@ export default function Rank() {
                         <span>{item?.orderNo}</span>
                       </div>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -590,9 +590,9 @@ export default function Rank() {
                           )}
                         </span>
                       </div>
-                      <div>State{pledgeStateObj(item?.status)}</div>
+                      <div>{t("198")}{pledgeStateObj(item?.status)}</div>
                       <div>
-                        Transaction hash
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
@@ -611,7 +611,7 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -626,9 +626,9 @@ export default function Rank() {
                         对应质押ID <span>{item?.pledgeOrderNo ?? 0}</span>
                       </div>
 
-                      <div>State{StateObj(2)}</div>
+                      <div>{t("198")}{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
@@ -650,10 +650,10 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Type<span>LP质押分红</span>
+                        {t("200")}<span>LP质押分红</span>
                       </div>
                       <div>
-                        time
+                        {t("201")}
                         <span>
                           {" "}
                           {dateFormat(
@@ -684,7 +684,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        time
+                        {t("201")}
                         <span>
                           {" "}
                           {dateFormat(
@@ -697,9 +697,9 @@ export default function Rank() {
                         Amount(MBK)<span>{item?.amount ?? 0}</span>
                       </div>
 
-                      <div>State{StateObj(2)}</div>
+                      <div>{t("198")}{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>

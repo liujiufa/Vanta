@@ -608,7 +608,7 @@ const MainLayout: React.FC = () => {
   const BindFun = useCallback(async () => {
     if (web3React.account) {
       let tag = await web3.utils.isAddress(InputValue);
-      if (!tag) return addMessage("请输入正确的钱包地址");
+      if (!tag) return addMessage(t("221"));
       let res: any = await isRefereeAddress({ userAddress: InputValue });
       if (!(res?.code === 200)) return addMessage(res.msg);
       let isSuccessBind: any;
@@ -620,14 +620,14 @@ const MainLayout: React.FC = () => {
           InputValue as string
         );
       } catch (error: any) {
-        addMessage("失败");
+        addMessage(t("222"));
       }
       showLoding(false);
       if (!!isSuccessBind?.status) {
         setBindModal(false);
-        return addMessage("绑定成功");
+        return addMessage(t("223"));
       } else {
-        addMessage("失败");
+        addMessage(t("222"));
       }
     } else {
       addMessage("Please link wallet");
@@ -892,16 +892,14 @@ const MainLayout: React.FC = () => {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={logo} alt="" />
-            <ModalContainer_Title>
-              {t("Binding relationship")}
-            </ModalContainer_Title>
+            <ModalContainer_Title>{t("225")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
-            Please confirm your superior address, enter and bind
+            {t("224")}
             <input
               value={InputValue}
               type="text"
-              placeholder="请输入上级地址"
+              placeholder={t("226")}
               onChange={inputFun}
             />
             <UpBtn
@@ -909,7 +907,7 @@ const MainLayout: React.FC = () => {
                 BindFun();
               }}
             >
-              {t("Sure")}
+              {t("227")}
             </UpBtn>
           </ModalContainer_Content>
         </ModalContainer>

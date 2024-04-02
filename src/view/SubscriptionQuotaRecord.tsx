@@ -447,9 +447,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     } else if (type === 3) {
       return <span style={{ color: "#EA0000" }}>fail</span>;
     } else if (type === 4) {
@@ -469,7 +469,7 @@ export default function Rank() {
                   setSubTab(0);
                 }}
               >
-                All
+                {t("189")}
               </Award_Record_Content_Tab_Item>
               <Award_Record_Content_Tab_Item
                 className={Number(SubTab) === 1 ? "activeSubTab" : ""}
@@ -477,7 +477,7 @@ export default function Rank() {
                   setSubTab(1);
                 }}
               >
-                Confirming
+                {t("203")}
               </Award_Record_Content_Tab_Item>
               <Award_Record_Content_Tab_Item
                 className={Number(SubTab) === 2 ? "activeSubTab" : ""}
@@ -509,7 +509,7 @@ export default function Rank() {
                 RecordList?.map((item: any, index: any) => (
                   <Get_Record_Content_Record_Content_Item key={index} type={1}>
                     <div>
-                      time
+                      {t("201")}
                       <span>
                         {dateFormat(
                           "YYYY-mm-dd HH:MM",
@@ -529,9 +529,9 @@ export default function Rank() {
                       MBK Price(MBK)
                       <span>{decimalNum(item?.coinPrice, 2)}</span>
                     </div>
-                    <div>State{StateObj(item?.status)}</div>
+                    <div>{t("198")}{StateObj(item?.status)}</div>
                     <div>
-                      Transaction hash
+                      {t("199")}
                       <span>{AddrHandle(item?.txId, 6, 6)}</span>
                     </div>
                   </Get_Record_Content_Record_Content_Item>

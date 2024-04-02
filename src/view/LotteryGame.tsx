@@ -49,7 +49,10 @@ import {
 } from "../assets/image/homeBox";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
-
+import useTime from "../hooks/useTime";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
   > div {
@@ -502,6 +505,9 @@ export default function Rank() {
     handleTransaction,
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.gameContract, "MBK");
+  const [diffTime, status, initDiffTime, setDiffTime] = useTime({
+    initDiffTime: 0,
+  });
   const getInitData = () => {
     getGameProfit().then((res: any) => {
       if (res.code === 200) {
@@ -534,14 +540,14 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage("激活失败");
+        return addMessage(t("69"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
-        addMessage("激活成功");
+        addMessage(t("70"));
       } else {
-        addMessage("激活失败");
+        addMessage(t("69"));
       }
     });
   };
@@ -571,15 +577,28 @@ export default function Rank() {
 
   useEffect(() => {
     if (token) {
+      // 获取当前日期和时间
+      const now = new Date();
+      // 创建一个新的日期对象表示今天结束的时刻（即下一个午夜12点）
+      const endOfDay = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1
+      );
+      // 计算当前时间到今天结束的毫秒数
+      const millisecondsLeft = Number(endOfDay) - Number(now);
+      // 将毫秒数转换为秒数
+      const secondsLeft = Math.floor(millisecondsLeft / 1000);
+      setDiffTime(secondsLeft);
       getInitData();
     }
   }, [token]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -589,19 +608,19 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={LotteryGameIcon} />
-            <ModalContainer_Title>My Profit and loss</ModalContainer_Title>
+            <ModalContainer_Title>{t("267")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
 
           <NodeInfo_Top_Item>
-            <div>Amount participated</div>
+            <div>{t("268")}</div>
             {GameProfit?.useAmount ?? 0} MBK
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
-            <div>Profit And Loss Amount</div>
+            <div>{t("269")}</div>
             {GameProfit?.profitAmount ?? 0} MBK
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
-            <div>Profit and Loss Ratio</div>
+            <div>{t("270")}</div>
             {GameProfit?.profitRate ?? 0}%
           </NodeInfo_Top_Item>
         </NodeInfo_Top>
@@ -611,18 +630,18 @@ export default function Rank() {
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
             <img src={ParticipateGameIcon} />
-            <ModalContainer_Title>Participate in the game</ModalContainer_Title>
+            <ModalContainer_Title>{t("271")}</ModalContainer_Title>
             <FinancialRecords
               onClick={() => {
                 Navigate("/View/FinancialRecord");
               }}
             >
-              Financial records <SmallOutLinkIconBox />
+              {t("272")} <SmallOutLinkIconBox />
             </FinancialRecords>
           </ModalContainer_Title_Container_Participate>
           <NodeInfo_Top_LotteryGame_Info>
             <InputContainer>
-              Purchase lottery entry
+              {t("273")}
               <InputBox>
                 <div>
                   <input
@@ -637,7 +656,7 @@ export default function Rank() {
                     joinInGameFun(String(InputValueAmount));
                   }}
                 >
-                  Buy now
+                  {t("274")}
                 </div>
               </InputBox>
               <BalanceBox_InputContainer>
@@ -649,31 +668,45 @@ export default function Rank() {
             </InputContainer>
 
             <NodeInfo_Top_Item>
-              <div>Today's new jackpot amount</div>
+              <div>{t("275")}</div>
               {GamePoolInfo?.todayAddPoolAmount ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
-              <div>total jackpot amount for this round</div>
+              <div>{t("276")}</div>
               {GamePoolInfo?.todayGamePoolAmount ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
-              <div>Pending Reward</div>
-              <div>
-                01 <span>HR</span>20 <span>MIN</span>29 <span>SEC</span>
-              </div>
+              <div>{t("277")}</div>
+              {Number(diffTime) > 0 ? (
+                <div>
+                  {dayjs?.duration(diffTime, "seconds").format("HH")}{" "}
+                  <span>{t("283")}</span>
+                  {dayjs?.duration(diffTime, "seconds").format("mm")}{" "}
+                  <span>{t("284")}</span>
+                  {dayjs?.duration(diffTime, "seconds").format("ss")}{" "}
+                  <span>{t("285")}</span>
+                </div>
+              ) : (
+                <div>
+                  00 <span>{t("283")}</span>00 <span>{t("284")}</span>00{" "}
+                  <span>{t("285")}</span>
+                </div>
+              )}
             </NodeInfo_Top_Item>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_LotteryGame_Reward>
-            Pending Reward
+            {t("278")}
             <div>
               {GameProfit?.waitReceiveAmount ?? 0} <span>mbk</span>
             </div>
           </NodeInfo_Top_LotteryGame_Reward>
-          <GetRewardBtn 
+          <GetRewardBtn
             onClick={() => {
-              getRewardFun(GameProfit?.waitReceiveAmount ?? 0,13);
+              getRewardFun(GameProfit?.waitReceiveAmount ?? 0, 13);
             }}
-          >reward</GetRewardBtn>
+          >
+            {t("266")}
+          </GetRewardBtn>
         </NodeInfo_Top_LotteryGame>
       </NodeInfo>
       <Goto
@@ -681,21 +714,21 @@ export default function Rank() {
           Navigate("/View/Announcement", { state: { recordType: 1 } });
         }}
       >
-        Announcement of lottery results &gt;&gt;{" "}
+        {t("279")} &gt;&gt;{" "}
       </Goto>
       <NodeInfo>
         <NodeInfo_Top_LotteryGame>
           <ModalContainer_Title_Container_Participate>
             <img src={ReservePoolIcon} />
-            <ModalContainer_Title>Reserve pool</ModalContainer_Title>
+            <ModalContainer_Title>{t("280")}</ModalContainer_Title>
           </ModalContainer_Title_Container_Participate>
           <NodeInfo_Top_ReservePool>
             <NodeInfo_Top_Item>
-              <div>Today's reserve pool addition</div>
+              <div>{t("281")}</div>
               {GamePoolInfo?.todayAddReadyPoolAmount ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
-              <div>Total reserve pool amount</div>
+              <div>{t("282")}</div>
               {GamePoolInfo?.readyPoolTotalAmount ?? 0} MBK
             </NodeInfo_Top_Item>
           </NodeInfo_Top_ReservePool>
@@ -728,7 +761,7 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={logo} alt="" />
-            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("187")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
             Activation requires destroying MBK
@@ -738,7 +771,7 @@ export default function Rank() {
                 // BindFun();
               }}
             >
-              {t("Activation")}
+              {t("97")}
             </UpBtn>
             <BalanceBox>
               {t("50")}: <span>100,000.00</span>MBK

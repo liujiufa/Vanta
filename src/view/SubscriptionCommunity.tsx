@@ -434,16 +434,16 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage("激活失败");
+        return addMessage(t("69"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
         getInitData();
         Navigate("/View/Community");
-        addMessage("激活成功");
+        addMessage(t("70"));
       } else {
-        addMessage("激活失败");
+        addMessage(t("69"));
       }
     });
   };
@@ -460,22 +460,20 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={menuIcon3} />
-            <ModalContainer_Title>Subscription Community</ModalContainer_Title>
+            <ModalContainer_Title>{t("207")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
-            Total Community
+            {t("212")}
             <span>{CommunitySoldBase?.totalSupply ?? 0} PCS</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
-            The Remaining Amount
+            {t("213")}
             <span>{CommunitySoldBase?.remainSupply ?? 0} PCS</span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
-          <NodeInfo_Mid_Title>
-            Current community activation price
-          </NodeInfo_Mid_Title>
+          <NodeInfo_Mid_Title>{t("215")}</NodeInfo_Mid_Title>
           {/* <NodeInfo_Mid_Price>
             {CommunitySoldBase?.currentPrice ?? 0} <span>USDT</span>
           </NodeInfo_Mid_Price> */}
@@ -505,7 +503,7 @@ export default function Rank() {
             <span>3000 MBK</span>
           </NodeInfo_Mid_Item_First> */}
           <NodeInfo_Mid_Conditions>
-            Subscription conditions
+            {t("216")}
             <div>
               <img
                 src={
@@ -513,15 +511,14 @@ export default function Rank() {
                 }
                 alt=""
               />
-              You must be a node
+              {t("217")}
             </div>
             <div>
               <img
                 src={!!CommunitySoldBase?.isSatisfy ? yesIcon : errorIcon}
                 alt=""
               />
-              At least two nodes in the community and the team's performance
-              reaches 300,000 U
+              {t("218")}
             </div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>
@@ -533,11 +530,11 @@ export default function Rank() {
             ) {
               setActivationModal(true);
             } else {
-              return addMessage("未达到激活条件");
+              return addMessage(t("220"));
             }
           }}
         >
-          Subscription
+          {t("152")}
         </NodeInfo_Bottom>
       </NodeInfo>
 
@@ -567,10 +564,10 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={menuIcon3} alt="" />
-            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("187")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
-            Activation requires destroying MBK
+            {t("188")}
             <span>
               {decimalNum(
                 Number(CommunitySoldBase?.currentPrice) / Number(Price),
@@ -588,7 +585,7 @@ export default function Rank() {
                 );
               }}
             >
-              {t("Activation")}
+              {t("97")}
             </UpBtn>
             <BalanceBox>
               {t("50")}: <span>{TOKENBalance}</span>MBK

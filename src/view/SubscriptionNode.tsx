@@ -256,7 +256,7 @@ export default function Rank() {
 
   const buyNodeFun = (value: string) => {
     if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.isHoldNft)
-      return addMessage("未满足认购条件");
+      return addMessage(t("219"));
     if (Number(value) <= 0) return;
     if (!state.token) return;
 
@@ -271,16 +271,16 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage("购买失败");
+        return addMessage(t("25"));
       }
 
       showLoding(false);
       if (!!res?.status) {
         call();
         Navigate("/View/Node");
-        addMessage("购买成功");
+        addMessage(t("26"));
       } else {
-        addMessage("购买失败");
+        addMessage(t("25"));
       }
     });
   };
@@ -302,22 +302,20 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={menuIcon2} />
-            <ModalContainer_Title>Subscription Node</ModalContainer_Title>
+            <ModalContainer_Title>{t("175")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
-            Node Total
+            {t("176")}
             <span>{NodeBaseInfo?.totalSupply ?? 0} PCS</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
-            The Remaining Amount
+            {t("177")}
             <span>{NodeBaseInfo?.reaminSupply ?? 0} PCS</span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
-          <NodeInfo_Mid_Title>
-            Current node subscription price
-          </NodeInfo_Mid_Title>
+          <NodeInfo_Mid_Title>{t("178")}</NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
             {NodeBaseInfo?.price ?? 0} <span>USDT</span>
           </NodeInfo_Mid_Price>
@@ -326,20 +324,20 @@ export default function Rank() {
             {t("12")}
           </NodeInfo_Mid_Rule>
           <NodeInfo_Mid_Conditions>
-            Subscription conditions
+            {t("179")}
             <div>
               <img
                 src={!!NodeBaseInfo?.isHoldNft ? yesIcon : errorIcon}
                 alt=""
               />
-              Hold NFT yourself
+              {t("180")}
             </div>
             <div>
               <img
                 src={!!NodeBaseInfo?.isCommunityNftNum ? yesIcon : errorIcon}
                 alt=""
               />
-              The community subscribed for more than 30 NFTs
+              {t("181")}
             </div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>
@@ -348,7 +346,7 @@ export default function Rank() {
             buyNodeFun(NodeBaseInfo?.price + "");
           }}
         >
-          Subscription
+          {t("152")}
         </NodeInfo_Bottom>
       </NodeInfo>
     </NodeContainerBox>

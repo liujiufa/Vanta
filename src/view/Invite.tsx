@@ -264,20 +264,20 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={menuIcon4} />
-            <ModalContainer_Title>My Team</ModalContainer_Title>
+            <ModalContainer_Title>{t("228")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Bottom_Item>
-            Number of Team
-            <span>{TeamData?.teamNum ?? 0} people</span>
+            {t("229")}
+            <span>{TeamData?.teamNum ?? 0} </span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item_First>
-            Number of Direct Referrals
-            <span>{TeamData?.refereeNum ?? 0} people</span>
+            {t("230")}
+            <span>{TeamData?.refereeNum ?? 0} </span>
           </NodeInfo_Bottom_Item_First>
         </NodeInfo_Top>
 
         <NodeInfo_Mid>
-          Invitation link:
+          {t("231")}:
           <div>
             <div>
               {window.location.origin +
@@ -290,20 +290,20 @@ export default function Rank() {
       </NodeInfo>
       <DirectPush_Title_Container>
         <img src={DirectPushListIcon} />
-        <ModalContainer_Title>Direct Push list</ModalContainer_Title>
+        <ModalContainer_Title>{t("232")}</ModalContainer_Title>
       </DirectPush_Title_Container>
       {TeamData?.list?.length > 0 ? (
         <DirectPush_Content_Container>
           <DirectPush_Content_Container_Header>
-            <div>Address</div>
+            <div>{t("233")}</div>
             <div>
-              Performance <div>USDT</div>
+              {t("234")} <div>USDT</div>
             </div>
             <div>
-              Community <div>USDT</div>
+              {t("235")} <div>USDT</div>
             </div>
-            <div>Node</div>
-            <div>Community</div>
+            <div>{t("236")}</div>
+            <div>{t("237")}</div>
             <div>NFT</div>
           </DirectPush_Content_Container_Header>
           <DirectPush_Content_Container_Content>

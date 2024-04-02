@@ -470,7 +470,7 @@ export default function Rank() {
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.nodeContract, "MBK");
 
-  const typeObj = { 46: "节点LP加权", 43: "节点平均分配", 44: "节点小区加权" };
+  const typeObj = { 46: "190", 43: "191", 44: "192" };
 
   const getInitData = useCallback(() => {
     getMyNodeInfo().then((res: any) => {
@@ -528,9 +528,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>success</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -553,15 +553,15 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage("激活失败");
+        return addMessage(t("69"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
         getInitData();
-        addMessage("激活成功");
+        addMessage(t("70"));
       } else {
-        addMessage("激活失败");
+        addMessage(t("69"));
       }
     });
   };
@@ -572,10 +572,10 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={menuIcon2} />
-            <ModalContainer_Title>My Node </ModalContainer_Title>
+            <ModalContainer_Title>{t("166")} </ModalContainer_Title>
           </ModalContainer_Title_Container>
           <NodeInfo_Mid_Content>
-            <div>To be collected</div>
+            <div>{t("102")}</div>
             <div>
               {decimalNum(MyNodeInfo?.amount, 2) ?? 0} <span>mbk</span>
             </div>
@@ -585,7 +585,7 @@ export default function Rank() {
               getRewardFun(MyNodeInfo?.amount ?? 0, 15);
             }}
           >
-            receive
+            {t("103")}
           </NodeInfo_Top_Btn>
         </NodeInfo_Top>
       );
@@ -594,17 +594,15 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={menuIcon2} />
-            <ModalContainer_Title>My Node </ModalContainer_Title>
+            <ModalContainer_Title>{t("166")} </ModalContainer_Title>
           </ModalContainer_Title_Container>
-          <NodeInfo_Top_Tip>
-            You have subscribed to the node To be activated
-          </NodeInfo_Top_Tip>
+          <NodeInfo_Top_Tip>{t("183")}</NodeInfo_Top_Tip>
           <NodeInfo_Top_Btn
             onClick={() => {
               setActivationModal(true);
             }}
           >
-            activation
+            {t("97")}
           </NodeInfo_Top_Btn>
         </NodeInfo_Top>
       );
@@ -613,15 +611,15 @@ export default function Rank() {
         <NodeInfo_Top>
           <ModalContainer_Title_Container>
             <img src={menuIcon2} />
-            <ModalContainer_Title>My Node </ModalContainer_Title>
+            <ModalContainer_Title>{t("166")} </ModalContainer_Title>
           </ModalContainer_Title_Container>
-          <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
+          <NodeInfo_Top_Tip>{t("167")}</NodeInfo_Top_Tip>
           <NodeInfo_Top_Btn
             onClick={() => {
               Navigate("/View/SubscriptionNode");
             }}
           >
-            Subscription
+            {t("152")}
           </NodeInfo_Top_Btn>
         </NodeInfo_Top>
       );
@@ -634,19 +632,19 @@ export default function Rank() {
         {NodeInfo_Top_Box_Fun(MyNodeInfo)}
         <NodeInfo_Bottom>
           <NodeInfo_Bottom_Item>
-            Prize pool funds
+            {t("182")}
             <span>{MyNodeInfo?.awardPool ?? 0} MBK</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
-            My LP quantity
+            {t("184")}
             <span>{MyNodeInfo?.lpNum ?? 0} LP</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
-            Community subscription performance
+            {t("185")}
             <span>{MyNodeInfo?.communityPerformance ?? 0} USDT</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
-            Accumulated NFT equity rewards
+            {t("186")}
             <span>{MyNodeInfo?.totalNodeAward ?? 0} MBK</span>
           </NodeInfo_Bottom_Item>
         </NodeInfo_Bottom>
@@ -660,7 +658,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Award record
+            {t("56")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -668,7 +666,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            Get records
+            {t("173")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
@@ -676,7 +674,7 @@ export default function Rank() {
               setActiveTab(3);
             }}
           >
-            Subscription record
+            {t("174")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -689,7 +687,7 @@ export default function Rank() {
                     setSubTab(0);
                   }}
                 >
-                  All
+                  {t("189")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 46 ? "activeSubTab" : ""}
@@ -697,7 +695,7 @@ export default function Rank() {
                     setSubTab(46);
                   }}
                 >
-                  LP WeiAghted
+                  {t("190")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 43 ? "activeSubTab" : ""}
@@ -705,7 +703,7 @@ export default function Rank() {
                     setSubTab(43);
                   }}
                 >
-                  Equally Distributed
+                  {t("191")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 44 ? "activeSubTab" : ""}
@@ -713,7 +711,7 @@ export default function Rank() {
                     setSubTab(44);
                   }}
                 >
-                  Cell Weighting
+                  {t("192")}
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
@@ -721,10 +719,10 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>{typeObj[item?.businessType]}</span>
+                        {t("193")} <span>{t(typeObj[item?.businessType])}</span>
                       </div>
                       <div>
-                        Release time{" "}
+                        {t("194")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -733,8 +731,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK){" "}
-                        <span>{decimalNum(item?.amount, 2)}</span>
+                        {t("195")} <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -754,7 +751,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Collection time{" "}
+                        {t("196")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -763,12 +760,15 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Receive quantity (MBK){" "}
-                        <span>{decimalNum(item?.amount, 2)}</span>
+                        {t("197")} <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash<span>{AddrHandle(item?.txId)}</span>
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
+                        <span>{AddrHandle(item?.txId)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))
@@ -788,10 +788,10 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Type <span>Subscription</span>
+                        {t("200")} <span>{t("152")}</span>
                       </div>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -800,12 +800,14 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Payment amount(USDT){" "}
-                        <span>{decimalNum(item?.payNum, 2)}</span>
+                        {t("202")} <span>{decimalNum(item?.payNum, 2)}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.buyTxId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
@@ -845,17 +847,17 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={menuIcon2} alt="" />
-            <ModalContainer_Title>{t("Node activation")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("187")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
-            Activation requires destroying MBK
+            {t("188")}
             <span>100</span>
             <UpBtn
               onClick={() => {
                 activationFun("100");
               }}
             >
-              {t("Activation")}
+              {t("97")}
             </UpBtn>
             <BalanceBox>
               {t("50")}: <span>{TOKENBalance ?? 0}</span>MBK

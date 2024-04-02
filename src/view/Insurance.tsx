@@ -191,7 +191,7 @@ const NodeInfo_Top_Tip = styled(FlexCCBox)`
   font-variation-settings: "opsz" auto;
   color: rgba(213, 104, 25, 0.8);
   margin: 15px 0px 10px;
-  > div {
+  > span {
     font-family: PingFang SC;
     font-size: 12px;
     font-weight: normal;
@@ -372,48 +372,57 @@ export default function Rank() {
         {Number(InsureStatus?.status) !== 3 ? (
           <NodeInfo_Top>
             <NodeInfo_Top_Rule>
-              <HelpIconAuto /> Rule export{" "}
+              <HelpIconAuto /> {t("12")}{" "}
             </NodeInfo_Top_Rule>
             <ModalContainer_Title_Container>
               <img src={menuIcon7} />
-              <ModalContainer_Title>Insurance Status</ModalContainer_Title>
+              <ModalContainer_Title>{t("248")}</ModalContainer_Title>
             </ModalContainer_Title_Container>
 
             {Number(InsureStatus?.status) !== 2 ? (
-              <NodeInfo_Top_Tip>Enter single normally</NodeInfo_Top_Tip>
+              <NodeInfo_Top_Tip>{t("249")}</NodeInfo_Top_Tip>
             ) : (
               <NodeInfo_Top_Tip>
-                <div> The allocation mechanism will start after</div>{" "}
-                {dayjs?.duration(diffTime, "seconds").format("HH:mm:ss")}
+                {/* <span> The allocation mechanism will start after</span>{" "}
+                {dayjs?.duration(diffTime, "seconds").format("HH:mm:ss")} */}
+                {t("257", {
+                  time: dayjs?.duration(diffTime, "seconds").format("HH:mm:ss"),
+                })}
               </NodeInfo_Top_Tip>
             )}
 
             <Pool_Amount>
-              <div>Insurance Pool Amount</div>
+              <div>{t("251")}</div>
               {InsureStatus?.poolNum ?? 0} MBK
             </Pool_Amount>
             <NodeInfo_Top_Message>
-              {dateFormat(
+              {/* {dateFormat(
                 "YYYY-mm-dd HH:MM:SS",
                 new Date(LastRecord?.createTime)
               )}{" "}
               {AddrHandle(LastRecord?.userAddress, 6, 4)} pledge value
-              {LastRecord?.pledgeAmount ?? 0}USDT
+              {LastRecord?.pledgeAmount ?? 0}USDT */}
+
+              {t("21", {
+                time: dateFormat("HH:MM:SS", new Date(LastRecord?.createTime)),
+                address: AddrHandle(LastRecord?.userAddress, 6, 4),
+                num: LastRecord?.pledgeAmount,
+              })}
             </NodeInfo_Top_Message>
           </NodeInfo_Top>
         ) : (
           <>
             <NodeInfo_Bottom_Box>
-              export{" "}
+              {/* export{" "} */}
               <NodeInfo_Top_Rule>
-                <HelpIconAuto /> Rule export{" "}
+                <HelpIconAuto /> {t("12")}{" "}
               </NodeInfo_Top_Rule>
               <ModalContainer_Title_Container>
                 <img src={menuIcon7} />
-                <ModalContainer_Title>Insurance Status</ModalContainer_Title>
+                <ModalContainer_Title>{t("248")}</ModalContainer_Title>
               </ModalContainer_Title_Container>
               <NodeInfo_Bottom_Box_Tip>
-                <div> Compensated and pending</div>{" "}
+                <div> {t("259")}</div>{" "}
                 <div>
                   {InsureStatus?.waitReceiveAmount ?? 0} <span>mbk</span>
                 </div>
@@ -423,21 +432,23 @@ export default function Rank() {
                   getRewardFun(InsureStatus?.waitReceiveAmount ?? 0, 16);
                 }}
               >
-                receive
+                {t("103")}
               </ReceiveBtn>
             </NodeInfo_Bottom_Box>
             <NodeInfo_Bottom_Bottom_Box>
               <Pool_Amount>
-                <div>Insurance Pool Amount</div>
+                <div>{t("251")}</div>
                 {InsureStatus?.poolNum ?? 0} MBK
               </Pool_Amount>
               <NodeInfo_Top_Message>
-                {dateFormat(
-                  "YYYY-mm-dd HH:MM:SS",
-                  new Date(LastRecord?.createTime)
-                )}{" "}
-                {AddrHandle(LastRecord?.userAddress, 6, 4)} pledge value
-                {LastRecord?.pledgeAmount ?? 0}USDT
+                {t("21", {
+                  time: dateFormat(
+                    "HH:MM:SS",
+                    new Date(LastRecord?.createTime)
+                  ),
+                  address: AddrHandle(LastRecord?.userAddress, 6, 4),
+                  num: LastRecord?.pledgeAmount,
+                })}
               </NodeInfo_Top_Message>
             </NodeInfo_Bottom_Bottom_Box>
           </>
@@ -445,32 +456,44 @@ export default function Rank() {
       </NodeInfo>
       <DirectPush_Title_Container>
         <img src={DirectPushListIcon} />
-        <ModalContainer_Title>
-          Enter in reverse order 10 people
-        </ModalContainer_Title>
+        <ModalContainer_Title>{t("252")}</ModalContainer_Title>
       </DirectPush_Title_Container>
-      <DirectPush_Content_Container>
-        <DirectPush_Content_Container_Header>
-          <div>Number</div>
-          <div>Address</div>
-          <div>
-            Current <div>pledge（USDT）</div>{" "}
-          </div>
-          <div>
-            Compensation <div>multiple</div>
-          </div>
-        </DirectPush_Content_Container_Header>
-        <DirectPush_Content_Container_Content>
-          {InsureRank?.map((item: any, index: any) => (
-            <DirectPush_Content_Container_Content_Item key={index}>
-              <div>{Number(index) + 1}</div>
-              <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
-              <div>{item?.pledgeAmount ?? 0}</div>
-              <div>{item?.multiple ?? 0}</div>
-            </DirectPush_Content_Container_Content_Item>
-          ))}
-        </DirectPush_Content_Container_Content>
-      </DirectPush_Content_Container>
+      {InsureRank?.length > 0 ? (
+        <DirectPush_Content_Container>
+          <DirectPush_Content_Container_Header>
+            <div>{t("253")}</div>
+            <div>{t("254")}</div>
+            {i18n.language === "en" ? (
+              <div>
+                Current <div>pledge（USDT）</div>{" "}
+              </div>
+            ) : (
+              <div>{t("255")}</div>
+            )}
+            {i18n.language === "en" ? (
+              <div>
+                Compensation <div>multiple</div>
+              </div>
+            ) : (
+              <div>{t("256")}</div>
+            )}
+          </DirectPush_Content_Container_Header>
+          <DirectPush_Content_Container_Content>
+            {InsureRank?.map((item: any, index: any) => (
+              <DirectPush_Content_Container_Content_Item key={index}>
+                <div>{Number(index) + 1}</div>
+                <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
+                <div>{item?.pledgeAmount ?? 0}</div>
+                <div>{item?.multiple ?? 0}</div>
+              </DirectPush_Content_Container_Content_Item>
+            ))}
+          </DirectPush_Content_Container_Content>
+        </DirectPush_Content_Container>
+      ) : (
+        <DirectPush_Content_Container>
+          <NoData />
+        </DirectPush_Content_Container>
+      )}
     </NodeContainerBox>
   );
 }

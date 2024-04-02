@@ -421,15 +421,10 @@ export default function Rank() {
   const onChange = (checked: boolean) => {
     if (Number(SubTab) !== 0) return;
   };
-  const TypeObj = {
-    1: "质押中",
-    2: "待赎回",
-    3: "已赎回",
-  };
 
   const subTabArr = {
     1: [
-      { key: -1, name: "All" },
+      { key: -1, name: "189" },
       { key: 0, name: "Pledge in progress" },
       { key: 1, name: "To Be Redeemed" },
       { key: 2, name: "Redeemed" },
@@ -573,9 +568,12 @@ export default function Rank() {
                           </span>
                         </div>
 
-                        <div>State{StateObj(item?.status)}</div>
                         <div>
-                          Transaction hash
+                          {t("198")}
+                          {StateObj(item?.status)}
+                        </div>
+                        <div>
+                          {t("199")}
                           <span>{AddrHandle(item?.pledgeHash, 6, 6)}</span>
                         </div>
                       </Award_Record_Content_Record_Content_Item>
@@ -596,7 +594,7 @@ export default function Rank() {
                         type={1}
                       >
                         <div>
-                          time
+                          {t("201")}
                           <span>
                             {" "}
                             {dateFormat(
@@ -610,9 +608,12 @@ export default function Rank() {
                           <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                         </div>
 
-                        <div>State{StateObj(2)}</div>
                         <div>
-                          Transaction hash
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
                           <span>{AddrHandle(item?.redemptionHash, 6, 6)}</span>
                         </div>
                       </Get_Record_Content_Record_Content_Item>
@@ -637,7 +638,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        time
+                        {t("201")}
                         <span>
                           {" "}
                           {dateFormat(
@@ -650,9 +651,12 @@ export default function Rank() {
                         Amount(MBK)<span>{item?.amount ?? 0}</span>
                       </div>
 
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>

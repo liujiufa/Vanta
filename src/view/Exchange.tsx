@@ -233,23 +233,23 @@ export default function Rank() {
           );
       } catch (error: any) {
         showLoding(false);
-        return addMessage("兑换失败");
+        return addMessage(t("238"));
       }
       showLoding(false);
       if (!!res?.status) {
         call();
-        addMessage("兑换成功");
+        addMessage(t("239"));
       } else {
-        addMessage("兑换失败");
+        addMessage(t("238"));
       }
     });
   };
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>success</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -298,7 +298,7 @@ export default function Rank() {
           <div>USDT</div>
           <input
             type="number"
-            placeholder="Please enter quantity"
+            placeholder={t("240")}
             value={InputValue1}
             onChange={InputValueFun}
           />
@@ -312,7 +312,7 @@ export default function Rank() {
           <input
             type="number"
             value={InputValue2}
-            placeholder="Please enter quantity"
+            placeholder={t("240")}
             onChange={InputValueFun}
           />
         </CoinBox_Item>
@@ -342,7 +342,7 @@ export default function Rank() {
               <div>USDT</div>
               <input
                 type="number"
-                placeholder="Please enter quantity"
+                placeholder={t("240")}
                 onClick={InputValueFun}
               />
             </CoinBox_Item> */}
@@ -367,7 +367,7 @@ export default function Rank() {
               <input
                 type="number"
                 readOnly={true}
-                placeholder="Please enter quantity"
+                placeholder={t("240")}
               />
             </CoinBox_Item> */}
           </CoinBox>
@@ -379,7 +379,7 @@ export default function Rank() {
             SwapFun(String(amount));
           }}
         >
-          exchange
+          {t("241")}
         </NodeInfo_Bottom>
       </NodeInfo>
       <DirectPush_Title_Container>
@@ -392,7 +392,7 @@ export default function Rank() {
             RecordList?.map((item: any, index: any) => (
               <Get_Record_Content_Record_Content_Item key={index} type={1}>
                 <div>
-                  Time{" "}
+                  {t("201")}{" "}
                   <span>
                     {dateFormat(
                       "YYYY-mm-dd HH:MM:SS",
@@ -400,18 +400,37 @@ export default function Rank() {
                     )}
                   </span>
                 </div>
+                {/* {false ? (
+                  <> */}
                 <div>
-                  From (USDT) <span>{item?.formNum}</span>
+                  {t("243", { coinName: item?.formCoin })}{" "}
+                  <span>{item?.formNum}</span>
                 </div>
                 <div>
-                  To (MBK) <span>{item?.toNum}</span>
+                  {t("244", { coinName: item?.toCoin })}{" "}
+                  <span>{item?.toNum}</span>
+                </div>
+                {/* </>
+                ) : (
+                  <>
+                    <div>
+                      From (USDT) <span>{item?.formNum}</span>
+                    </div>
+                    <div>
+                      To (MBK) <span>{item?.toNum}</span>
+                    </div>
+                  </>
+                )} */}
+                <div>
+                  {t("245")} <span>{item?.coinPrice}</span>
                 </div>
                 <div>
-                  MBK price(USDT) <span>{item?.coinPrice}</span>
+                  {t("198")}
+                  {StateObj(2)}
                 </div>
-                <div>State{StateObj(2)}</div>
                 <div>
-                  Transaction hash<span>{AddrHandle(item?.txId, 6, 6)}</span>
+                  {t("199")}
+                  <span>{AddrHandle(item?.txId, 6, 6)}</span>
                 </div>
               </Get_Record_Content_Record_Content_Item>
             ))

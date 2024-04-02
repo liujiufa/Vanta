@@ -420,13 +420,13 @@ export default function Rank() {
 
   const subTabArr = {
     1: [
-      { key: 0, name: "All" },
+      { key: 0, name: "189" },
       { key: 1, name: "Recommendation Award" },
       { key: 2, name: "Management Award" },
       { key: 0, name: "Level Award" },
     ],
     2: [
-      { key: 0, name: "All" },
+      { key: 0, name: "189" },
       { key: 5, name: "Performance Star Award" },
       { key: 6, name: "Directly promoted star award" },
       { key: 7, name: "NFT team star" },
@@ -495,9 +495,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -511,7 +511,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Award record
+            {t("56")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -519,7 +519,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            Get records
+            {t("173")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -568,10 +568,10 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>{TypeObj[item?.businessType]}</span>
+                        {t("193")} <span>{TypeObj[item?.businessType]}</span>
                       </div>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM",
@@ -580,7 +580,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK){" "}
+                        {t("195")}{" "}
                         <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
@@ -601,7 +601,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Time
+                        {t("201")}
                         <span>
                           {" "}
                           {dateFormat(
@@ -613,9 +613,9 @@ export default function Rank() {
                       <div>
                         Quantity(MBK)<span>{decimalNum(item?.amount, 2)}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
+                      <div>{t("198")}{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>

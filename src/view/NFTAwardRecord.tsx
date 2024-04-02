@@ -434,18 +434,18 @@ export default function Rank() {
 
   const subTabArr = {
     1: [
-      { key: 0, name: "All" },
-      { key: 20, name: "LP Weighted" },
-      { key: 21, name: "Equally Distributed" },
-      { key: 22, name: "Cell Weighting" },
-      { key: 23, name: "Team Star Award" },
+      { key: 0, name: "189" },
+      { key: 20, name: "190" },
+      { key: 21, name: "191" },
+      { key: 22, name: "192" },
+      { key: 23, name: "314" },
     ],
-    2: [
-      { key: 0, name: "All" },
-      { key: 5, name: "Performance Star Award" },
-      { key: 6, name: "Directly promoted star award" },
-      { key: 7, name: "NFT team star" },
-    ],
+    // 2: [
+    //   { key: 0, name: "189" },
+    //   { key: 5, name: "Performance Star Award" },
+    //   { key: 6, name: "Directly promoted star award" },
+    //   { key: 7, name: "NFT team star" },
+    // ],
   };
 
   const getInitData = (type: number) => {
@@ -483,9 +483,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>successful</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -499,7 +499,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            NFT dividends
+            {t("312")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -507,7 +507,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            Get records
+            {t("173")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
@@ -515,7 +515,7 @@ export default function Rank() {
               setActiveTab(3);
             }}
           >
-            Subscription record
+            {t("174")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 4 ? "activeTab" : "tab"}
@@ -523,7 +523,7 @@ export default function Rank() {
               setActiveTab(4);
             }}
           >
-            Activition record
+            {t("313")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -539,7 +539,7 @@ export default function Rank() {
                       setSubTab(item?.key);
                     }}
                   >
-                    {item?.name}
+                    {t(item?.name)}
                   </Award_Record_Content_Tab_Item>
                 ))}
               </Award_Record_Content_Tab_Content>
@@ -548,18 +548,19 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type{" "}
+                        {t("193")}{" "}
                         <span>
-                          {
+                          {t(
                             subTabArr[ActiveTab]?.find(
-                              (item: any) =>
-                                Number(item?.key) === Number(item?.businessType)
+                              (item1: any) =>
+                                Number(item1?.key) ===
+                                Number(item?.businessType)
                             )?.name
-                          }
+                          )}
                         </span>
                       </div>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -568,7 +569,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK) <span>{item?.amount ?? 0}</span>
+                        {t("195")} <span>{item?.amount ?? 0}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -589,7 +590,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Collection time
+                        {t("196")}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -598,11 +599,15 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>{item?.amount ?? 0}</span>
+                        {t("197")}
+                        <span>{item?.amount ?? 0}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
@@ -624,7 +629,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Subscription time
+                        {t("315")}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -633,18 +638,24 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Pay Amount(USDT)<span>{item?.payAmount ?? 0}</span>
+                        {t("316")}
+                        <span>{item?.payAmount ?? 0}</span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>{item?.payNum ?? 0}</span>
+                        {t("317")}
+                        <span>{item?.payNum ?? 0}</span>
                       </div>
 
                       <div>
-                        MBK Price(USDT)<span>{item?.coinPrice ?? 0}</span>
+                        {t("245")}
+                        <span>{item?.coinPrice ?? 0}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
@@ -666,10 +677,11 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Type<span>activation</span>
+                        {t("200")}
+                        <span>{t("97")}</span>
                       </div>
                       <div>
-                        time
+                        {t("201")}
                         <span>
                           {" "}
                           {dateFormat(
@@ -679,12 +691,16 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Pay Amount(MBK)<span>{item?.amount ?? 0}</span>
+                        {t("318")}
+                        <span>{item?.amount ?? 0}</span>
                       </div>
 
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>

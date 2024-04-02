@@ -478,11 +478,11 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
 
   const typeObj = {
-    34: "社区激活记录",
-    35: "社区LP加权奖励",
-    36: "社区平均分配奖励",
-    37: "社区小区加权奖励",
-    38: "社区账户奖励领取记录",
+    34: "97",
+    35: "190",
+    36: "191",
+    37: "192",
+    38: "103",
   };
 
   const getInitData = useCallback(() => {
@@ -543,9 +543,9 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 1) {
-      return <span style={{ color: "#D56819" }}>Confirming</span>;
+      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>success</span>;
+      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
     }
   };
 
@@ -556,10 +556,10 @@ export default function Rank() {
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
               <img src={menuIcon3} />
-              <ModalContainer_Title>My Community</ModalContainer_Title>
+              <ModalContainer_Title>{t("205")}</ModalContainer_Title>
             </ModalContainer_Title_Container>
             <NodeInfo_Mid_Content>
-              <div>To be collected</div>
+              <div>{t("102")}</div>
               <div>
                 {decimalNum(MyCommunity?.amount ?? 0, 2)} <span>mbk</span>
               </div>
@@ -569,39 +569,39 @@ export default function Rank() {
                 getRewardFun(MyCommunity?.amount ?? 0, 12);
               }}
             >
-              receive
+              {t("103")}
             </NodeInfo_Top_Btn>
           </NodeInfo_Top>
         ) : (
           <NodeInfo_Top>
             <ModalContainer_Title_Container>
               <img src={menuIcon3} />
-              <ModalContainer_Title>My Community</ModalContainer_Title>
+              <ModalContainer_Title>{t("205")}</ModalContainer_Title>
             </ModalContainer_Title_Container>
-            <NodeInfo_Top_Tip>No node yet</NodeInfo_Top_Tip>
+            <NodeInfo_Top_Tip>{t("206")}</NodeInfo_Top_Tip>
             <NodeInfo_Top_Btn
               onClick={() => {
                 // setActivationModal(true);
                 Navigate("/View/SubscriptionCommunity");
               }}
             >
-              activation
+              {t("97")}
             </NodeInfo_Top_Btn>
           </NodeInfo_Top>
         )}
         <NodeInfo_Bottom>
           <NodeInfo_Bottom_Item>
-            My LP quantity
+            {t("208")}
             <span>{decimalNum(MyCommunity?.lpNum ?? 0, 2)} LP</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
-            Community subscription performance
+            {t("209")}
             <span>
               {decimalNum(MyCommunity?.communityPerformance ?? 0, 2)} USDT
             </span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
-            Accumulated NFT equity rewards
+            {t("210")}
             <span>{decimalNum(MyCommunity?.totalAmount ?? 0, 2)} MBK</span>
           </NodeInfo_Bottom_Item>
         </NodeInfo_Bottom>
@@ -615,7 +615,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Award record
+            {t("56")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -623,7 +623,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            Get records
+            {t("173")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
@@ -631,7 +631,7 @@ export default function Rank() {
               setActiveTab(3);
             }}
           >
-            Subscription record
+            {t("211")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -644,7 +644,7 @@ export default function Rank() {
                     setSubTab(1);
                   }}
                 >
-                  All
+                  {t("189")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 35 ? "activeSubTab" : ""}
@@ -652,7 +652,7 @@ export default function Rank() {
                     setSubTab(35);
                   }}
                 >
-                  LP WeiAghted
+                  {t("190")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 36 ? "activeSubTab" : ""}
@@ -660,7 +660,7 @@ export default function Rank() {
                     setSubTab(36);
                   }}
                 >
-                  Equally Distributed
+                  {t("191")}
                 </Award_Record_Content_Tab_Item>
                 <Award_Record_Content_Tab_Item
                   className={Number(SubTab) === 37 ? "activeSubTab" : ""}
@@ -668,7 +668,7 @@ export default function Rank() {
                     setSubTab(37);
                   }}
                 >
-                  Cell Weighting
+                  {t("192")}
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
@@ -676,10 +676,10 @@ export default function Rank() {
                   CommunityAwardRecord?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Reward type <span>{typeObj[item?.businessType]}</span>
+                        {t("193")} <span>{t(typeObj[item?.businessType])}</span>
                       </div>
                       <div>
-                        Release time{" "}
+                        {t("194")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -688,7 +688,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity Issued (MBK){" "}
+                        {t("195")}{" "}
                         <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
@@ -709,7 +709,7 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Collection time{" "}
+                        {t("196")}{" "}
                         <span>
                           {" "}
                           {dateFormat(
@@ -719,12 +719,15 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Receive quantity (MBK){" "}
+                        {t("197")}{" "}
                         <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
@@ -745,10 +748,10 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        Type <span>activation</span>
+                        {t("200")} <span>{t("97")}</span>
                       </div>
                       <div>
-                        Time{" "}
+                        {t("201")}{" "}
                         <span>
                           {" "}
                           {dateFormat(
@@ -758,12 +761,15 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Payment amount(USDT){" "}
+                        {t("202")}{" "}
                         <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                       </div>
-                      <div>State{StateObj(2)}</div>
                       <div>
-                        Transaction hash
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
+                      <div>
+                        {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
