@@ -246,6 +246,7 @@ const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
   }
 
   > div {
+    white-space: nowrap;
     font-family: "PingFang SC";
     font-size: 12px;
     font-weight: normal;
@@ -449,11 +450,11 @@ export default function Rank() {
     if (type === 1) {
       return <span style={{ color: "#D56819" }}>{t("203")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
+      return <span style={{ color: "#0256FF" }}>{t("328")}</span>;
     } else if (type === 3) {
-      return <span style={{ color: "#EA0000" }}>fail</span>;
+      return <span style={{ color: "#EA0000" }}>{t("329")}</span>;
     } else if (type === 4) {
-      return <span>Cancel</span>;
+      return <span>{t("330")}</span>;
     }
   };
 
@@ -485,7 +486,7 @@ export default function Rank() {
                   setSubTab(2);
                 }}
               >
-                Successful
+                {t("328")}
               </Award_Record_Content_Tab_Item>
               <Award_Record_Content_Tab_Item
                 className={Number(SubTab) === 3 ? "activeSubTab" : ""}
@@ -493,7 +494,7 @@ export default function Rank() {
                   setSubTab(3);
                 }}
               >
-                Fail
+                {t("329")}
               </Award_Record_Content_Tab_Item>
               <Award_Record_Content_Tab_Item
                 className={Number(SubTab) === 4 ? "activeSubTab" : ""}
@@ -501,7 +502,7 @@ export default function Rank() {
                   setSubTab(4);
                 }}
               >
-                Cancel
+                {t("330")}
               </Award_Record_Content_Tab_Item>
             </Award_Record_Content_Tab_Content>
             <Award_Record_Content_Record_Content>
@@ -509,7 +510,7 @@ export default function Rank() {
                 RecordList?.map((item: any, index: any) => (
                   <Get_Record_Content_Record_Content_Item key={index} type={1}>
                     <div>
-                      {t("201")}
+                      {t("315")}
                       <span>
                         {dateFormat(
                           "YYYY-mm-dd HH:MM",
@@ -518,18 +519,21 @@ export default function Rank() {
                       </span>
                     </div>
                     <div>
-                      Amount(USDT)
+                      {t("316")}
                       <span>{decimalNum(item?.subscriptionValue, 2)}</span>
                     </div>
                     <div>
-                      Quantity(MBK)
+                      {t("317")}
                       <span>{decimalNum(item?.subscriptionNum, 2)}</span>
                     </div>
                     <div>
-                      MBK Price(MBK)
+                      {t("309")}
                       <span>{decimalNum(item?.coinPrice, 2)}</span>
                     </div>
-                    <div>{t("198")}{StateObj(item?.status)}</div>
+                    <div>
+                      {t("198")}
+                      {StateObj(item?.status)}
+                    </div>
                     <div>
                       {t("199")}
                       <span>{AddrHandle(item?.txId, 6, 6)}</span>

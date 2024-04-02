@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getPledgeOrderRecord, getPledgeUserAwardRecord, userInfo } from "../API/index";
+import {
+  getPledgeOrderRecord,
+  getPledgeUserAwardRecord,
+  userInfo,
+} from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -417,18 +421,13 @@ export default function Rank() {
   const onChange = (checked: boolean) => {
     if (Number(SubTab) !== 0) return;
   };
-  const TypeObj = {
-    1: "质押中",
-    2: "待赎回",
-    3: "已赎回",
-  };
 
   const subTabArr = {
     1: [
       { key: -1, name: "189" },
-      { key: 0, name: "Pledge in progress" },
-      { key: 1, name: "To Be Redeemed" },
-      { key: 2, name: "Redeemed" },
+      { key: 0, name: "302" },
+      { key: 1, name: "303" },
+      { key: 2, name: "304" },
     ],
   };
   const getInitData = (type: number) => {
@@ -460,11 +459,11 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 0) {
-      return <span style={{ color: "#D56819" }}>Pledge in progress</span>;
+      return <span style={{ color: "#D56819" }}>{t("302")}</span>;
     } else if (type === 1) {
-      return <span style={{ color: "#D56819" }}>To be redeemed</span>;
+      return <span style={{ color: "#D56819" }}>{t("303")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>redeemed</span>;
+      return <span style={{ color: "#0256FF" }}>{t("304")}</span>;
     }
   };
 
@@ -503,7 +502,7 @@ export default function Rank() {
                       setSubTab(item?.key);
                     }}
                   >
-                    {item?.name}
+                    {t(item?.name)}
                   </Award_Record_Content_Tab_Item>
                 ))}
               </Award_Record_Content_Tab_Content>
@@ -532,11 +531,11 @@ export default function Rank() {
                         <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
                       </div>
                       <div>
-                        MBK Price(MBK)
+                        {t("309")}
                         <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
                       </div>
                       <div>
-                        Pledge cycle<span>{item?.cycle ?? 0} DAY</span>
+                        Pledge cycle<span>{t("48", { num: item?.cycle ?? 0 })}</span>
                       </div>
                       <div>
                         Reinvestment at maturity
@@ -559,7 +558,10 @@ export default function Rank() {
                         </span>
                       </div>
 
-                      <div>{t("198")}{StateObj(item?.status)}</div>
+                      <div>
+                        {t("198")}
+                        {StateObj(item?.status)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.pledgeHash, 6, 6)}</span>
@@ -591,7 +593,10 @@ export default function Rank() {
                       <div>
                         Corresponding Pledge ID<span>{item?.orderNo}</span>
                       </div>
-                      <div>{t("198")}{StateObj(2)}</div>
+                      <div>
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.redemptionHash, 6, 6)}</span>

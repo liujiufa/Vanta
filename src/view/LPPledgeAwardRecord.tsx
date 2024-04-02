@@ -441,16 +441,11 @@ export default function Rank() {
   const subTabArr = {
     1: [
       { key: -1, name: "189" },
-      { key: 0, name: "质押中" },
-      { key: 1, name: "待赎回 " },
-      { key: 2, name: "已赎回" },
+      { key: 0, name: "302" },
+      { key: 1, name: "303" },
+      { key: 2, name: "304" },
     ],
-    2: [
-      { key: 0, name: "189" },
-      { key: 5, name: "Performance Star Award" },
-      { key: 6, name: "Directly promoted star award" },
-      { key: 7, name: "NFT team star" },
-    ],
+    2: [],
   };
 
   const getInitData = (type: -1 | 0 | 1 | 2) => {
@@ -495,11 +490,11 @@ export default function Rank() {
   };
   const pledgeStateObj = (type: number) => {
     if (type === 0) {
-      return <span style={{ color: "#D56819" }}>Pledge in progress</span>;
+      return <span style={{ color: "#D56819" }}>{t("302")}</span>;
     } else if (type === 1) {
-      return <span style={{ color: "#0256FF" }}>Redeeming</span>;
+      return <span style={{ color: "#0256FF" }}>{t("303")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#D56819" }}>redeemed</span>;
+      return <span style={{ color: "#D56819" }}>{t("304")}</span>;
     }
   };
 
@@ -513,7 +508,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            质押记录
+            {t("319")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -521,7 +516,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            赎回记录
+            {t("320")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
@@ -529,7 +524,7 @@ export default function Rank() {
               setActiveTab(3);
             }}
           >
-            分红记录
+            {t("321")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 4 ? "activeTab" : "tab"}
@@ -537,7 +532,7 @@ export default function Rank() {
               setActiveTab(4);
             }}
           >
-            领取记录
+            {t("322")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -553,7 +548,7 @@ export default function Rank() {
                       setSubTab(item?.key);
                     }}
                   >
-                    {item?.name}
+                    {t(item?.name)}
                   </Award_Record_Content_Tab_Item>
                 ))}
               </Award_Record_Content_Tab_Content>
@@ -562,11 +557,11 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Pledge ID
+                        {t("305")}
                         <span>{item?.orderNo}</span>
                       </div>
                       <div>
-                        {t("201")}{" "}
+                        {t("306")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -575,13 +570,13 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Pledge Amount(LP) <span>{item?.num ?? 0}</span>
+                        {t("323")} <span>{item?.num ?? 0}</span>
                       </div>
                       <div>
-                        质押周期 <span>{item?.pledgeCycle ?? 0}天</span>
+                        {t("310")} <span>{item?.pledgeCycle ?? 0}天</span>
                       </div>
                       <div>
-                        到期时间{" "}
+                        {t("311")}{" "}
                         <span>
                           {" "}
                           {dateFormat(
@@ -590,7 +585,10 @@ export default function Rank() {
                           )}
                         </span>
                       </div>
-                      <div>{t("198")}{pledgeStateObj(item?.status)}</div>
+                      <div>
+                        {t("198")}
+                        {pledgeStateObj(item?.status)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
@@ -611,7 +609,7 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        {t("201")}{" "}
+                        {t("324")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM:SS",
@@ -620,13 +618,16 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Amount(LP) <span>{item?.amount ?? 0}</span>
+                        {t("325")} <span>{item?.amount ?? 0}</span>
                       </div>
                       <div>
-                        对应质押ID <span>{item?.pledgeOrderNo ?? 0}</span>
+                        {t("326")} <span>{item?.pledgeOrderNo ?? 0}</span>
                       </div>
 
-                      <div>{t("198")}{StateObj(2)}</div>
+                      <div>
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
@@ -650,7 +651,8 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        {t("200")}<span>LP质押分红</span>
+                        {t("200")}
+                        <span>{t("109")}</span>
                       </div>
                       <div>
                         {t("201")}
@@ -663,7 +665,8 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Amount(MBK)<span>{item?.amount ?? 0}</span>
+                        {t("195")}
+                        <span>{item?.amount ?? 0}</span>
                       </div>
                     </Get_Record_Content_Record_Content_Item>
                   ))
@@ -694,10 +697,14 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Amount(MBK)<span>{item?.amount ?? 0}</span>
+                        {t("197")}
+                        <span>{item?.amount ?? 0}</span>
                       </div>
 
-                      <div>{t("198")}{StateObj(2)}</div>
+                      <div>
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>

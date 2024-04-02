@@ -13,6 +13,7 @@ const SubscriptionCommunity = React.lazy(
 );
 const Invite = React.lazy(() => import("../view/Invite"));
 const Exchange = React.lazy(() => import("../view/Exchange"));
+const Swap = React.lazy(() => import("../view/Swap"));
 const Insurance = React.lazy(() => import("../view/Insurance"));
 const LotteryGame = React.lazy(() => import("../view/LotteryGame"));
 const FinancialRecord = React.lazy(() => import("../view/FinancialRecord"));
@@ -57,7 +58,8 @@ export default function Router() {
               element={<SubscriptionCommunity />}
             ></Route>
             <Route path="Invite" element={<Invite />}></Route>
-            <Route path="Swap" element={<Exchange />}></Route>
+            <Route path="Swap" element={<Swap />}></Route>
+            <Route path="Exchange" element={<Exchange />}></Route>
             <Route path="Insurance" element={<Insurance />}></Route>
             <Route path="ZeroStroke" element={<ZeroStroke />}></Route>
             <Route path="LotteryGame" element={<LotteryGame />}></Route>

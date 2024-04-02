@@ -409,30 +409,32 @@ export default function Rank() {
   //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
   //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
   const TypeObj = {
-    1: "推荐奖励",
-    2: "管理奖励",
-    3: "平级奖励",
-    4: "领取奖励",
-    5: "业绩明星奖励",
-    6: "直推明星奖励",
-    7: "NFT团队明星奖励",
+    1: "331",
+    2: "332",
+    3: "333",
+    4: "334",
+    5: "335",
+    6: "336",
+    7: "337",
   };
 
   const subTabArr = {
     1: [
       { key: 0, name: "189" },
-      { key: 1, name: "Recommendation Award" },
-      { key: 2, name: "Management Award" },
-      { key: 0, name: "Level Award" },
+      { key: 1, name: "338" },
+      { key: 2, name: "339" },
+      { key: 0, name: "340" },
     ],
     2: [
       { key: 0, name: "189" },
-      { key: 5, name: "Performance Star Award" },
-      { key: 6, name: "Directly promoted star award" },
-      { key: 7, name: "NFT team star" },
+      { key: 5, name: "335" },
+      { key: 6, name: "336" },
+      { key: 7, name: "337" },
     ],
   };
   // type:3 NFT先锋奖励记录
+  //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
+  //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
   const recordType: number = Number((stateObj as any)?.type);
   const getAwardRecord = (type: any) => {
     if (recordType === 1) {
@@ -535,7 +537,7 @@ export default function Rank() {
                       setSubTab(item?.key);
                     }}
                   >
-                    {item?.name}
+                    {t(item?.name)}
                   </Award_Record_Content_Tab_Item>
                 ))}
                 {/* <Award_Record_Content_Tab_Item
@@ -568,7 +570,7 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        {t("193")} <span>{TypeObj[item?.businessType]}</span>
+                        {t("193")} <span>{t(TypeObj[item?.businessType])}</span>
                       </div>
                       <div>
                         {t("201")}{" "}
@@ -580,8 +582,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        {t("195")}{" "}
-                        <span>{decimalNum(item?.amount, 2)}</span>
+                        {t("195")} <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -611,9 +612,13 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>{decimalNum(item?.amount, 2)}</span>
+                        {t("197")}
+                        <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
-                      <div>{t("198")}{StateObj(2)}</div>
+                      <div>
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>

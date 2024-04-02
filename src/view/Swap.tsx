@@ -334,63 +334,56 @@ export default function Rank() {
 
   return (
     <NodeContainerBox>
-      <DirectPush_Title_Container>
-        <img src={exchangeIcon} alt="" />
-        <ModalContainer_Title>{t("242")}</ModalContainer_Title>
-      </DirectPush_Title_Container>
-      <Award_Record_Content>
-        <Award_Record_Content_Record_Content>
-          {RecordList?.length > 0 ? (
-            RecordList?.map((item: any, index: any) => (
-              <Get_Record_Content_Record_Content_Item key={index} type={1}>
-                <div>
-                  {t("201")}{" "}
-                  <span>
-                    {dateFormat(
-                      "YYYY-mm-dd HH:MM:SS",
-                      new Date(item?.createTime)
-                    )}
-                  </span>
-                </div>
-                {/* {false ? (
-                  <> */}
-                <div>
-                  {t("243", { coinName: item?.formCoin })}{" "}
-                  <span>{item?.formNum}</span>
-                </div>
-                <div>
-                  {t("244", { coinName: item?.toCoin })}{" "}
-                  <span>{item?.toNum}</span>
-                </div>
-                {/* </>
-                ) : (
-                  <>
-                    <div>
-                      From (USDT) <span>{item?.formNum}</span>
-                    </div>
-                    <div>
-                      To (MBK) <span>{item?.toNum}</span>
-                    </div>
-                  </>
-                )} */}
-                <div>
-                  {t("245")} <span>{item?.coinPrice}</span>
-                </div>
-                <div>
-                  {t("198")}
-                  {StateObj(2)}
-                </div>
-                <div>
-                  {t("199")}
-                  <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                </div>
-              </Get_Record_Content_Record_Content_Item>
-            ))
-          ) : (
-            <NoData></NoData>
-          )}
-        </Award_Record_Content_Record_Content>
-      </Award_Record_Content>
+      {location.pathname === "/View/Swap" && (
+        <NodeInfo>
+          <NodeInfo_Top>
+            <CoinBox>
+              {/* <CoinBox_Item>
+              <img src={logo} />
+              <div>USDT</div>
+              <input
+                type="number"
+                placeholder={t("240")}
+                onClick={InputValueFun}
+              />
+            </CoinBox_Item> */}
+              {CoinTopBox(Number(swapType))}
+              <CoinBox_Transfer>
+                <img
+                  src={transferIcon}
+                  alt=""
+                  onClick={() => {
+                    setSwapType(Number(swapType) === 1 ? 2 : 1);
+                  }}
+                />
+                {Number(swapType) === 1
+                  ? `1USDT=${Price ?? "--"}MBK`
+                  : `1MBK=${Price ?? "--"}USDT`}
+              </CoinBox_Transfer>
+              {CoinTopBox(Number(swapType) === 1 ? 2 : 1)}
+
+              {/* <CoinBox_Item>
+              <img src={logo} />
+              <div>MBK</div>
+              <input
+                type="number"
+                readOnly={true}
+                placeholder={t("240")}
+              />
+            </CoinBox_Item> */}
+            </CoinBox>
+          </NodeInfo_Top>
+
+          <NodeInfo_Bottom
+            onClick={() => {
+              let amount = Number(swapType) === 1 ? InputValue1 : InputValue2;
+              SwapFun(String(amount));
+            }}
+          >
+            {t("241")}
+          </NodeInfo_Bottom>
+        </NodeInfo>
+      )}
     </NodeContainerBox>
   );
 }

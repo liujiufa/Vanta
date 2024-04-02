@@ -416,7 +416,7 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
 
-  //1:认购奖励财务记录 2:NFT奖励领取记录
+  //1:首发认购奖励财务记录 2:NFT奖励领取记录
   const recordType: number = Number((stateObj as any)?.recordType);
   const onChange = (checked: boolean) => {
     if (Number(SubTab) !== 0) return;
@@ -425,9 +425,9 @@ export default function Rank() {
   const subTabArr = {
     1: [
       { key: -1, name: "189" },
-      { key: 0, name: "Pledge in progress" },
-      { key: 1, name: "To Be Redeemed" },
-      { key: 2, name: "Redeemed" },
+      { key: 0, name: "302" },
+      { key: 1, name: "303" },
+      { key: 2, name: "304" },
     ],
     2: [],
   };
@@ -468,11 +468,11 @@ export default function Rank() {
 
   const StateObj = (type: number) => {
     if (type === 0) {
-      return <span style={{ color: "#D56819" }}>Pledge in progress</span>;
+      return <span style={{ color: "#D56819" }}>{t("302")}</span>;
     } else if (type === 1) {
-      return <span style={{ color: "#D56819" }}>To be redeemed</span>;
+      return <span style={{ color: "#D56819" }}>{t("303")}</span>;
     } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>redeemed</span>;
+      return <span style={{ color: "#0256FF" }}>{t("304")}</span>;
     }
   };
 
@@ -487,7 +487,7 @@ export default function Rank() {
                 setActiveTab(1);
               }}
             >
-              Pledge record
+              {t("319")}
             </NodeRecord_Tab_Item>
             <NodeRecord_Tab_Item
               className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -495,7 +495,7 @@ export default function Rank() {
                 setActiveTab(2);
               }}
             >
-              redemption record
+              {t("320")}
             </NodeRecord_Tab_Item>
           </NodeRecord_Tab>
           <NodeRecord_Content>
@@ -512,7 +512,7 @@ export default function Rank() {
                         setSubTab(item?.key);
                       }}
                     >
-                      {item?.name}
+                      {t(item?.name)}
                     </Award_Record_Content_Tab_Item>
                   ))}
                 </Award_Record_Content_Tab_Content>
@@ -521,10 +521,10 @@ export default function Rank() {
                     RecordList?.map((item: any, index: any) => (
                       <Award_Record_Content_Record_Content_Item key={index}>
                         <div>
-                          Pledge ID <span>{item?.orderNo}</span>
+                          {t("305")} <span>{item?.orderNo}</span>
                         </div>
                         <div>
-                          Pledge time{" "}
+                          {t("306")}{" "}
                           <span>
                             {dateFormat(
                               "YYYY-mm-dd HH:MM",
@@ -533,21 +533,23 @@ export default function Rank() {
                           </span>
                         </div>
                         <div>
-                          Pledge Quantity(MBK){" "}
+                          {t("307")}{" "}
                           <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
                         </div>
                         <div>
-                          Pledge Amount(USDT)
+                          {t("308")}
                           <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
                         </div>
                         <div>
-                          MBK Price(MBK)
+                          {t("309")}
                           <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
                         </div>
                         <div>
-                          Pledge cycle<span>{item?.cycle ?? 0} DAY</span>
+                          {t("310")}
+                          <span>{t("48", { num: item?.cycle ?? 0 })}</span>
+                          {/* <span>{t("48", { num: item?.cycle ?? 0 })}</span> */}
                         </div>
-                        <div>
+                        {/* <div>
                           Reinvestment at maturity
                           <span>
                             {" "}
@@ -557,9 +559,9 @@ export default function Rank() {
                               onChange={onChange}
                             />
                           </span>
-                        </div>
+                        </div> */}
                         <div>
-                          maturity Time
+                          {t("311")}
                           <span>
                             {dateFormat(
                               "YYYY-mm-dd HH:MM",
@@ -594,7 +596,7 @@ export default function Rank() {
                         type={1}
                       >
                         <div>
-                          {t("201")}
+                          {t("324")}
                           <span>
                             {" "}
                             {dateFormat(
@@ -604,7 +606,7 @@ export default function Rank() {
                           </span>
                         </div>
                         <div>
-                          Redemption Quantity(MBK)
+                          {t("327")}
                           <span>{decimalNum(item?.amount ?? 0, 2)}</span>
                         </div>
 
@@ -648,7 +650,8 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Amount(MBK)<span>{item?.amount ?? 0}</span>
+                        {t("197")}
+                        <span>{item?.amount ?? 0}</span>
                       </div>
 
                       <div>
