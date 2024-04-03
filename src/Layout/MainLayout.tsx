@@ -43,6 +43,7 @@ import "../assets/style/layout.scss";
 import { Menu, Dropdown, Modal } from "antd";
 import useConnectWallet, {
   connector,
+  walletConnectConnector,
   // walletConnectConnector,
 } from "../hooks/useConnectWallet";
 import { contractAddress, LOCAL_KEY } from "../config";
@@ -639,8 +640,12 @@ const MainLayout: React.FC = () => {
     }
   }, [web3React.account, InputValue]);
 
-  const ConnectWalletFun = async (type: any) => {
-    connectWallet && connectWallet(connector);
+  const ConnectWalletFun = async (type: number) => {
+    if (type === 1) {
+      connectWallet && connectWallet(connector);
+    } else if (type === 2) {
+      // connectWallet && connectWallet(walletConnectConnector);
+    }
     await LoginFun();
   };
 
@@ -953,7 +958,7 @@ const MainLayout: React.FC = () => {
             </WalletItem>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(1);
+                ConnectWalletFun(2);
               }}
             >
               <OkxIcon />

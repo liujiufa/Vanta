@@ -5,7 +5,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { ChainId } from "../web3";
 import { networkConf } from "../web3";
 import { chain } from "lodash";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { WalletConnect } from "@web3-react/walletconnect-v2";
 
 export const connector = new InjectedConnector({
   supportedChainIds: [Number(ChainId.BSC)],
@@ -16,7 +16,7 @@ const bscTestnet = {
   },
   chainId: 97,
 };
-// export const walletConnectConnector = new WalletConnectConnector({
+// export const walletConnectConnector = new WalletConnect({
 //   rpc: bscTestnet.rpc,
 //   chainId: bscTestnet.chainId,
 //   bridge: "https://bridge.walletconnect.org",
