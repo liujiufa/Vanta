@@ -23,7 +23,7 @@ import prohibit from "./assets/image/prohibit.png";
 import cloneIcon from "./assets/image/closeIcon.svg";
 
 import { t } from "i18next";
-import useConnectWallet from "./hooks/useConnectWallet";
+import useConnectWallet, { connector } from "./hooks/useConnectWallet";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Web3 from "web3";
@@ -59,7 +59,7 @@ function App() {
   }, [web3React.account]);
 
   useEffect(() => {
-    connectWallet && connectWallet();
+    connectWallet && connectWallet(connector);
   }, [connectWallet]);
 
   return (

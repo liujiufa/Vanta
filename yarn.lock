@@ -2873,7 +2873,7 @@
   "resolved" "https://registry.npmmirror.com/@web3-react/types/-/types-6.0.7.tgz"
   "version" "6.0.7"
 
-"@web3-react/walletconnect-connector@^6.2.10":
+"@web3-react/walletconnect-connector@^6.2.13":
   "integrity" "sha512-rTsYLv2UpQZ92Yv5kyIwzrG+2aQkzE8ki2ElotJ6GmSl3yF9WSaGNfKpE8XI5+aPvbAk4mMn8lIy+os3a9gJgw=="
   "resolved" "https://registry.npmmirror.com/@web3-react/walletconnect-connector/-/walletconnect-connector-6.2.13.tgz"
   "version" "6.2.13"

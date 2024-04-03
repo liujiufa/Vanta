@@ -43,27 +43,27 @@ export const networkConf = {
   },
 };
 //切换链
-export const changeNetwork = (chainId: number) => {
-  return new Promise<void>((reslove) => {
-    const { ethereum } = window;
-    if (ethereum && ethereum.isMetaMask && networkConf[chainId]) {
-      ethereum
-        .request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              ...networkConf[chainId],
-            },
-          ],
-        })
-        .then(() => {
-          setTimeout(reslove, 500);
-        });
-    } else {
-      reslove();
-    }
-  });
-};
+// export const changeNetwork = (chainId: number) => {
+//   return new Promise<void>((reslove) => {
+//     const { ethereum } = window;
+//     if (ethereum && ethereum.isMetaMask && networkConf[chainId]) {
+//       ethereum
+//         .request({
+//           method: "wallet_addEthereumChain",
+//           params: [
+//             {
+//               ...networkConf[chainId],
+//             },
+//           ],
+//         })
+//         .then(() => {
+//           setTimeout(reslove, 500);
+//         });
+//     } else {
+//       reslove();
+//     }
+//   });
+// };
 
 export class Contracts {
   //单例

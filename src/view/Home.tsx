@@ -153,7 +153,7 @@ const MenuList_Item = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  text-align: center;
   font-family: "PingFang SC";
   font-size: 12px;
   font-weight: normal;

@@ -41,7 +41,10 @@ import closeIcon from "../assets/image/closeIcon.svg";
 
 import "../assets/style/layout.scss";
 import { Menu, Dropdown, Modal } from "antd";
-import useConnectWallet from "../hooks/useConnectWallet";
+import useConnectWallet, {
+  connector,
+  // walletConnectConnector,
+} from "../hooks/useConnectWallet";
 import { contractAddress, LOCAL_KEY } from "../config";
 import { useViewport } from "../components/viewportContext";
 import Web3 from "web3";
@@ -477,7 +480,7 @@ const MainLayout: React.FC = () => {
 
   const langArr = [
     { key: "en", label: "English" },
-    { key: "zh", label: "中文" },
+    { key: "zh", label: "ZH 中文" },
     { key: "ja", label: "JA 日本語" },
     { key: "ko", label: "KO 한국어" },
     { key: "ar", label: "AR عربي" },
@@ -636,7 +639,8 @@ const MainLayout: React.FC = () => {
     }
   }, [web3React.account, InputValue]);
 
-  const ConnectWalletFun = async (type: 1) => {
+  const ConnectWalletFun = async (type: any) => {
+    connectWallet && connectWallet(connector);
     await LoginFun();
   };
 

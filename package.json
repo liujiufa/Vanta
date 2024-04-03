@@ -11,7 +11,7 @@
     "@umijs/hooks": "^1.9.3",
     "@web3-react/core": "6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.2.10",
+    "@web3-react/walletconnect-connector": "^6.2.13",
     "ant-design": "^1.0.0",
     "antd": "^4.24.1",
     "antd-mobile": "^5.34.0",
