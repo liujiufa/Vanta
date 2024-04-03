@@ -171,6 +171,8 @@ const DropdownContainer = styled(Dropdown)`
     }
 
     .LangItem {
+      white-space: nowrap;
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -474,11 +476,11 @@ const MainLayout: React.FC = () => {
   }
 
   const langArr = [
+    { key: "en", label: "English" },
     { key: "zh", label: "中文" },
-    // { key: "en", label: "English" },
-    // { key: "ja", label: "JA 日本語" },
-    // { key: "ko", label: "KO 한국어" },
-    // { key: "vi", label: "VI Tiếng" },
+    { key: "ja", label: "JA 日本語" },
+    { key: "ko", label: "KO 한국어" },
+    { key: "ar", label: "AR عربي" },
     // { key: "th", label: "TH ภาษาไทย" },
   ];
 
