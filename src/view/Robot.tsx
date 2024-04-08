@@ -61,6 +61,7 @@ import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { throttle } from "lodash";
 import { log } from "console";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -640,19 +641,20 @@ const NodeInfo_Mid_Rule_Robot = styled(NodeInfo_Mid_Rule)`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const token = useSelector<stateType, any>((state) => state.token);
-  const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
-  const [SubTab, setSubTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Price, setPrice] = useState<any>("");
+  const [UserBuyBotInfo, setUserBuyBotInfo] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>("");
   const [InputValueAmountValue, setInputValueAmountValue] = useState<any>("0");
-  const [ActivationModal, setActivationModal] = useState(false);
   const {
     TOKENBalance,
     TOKENAllowance,
@@ -684,8 +686,8 @@ export default function Rank() {
   };
 
   const getVilifyState = throttle(async (value: string) => {
-    if (!account) return;
-    return Contracts.example.queryUsdtByMbk(account as string, value);
+    if (!web3ModalAccount) return;
+    return Contracts.example.queryUsdtByMbk(web3ModalAccount as string, value);
   }, 2000);
 
   const InputValueFun = async (e: any) => {
@@ -733,20 +735,35 @@ export default function Rank() {
   }, [token]);
 
   useEffect(() => {
-    if (account) {
+    if (web3ModalAccount) {
       getVilifyState("1")?.then((res: any) => {
         setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
       });
+      Contracts.example
+        ?.queryUserBuyBotInfo(web3ModalAccount as string)
+        .then((res: any) => {
+          console.log(res, "queryUserBuyBotInfo");
+
+          setUserBuyBotInfo(
+            decimalNum(EthertoWei(res[res?.length - 1] ?? "0"), 2)
+          );
+        });
     }
-  }, [account]);
+  }, [web3ModalAccount]);
 
   const buyRobotFun = (value: string) => {
     if (Number(value) <= 0) return;
+    if (Number(UserBuyBotInfo) > Number(value))
+      return addMessage(t("358", { num: UserBuyBotInfo }));
+
     handleTransaction(value, async (call: any) => {
       let res: any;
       try {
         showLoding(true);
-        res = await Contracts.example?.buyBot(account as string, value);
+        res = await Contracts.example?.buyBot(
+          web3ModalAccount as string,
+          value
+        );
       } catch (error: any) {
         showLoding(false);
         return addMessage(t("164"));
@@ -754,6 +771,15 @@ export default function Rank() {
       showLoding(false);
       if (!!res?.status) {
         call();
+        Contracts.example
+          ?.queryUserBuyBotInfo(web3ModalAccount as string)
+          .then((res: any) => {
+            console.log(res, "queryUserBuyBotInfo");
+
+            setUserBuyBotInfo(
+              decimalNum(EthertoWei(res[res?.length - 1] ?? "0"), 2)
+            );
+          });
         addMessage(t("165"));
       } else {
         addMessage(t("164"));
@@ -826,6 +852,9 @@ export default function Rank() {
                 <div>
                   <input
                     type="number"
+                    placeholder={t(`358`, {
+                      num: UserBuyBotInfo,
+                    })}
                     value={!!InputValueAmount ? InputValueAmount : ""}
                     onChange={(e) => {
                       InputValueFun(e);

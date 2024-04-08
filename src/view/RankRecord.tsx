@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { getRobotRankRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
-import Table from "../components/Table";
-import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
@@ -311,7 +309,6 @@ const Award_Record_Content_Record_Content_Item = styled(
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const { state: typeObj } = useLocation();
@@ -329,6 +326,7 @@ export default function Rank() {
   const recordType: number = Number((typeObj as any)?.recordType);
   // 1机器人业绩明星 2机器人-直推明星 3机器人-NFT团队明星 4-质押业绩明星 5-质押直推明星 6-质押NFT团队明星 7NFT-先锋排名
   const getInitData = () => {
+    setRecordList([]);
     getRobotRankRecord({
       month: DateString?.getMonth() + 1,
       type: recordType === 1 ? ActiveTab : Number(ActiveTab) + 3,
@@ -345,25 +343,6 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token, ActiveTab, DateString, recordType]);
-
-  useEffect(() => {
-    if (account) {
-      // Contracts.example
-      //   .balanceOf(account as string, "LPToken")
-      //   .then((res: any) => {
-      //     setBalance(EthertoWei(res ?? "0"));
-      //     Contracts.example
-      //       .queryUsdtAmountByLPAmount(
-      //         account as string,
-      //         EthertoWei(res ?? "0") + ""
-      //       )
-      //       .then((res: any) => {
-      //         console.log(res, "er");
-      //         setInputValueAmount(EthertoWei(res ?? "0"));
-      //       });
-      //   });
-    }
-  }, [account]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
@@ -384,7 +363,7 @@ export default function Rank() {
               setDateString(new Date());
             }}
           >
-            performance
+            {t("66")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -393,7 +372,7 @@ export default function Rank() {
               setDateString(new Date());
             }}
           >
-            direct push
+            {t("67")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 3 ? "activeTab" : "tab"}
@@ -402,7 +381,7 @@ export default function Rank() {
               setDateString(new Date());
             }}
           >
-            NFT team
+            {t("68")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -413,7 +392,7 @@ export default function Rank() {
             <Award_Record_Content>
               <Award_Record_Content_Title_Content>
                 <div>{t("290")}</div>
-                <div>Community(USDT)</div>
+                <div>{t("58")}(USDT)</div>
                 <div>{t("294")}</div>
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
@@ -437,7 +416,7 @@ export default function Rank() {
             <Award_Record_Content>
               <Award_Record_Content_Title_Content>
                 <div>{t("290")}</div>
-                <div>Direct Push(USDT)</div>
+                <div>{t("341")}(USDT)</div>
                 <div>{t("294")}</div>
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
@@ -461,7 +440,7 @@ export default function Rank() {
             <Award_Record_Content>
               <Award_Record_Content_Title_Content>
                 <div>{t("290")}</div>
-                <div>Team(USDT)</div>
+                <div>{t("57")}(USDT)</div>
                 <div>{t("294")}</div>
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
@@ -483,57 +462,6 @@ export default function Rank() {
           )}
         </NodeRecord_Content>
       </NodeRecord>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>
-              {t("Lottery is being drawn")}
-            </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-
-          <ModalContainer_Content>
-            <LotteryContainer>
-              <LodingModeBox>
-                <img src={lodingModal} alt="" />
-              </LodingModeBox>
-              {true ? (
-                <div>
-                  Congratulations <span>First Prize 3000MBK</span>
-                </div>
-              ) : (
-                "The lottery is in progress, please wait."
-              )}
-              <LotteryContainer_Btn>
-                View the list of winners
-              </LotteryContainer_Btn>
-            </LotteryContainer>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
     </NodeContainerBox>
   );
 }

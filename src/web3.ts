@@ -1,11 +1,4 @@
 import { useCallback, useMemo } from "react";
-import {
-  InjectedConnector,
-  NoEthereumProviderError,
-  UserRejectedRequestError,
-} from "@web3-react/injected-connector";
-// import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { Contract } from "web3-eth-contract";
 import { provider } from "web3-core";
 import Web3 from "web3";
@@ -70,7 +63,9 @@ export class Contracts {
   static example: Contracts;
   web3: Web3;
   contract: contractType = {};
-  constructor(library: provider) {
+  constructor(library: any) {
+    console.log(library, "library");
+
     this.web3 = new Web3(library);
     //保存实例到静态属性
     Contracts.example = this;
@@ -294,5 +289,12 @@ export class Contracts {
     return this.contract.lpContract?.methods
       .unStake(data)
       .send({ from: addr, gasPrice: "5000000000" });
+  }
+
+  queryUserBuyBotInfo(addr: string) {
+    this.verification("Bot");
+    return this.contract.Bot?.methods
+      .queryUserBuyBotInfo(addr)
+      .call({ from: addr });
   }
 }

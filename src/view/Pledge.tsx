@@ -65,6 +65,7 @@ import { throttle } from "lodash";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { useInputValue } from "../hooks/useInputValue";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -707,6 +708,11 @@ const PledgeValue = styled(FlexSBCBox)`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [PledgeUserInfo, setPledgeUserInfo] = useState<any>({});
@@ -784,7 +790,13 @@ export default function Rank() {
           num: value,
         });
         if (item?.code === 200 && item?.data) {
-          res = await Contracts.example?.stake(account as string, item?.data);
+          res = await Contracts.example?.stake(
+            web3ModalAccount as string,
+            item?.data
+          );
+        } else {
+          showLoding(false);
+          return addMessage(res?.msg);
         }
       } catch (error: any) {
         showLoding(false);
@@ -824,11 +836,6 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
 
   return (
     <NodeContainerBox>
@@ -891,7 +898,7 @@ export default function Rank() {
             <div
               onClick={() => {
                 Navigate("/View/PledgeEarningsRecord", {
-                  state: { recoedType: 1 },
+                  state: { recordType: 1 },
                 });
               }}
             >
@@ -923,14 +930,14 @@ export default function Rank() {
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item style={{ color: "#D56819" }}>
                 <div>{t("41")}</div>
-                {TRedemptionAccountInfo?.freezeAmount ?? 0} MBK
+                {TRedemptionAccountInfo?.amount ?? 0} MBK
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info_Bottom>
 
           <GetRewardBtn
             onClick={() => {
-              getRewardFun(TRedemptionAccountInfo?.freezeAmount ?? 0, 4);
+              getRewardFun(TRedemptionAccountInfo?.amount ?? 0, 4);
             }}
           >
             {t("42")}
@@ -971,6 +978,9 @@ export default function Rank() {
                 <div>
                   <input
                     type=""
+                    placeholder={t(`357`, {
+                      num: PledgeUserInfo?.lastPledgeNum,
+                    })}
                     value={!!InputValueAmount ? InputValueAmount : ""}
                     onChange={(e) => {
                       InputValueFun(e);
@@ -1038,7 +1048,7 @@ export default function Rank() {
             <FinancialRecords
               onClick={() => {
                 Navigate("/View/PledgeEarningsRecord", {
-                  state: { recoedType: 2 },
+                  state: { recordType: 2 },
                 });
               }}
             >
@@ -1096,7 +1106,7 @@ export default function Rank() {
             <FinancialRecords
               onClick={() => {
                 Navigate("/View/PledgeEarningsRecord", {
-                  state: { recoedType: 3 },
+                  state: { recordType: 3 },
                 });
               }}
             >

@@ -53,6 +53,7 @@ import {
   menuIcon7,
   menuIcon8,
 } from "../assets/image/homeBox";
+import { SwapUrl } from "../config";
 
 const HomeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -503,7 +504,13 @@ export default function Rank() {
           <MenuList_Item
             key={index}
             onClick={() => {
-              Navigate("/View/" + item?.route);
+              if (String(item?.route) === "More") {
+                return addMessage(t("Open soon"));
+              } else if (String(item?.route) === "Swap") {
+                window.open(SwapUrl);
+              } else {
+                Navigate("/View/" + item?.route);
+              }
             }}
           >
             <img src={item?.img} alt="" />

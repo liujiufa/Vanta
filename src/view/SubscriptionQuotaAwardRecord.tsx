@@ -7,8 +7,6 @@ import {
 } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
-import Table from "../components/Table";
-import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
@@ -393,7 +391,6 @@ const LotteryContainer_Btn = styled(Btn)`
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
@@ -423,7 +420,7 @@ export default function Rank() {
       { key: 0, name: "189" },
       { key: 1, name: "338" },
       { key: 2, name: "339" },
-      { key: 0, name: "340" },
+      { key: 3, name: "340" },
     ],
     2: [
       { key: 0, name: "189" },
@@ -436,7 +433,10 @@ export default function Rank() {
   //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
   //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
   const recordType: number = Number((stateObj as any)?.type);
+  console.log(recordType, "recordType");
+
   const getAwardRecord = (type: any) => {
+    setRecordList([]);
     if (recordType === 1) {
       getRobotManageAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
@@ -459,6 +459,7 @@ export default function Rank() {
   };
 
   const getGetRecord = useCallback(() => {
+    setRecordList([]);
     if (recordType === 1) {
       getRobotManageAwardRecord(4).then((res: any) => {
         if (res.code === 200) {
@@ -489,11 +490,6 @@ export default function Rank() {
       }
     }
   }, [state.token, SubTab, ActiveTab]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
 
   const StateObj = (type: number) => {
     if (type === 1) {

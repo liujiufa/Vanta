@@ -4,14 +4,20 @@ import { addMessage, showLoding } from "../utils/tool";
 import { Contracts } from "../web3";
 import { useEffect } from "react";
 import useConnectWallet from "./useConnectWallet";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 export const useSign = () => {
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   function signFun(callback: any, msg: string) {
-    if (!account) return addMessage(t("Please link wallet"));
+    if (!web3ModalAccount) return addMessage(t("Please link wallet"));
     let time = new Date().valueOf();
     showLoding(true);
     Contracts.example
-      .Sign(account as string, `${msg}&timestamp=${time}`)
+      .Sign(web3ModalAccount as string, `${msg}&timestamp=${time}`)
       .then((res: string) => {
         callback({
           sign: res,

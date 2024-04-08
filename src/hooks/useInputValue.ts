@@ -5,15 +5,21 @@ import { Contracts } from "../web3";
 import { useEffect, useState } from "react";
 import useConnectWallet from "./useConnectWallet";
 import { throttle } from "lodash";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 export const useInputValue = () => {
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const [InputValueAmount, setInputValueAmount] = useState<any>("");
   const [InputValueAmountValue, setInputValueAmountValue] = useState<any>("0");
   const [Price, setPrice] = useState<any>("");
 
   const getVilifyState = throttle(async (value: string) => {
-    if (!account) return;
-    return Contracts.example.queryUsdtByMbk(account as string, value);
+    if (!web3ModalAccount) return;
+    return Contracts.example.queryUsdtByMbk(web3ModalAccount as string, value);
   }, 2000);
 
   const InputValueFun = async (e: any) => {
@@ -37,12 +43,12 @@ export const useInputValue = () => {
   };
 
   useEffect(() => {
-    if (account) {
+    if (web3ModalAccount) {
       getVilifyState("1")?.then((res: any) => {
         setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
       });
     }
-  }, [account]);
+  }, [web3ModalAccount]);
   return {
     Price,
     InputValueAmountValue,

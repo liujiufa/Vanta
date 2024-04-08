@@ -32,6 +32,7 @@ import copyIcon from "../assets/image/Invite/copyIcon.svg";
 import DirectPushListIcon from "../assets/image/Invite/DirectPushListIcon.svg";
 import { menuIcon4 } from "../assets/image/homeBox";
 import copyFun from "copy-to-clipboard";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -221,6 +222,11 @@ const DirectPush_Content_Container_Content_Item = styled(
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [TeamData, setTeamData] = useState<any>({});
@@ -239,7 +245,7 @@ export default function Rank() {
     });
   };
   function invitation(value: any) {
-    if (!account) {
+    if (!web3ModalAccount) {
       return addMessage(t("Please link wallet"));
     } else {
       copyFun(window.location.origin + "/" + value);
@@ -253,10 +259,6 @@ export default function Rank() {
     }
   }, [state.token]);
 
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
 
   return (
     <NodeContainerBox>
@@ -282,9 +284,9 @@ export default function Rank() {
             <div>
               {window.location.origin +
                 "/" +
-                AddrHandle(account as string, 6, 6)}
+                AddrHandle(web3ModalAccount as string, 6, 6)}
             </div>
-            <img src={copyIcon} alt="" onClick={() => invitation(account)} />
+            <img src={copyIcon} alt="" onClick={() => invitation(web3ModalAccount)} />
           </div>
         </NodeInfo_Mid>
       </NodeInfo>

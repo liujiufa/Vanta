@@ -42,6 +42,7 @@ import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { useInputValue } from "../hooks/useInputValue";
 import { NFTIcon } from "../assets/image/NFTBox";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -221,6 +222,11 @@ const NodeInfo_Mid_Conditions = styled.div`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [CardBase, setCardBase] = useState<any>({});
@@ -253,8 +259,8 @@ export default function Rank() {
   };
 
   const getContractsData = async () => {
-    let data = await Contracts.example?.queryPrice(account as string);
-    let nftBuyed = await Contracts.example?.totalSupply(account as string);
+    let data = await Contracts.example?.queryPrice(web3ModalAccount as string);
+    let nftBuyed = await Contracts.example?.totalSupply(web3ModalAccount as string);
 
     setNFTPrice({ ...data, supply: nftBuyed });
   };
@@ -265,7 +271,7 @@ export default function Rank() {
       let res: any;
       try {
         showLoding(true);
-        res = await Contracts.example?.mint(account as string);
+        res = await Contracts.example?.mint(web3ModalAccount as string);
       } catch (error: any) {
         showLoding(false);
         return addMessage("mint失败");
@@ -288,10 +294,10 @@ export default function Rank() {
   }, []);
 
   useEffect(() => {
-    if (account) {
+    if (web3ModalAccount) {
       getContractsData();
     }
-  }, [account]);
+  }, [web3ModalAccount]);
 
   return (
     <NodeContainerBox>

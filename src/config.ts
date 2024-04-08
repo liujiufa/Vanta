@@ -22,10 +22,35 @@ export let baseUrl: string = isMain
 export let ContractUrl: string = isMain
   ? "https://bscscan.com/address/"
   : "https://testnet.bscscan.com/address/";
-export let SwapUrl: string = "https://pancakeswap.finance/swap";
+export let SwapUrl: string =
+  "https://pancakeswap.finance/swap?chain=bscTestnet&inputCurrency=0x2b11640f31b84dc727841FE6B5a905D366A00e78&outputCurrency=0xdA99fA57019FB1DFC1AAea892e5190a91236A840";
 export let SuShiSwapUrl: string = "https://www.sushi.com/swap";
 export let RewardType: any = { "1": "16", "2": "17" };
 export const BitNumber = 8;
+
+export const mainnet = {
+  "0x1": {
+    chainId: 1,
+    name: "Ethereum",
+    currency: "ETH",
+    explorerUrl: "https://etherscan.io",
+    rpcUrl: "https://cloudflare-eth.com",
+  },
+  "0x38": {
+    chainId: 1,
+    name: "Ethereum",
+    currency: "ETH",
+    explorerUrl: "https://etherscan.io",
+    rpcUrl: "https://cloudflare-eth.com",
+  },
+  "0x61": {
+    chainId: 97,
+    name: "BSC",
+    currency: "BNB",
+    explorerUrl: "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
+    rpcUrl: "https://bsc-testnet.public.blastapi.io",
+  },
+};
 
 interface abiObjType {
   [propName: string]: any;

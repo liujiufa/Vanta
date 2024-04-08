@@ -9,8 +9,6 @@ import {
 } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
-import Table from "../components/Table";
-import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
@@ -395,7 +393,6 @@ const LotteryContainer_Btn = styled(Btn)`
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
@@ -408,16 +405,18 @@ export default function Rank() {
   const [InputValueAmount, setInputValueAmount] = useState<any>("0");
   const [ActivationModal, setActivationModal] = useState(false);
   const { state: stateObj } = useLocation();
-  //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
-  //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
+  //(1:) 9-质押静态收益奖励 10-质押静态收益领取记录 50质押赎回记录
   const TypeObj = {
-    1: "推荐奖励",
-    2: "管理奖励",
-    3: "平级奖励",
-    4: "领取奖励",
-    5: "业绩明星奖励",
-    6: "直推明星奖励",
-    7: "NFT团队明星奖励",
+    1: "331",
+    2: "332",
+    3: "333",
+    4: "334",
+    5: "335",
+    6: "336",
+    7: "337",
+    9: "359",
+    10: "",
+    50: "",
   };
 
   const subTabArr = {
@@ -429,20 +428,21 @@ export default function Rank() {
     ],
     2: [
       { key: 0, name: "189" },
-      { key: 12, name: "Management Award" },
-      { key: 13, name: "Recommendation Award" },
-      { key: 14, name: "Level Award" },
+      { key: 12, name: "332" },
+      { key: 13, name: "331" },
+      { key: 14, name: "333" },
     ],
     3: [
       { key: 0, name: "189" },
-      { key: 16, name: "Performance Star Award" },
-      { key: 17, name: "Directly promoted star award" },
-      { key: 18, name: "NFT team star" },
+      { key: 16, name: "335" },
+      { key: 17, name: "336" },
+      { key: 18, name: "337" },
     ],
   };
   // 1:质押静态奖励记录
-  const recordType: number = Number((stateObj as any)?.recoedType);
+  const recordType: number = Number((stateObj as any)?.recordType);
   const getAwardRecord = (type: any) => {
+    setRecordList([]);
     if (recordType === 1) {
       getPledgeUserAwardRecord(9).then((res: any) => {
         if (res.code === 200) {
@@ -465,6 +465,8 @@ export default function Rank() {
   };
 
   const getGetRecord = useCallback(() => {
+    setRecordList([]);
+
     if (recordType === 1) {
       getPledgeUserAwardRecord(10).then((res: any) => {
         if (res.code === 200) {
@@ -495,11 +497,6 @@ export default function Rank() {
       }
     }
   }, [state.token, SubTab, ActiveTab, recordType]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
 
   const StateObj = (type: number) => {
     if (type === 1) {
@@ -543,7 +540,7 @@ export default function Rank() {
                       setSubTab(item?.key);
                     }}
                   >
-                    {item?.name}
+                    {t(item?.name)}
                   </Award_Record_Content_Tab_Item>
                 ))}
                 {/* <Award_Record_Content_Tab_Item
@@ -576,7 +573,17 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        {t("193")} <span>{TypeObj[item?.businessType]}</span>
+                        {t("193")}{" "}
+                        <span>
+                          {t(
+                            TypeObj[item?.businessType] ??
+                              subTabArr[recordType]?.find(
+                                (item1: any) =>
+                                  Number(item1?.key) ===
+                                  Number(item?.businessType)
+                              )?.name
+                          )}
+                        </span>
                       </div>
                       <div>
                         {t("201")}{" "}
@@ -588,8 +595,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        {t("195")}{" "}
-                        <span>{decimalNum(item?.amount, 2)}</span>
+                        {t("195")} <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -619,9 +625,13 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Quantity(MBK)<span>{decimalNum(item?.amount, 2)}</span>
+                        {t("197")}
+                        <span>{decimalNum(item?.amount, 2)}</span>
                       </div>
-                      <div>{t("198")}{StateObj(2)}</div>
+                      <div>
+                        {t("198")}
+                        {StateObj(2)}
+                      </div>
                       <div>
                         {t("199")}
                         <span>{AddrHandle(item?.txId, 6, 6)}</span>
@@ -636,57 +646,6 @@ export default function Rank() {
           )}
         </NodeRecord_Content>
       </NodeRecord>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>
-              {t("Lottery is being drawn")}
-            </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-
-          <ModalContainer_Content>
-            <LotteryContainer>
-              <LodingModeBox>
-                <img src={lodingModal} alt="" />
-              </LodingModeBox>
-              {true ? (
-                <div>
-                  Congratulations <span>First Prize 3000MBK</span>
-                </div>
-              ) : (
-                "The lottery is in progress, please wait."
-              )}
-              <LotteryContainer_Btn>
-                View the list of winners
-              </LotteryContainer_Btn>
-            </LotteryContainer>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
     </NodeContainerBox>
   );
 }

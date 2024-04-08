@@ -52,6 +52,7 @@ import { contractAddress } from "../config";
 import useTime from "../hooks/useTime";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 dayjs.extend(duration);
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -486,6 +487,11 @@ const Goto = styled(FlexECBox)`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const token = useSelector<any>((state) => state.token);
   const [RecordList, setRecordList] = useState<any>([]);
   const [GameProfit, setGameProfit] = useState<any>({});
@@ -496,7 +502,9 @@ export default function Rank() {
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("");
+  const [InputValueAmount, setInputValueAmount] = useState<any>(
+    GamePoolInfo?.gameJoinNum ?? 0
+  );
   const [ActivationModal, setActivationModal] = useState(false);
   const {
     TOKENBalance,
@@ -517,6 +525,7 @@ export default function Rank() {
     getGamePoolInfo().then((res: any) => {
       if (res.code === 200) {
         setGamePoolInfo(res?.data);
+        setInputValueAmount(res?.data?.gameJoinNum);
       }
     });
   };
@@ -534,7 +543,7 @@ export default function Rank() {
           console.log(item?.data, "1212");
 
           res = await Contracts.example?.participate(
-            account as string,
+            web3ModalAccount as string,
             item?.data
           );
         }
@@ -647,7 +656,8 @@ export default function Rank() {
                   <input
                     type=""
                     value={InputValueAmount}
-                    onChange={InputValueFun}
+                    readOnly={true}
+                    // onChange={InputValueFun}
                   />{" "}
                   MBK
                 </div>{" "}

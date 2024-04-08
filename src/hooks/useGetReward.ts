@@ -4,11 +4,17 @@ import { drawAward, receive } from "../API";
 import { addMessage, showLoding } from "../utils/tool";
 import { Contracts } from "../web3";
 import { useSelector } from "react-redux";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 export const useGetReward = () => {
   const token = useSelector<any>((state) => state?.token);
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   function getReward(incomeType: any, callbackFun: any, contractName: string) {
-    if (!account) return addMessage(t("Please link wallet"));
+    if (!web3ModalAccount) return addMessage(t("Please link wallet"));
     if (!token) return addMessage(t("请先登录"));
     if (!incomeType) return addMessage(t("failed"));
     drawAward({
@@ -19,7 +25,7 @@ export const useGetReward = () => {
         let value: any;
         try {
           value = await Contracts.example.withdrawReward(
-            account as string,
+            web3ModalAccount as string,
             res?.data,
             contractName
           );

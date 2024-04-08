@@ -350,6 +350,7 @@ export default function Rank() {
   // 2:小区新增业绩排名 1:游戏抽奖开奖结果公示
   const recordType: number = Number((stateObj as any)?.recordType);
   const getInitData = () => {
+    setRecordList([]);
     if (Number(recordType) === 1) {
       hitRecord({ date: DateString, level: SubTab, myself: false }).then(
         (res: any) => {

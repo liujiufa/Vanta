@@ -43,7 +43,6 @@ import "../assets/style/layout.scss";
 import { Menu, Dropdown, Modal } from "antd";
 import useConnectWallet, {
   connector,
-  walletConnectConnector,
   // walletConnectConnector,
 } from "../hooks/useConnectWallet";
 import { contractAddress, LOCAL_KEY } from "../config";
@@ -59,6 +58,14 @@ import {
   ReturnIcon,
   TpIcon,
 } from "../assets/image/layoutBox";
+import {
+  useWeb3Modal,
+  useWeb3ModalProvider,
+  useWeb3ModalState,
+} from "@web3modal/ethers/react";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import TruncateMarkup from "react-truncate-markup";
+
 const { Header, Content, Footer, Sider } = Layout;
 
 let refereeUserAddress: any;
@@ -86,6 +93,7 @@ const SetBox = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
+  /* width: 100%; */
 
   .priceBox {
     font-family: "DIN";
@@ -131,7 +139,7 @@ const SetBox = styled.div`
   .activeConnect {
     border-radius: 5px;
     opacity: 1;
-
+    white-space: nowrap;
     box-sizing: border-box;
     border: 1px solid #d56819;
 
@@ -240,7 +248,7 @@ const FooterContainer = styled.div`
   height: 83px;
   width: 100%;
   max-width: 450px;
-  z-index: 999;
+  z-index: 1;
   background: #000000;
   .tabBox {
     width: 100%;
@@ -258,7 +266,7 @@ const FooterContainer = styled.div`
       .MenuItem {
         font-family: "PingFang SC";
         font-size: 12px;
-        font-weight: normal;
+        font-weight: 500;
         line-height: normal;
         text-transform: uppercase;
         letter-spacing: 0em;
@@ -270,7 +278,7 @@ const FooterContainer = styled.div`
       .active {
         font-family: "PingFang SC";
         font-size: 12px;
-        font-weight: normal;
+        font-weight: 500;
         line-height: normal;
         text-transform: uppercase;
         letter-spacing: 0em;
@@ -436,14 +444,22 @@ const WalletItem = styled(FlexCCBox)`
   }
 `;
 const ReturnContainer = styled(FlexSBCBox)`
-  font-family: PingFang SC;
-  font-size: 16px;
-  font-weight: normal;
-  line-height: normal;
-  letter-spacing: 0em;
+  width: 100%;
 
-  font-variation-settings: "opsz" auto;
-  color: #ffffff;
+  > div {
+    font-family: PingFang SC;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+
+    /* max-width: 220px; */
+    width: 100%;
+    /* flex: 1; */
+  }
   > svg {
     margin-right: 10px;
   }
@@ -451,6 +467,7 @@ const ReturnContainer = styled(FlexSBCBox)`
 
 const MainLayout: React.FC = () => {
   const web3 = new Web3();
+
   let dispatch = useDispatch();
   let token = useSelector<any>((state) => state.token);
   let address = useSelector<any>((state) => state.address);
@@ -460,13 +477,25 @@ const MainLayout: React.FC = () => {
   const Navigate = useNavigate();
   const { connectWallet } = useConnectWallet();
   const web3React = useWeb3React();
+
   const { width } = useViewport();
   const [BindModal, setBindModal] = useState(false);
   const [SelectWallet, setSelectWallet] = useState(false);
   const { signFun } = useSign();
-  const initalToken = localStorage.getItem(
-    (web3React.account as string)?.toLowerCase()
-  );
+
+  const { open } = useWeb3Modal();
+  const { walletProvider } = useWeb3ModalProvider();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
+  const { open: openState, selectedNetworkId } = useWeb3ModalState();
+  const { state: stateObj } = useLocation();
+
+  const recordType: number = Number((stateObj as any)?.type);
+  // 机器人
+  const recordType1: number = Number((stateObj as any)?.recordType);
 
   let tag = web3.utils.isAddress(window.location.pathname.slice(1));
   if (tag) {
@@ -478,6 +507,9 @@ const MainLayout: React.FC = () => {
     window.localStorage.setItem(LOCAL_KEY, lang.key);
     i18n.changeLanguage(lang.key);
   }
+  const initalToken = localStorage.getItem(
+    (web3ModalAccount as string)?.toLowerCase()
+  );
 
   const langArr = [
     { key: "en", label: "English" },
@@ -572,7 +604,9 @@ const MainLayout: React.FC = () => {
   }
 
   const LoginFun = useCallback(async () => {
-    if (web3React.account) {
+    console.log(web3ModalAccount, "web3ModalAccount");
+
+    if (web3ModalAccount) {
       let tag = await web3.utils.isAddress(window.location.pathname.slice(1));
       if (tag) {
         refereeUserAddress = window.location.pathname.slice(1);
@@ -583,7 +617,7 @@ const MainLayout: React.FC = () => {
       await signFun((res: any) => {
         Login({
           ...res,
-          userAddress: web3React.account as string,
+          userAddress: web3ModalAccount as string,
           refereeUserAddress,
         }).then((res: any) => {
           if (res.code === 200) {
@@ -591,12 +625,12 @@ const MainLayout: React.FC = () => {
             dispatch(
               createLoginSuccessAction(
                 res.data.token,
-                web3React.account as string
+                web3ModalAccount as string
               )
             );
 
             localStorage.setItem(
-              (web3React.account as string)?.toLowerCase(),
+              (web3ModalAccount as string)?.toLowerCase(),
               res.data.token
             );
             setSelectWallet(false);
@@ -605,14 +639,14 @@ const MainLayout: React.FC = () => {
             addMessage(res.msg);
           }
         });
-      }, `userAddress=${web3React.account as string}&refereeUserAddress=${refereeUserAddress}`);
+      }, `userAddress=${web3ModalAccount as string}&refereeUserAddress=${refereeUserAddress}`);
     } else {
       addMessage("Please link wallet");
     }
-  }, [web3React.account, refereeUserAddress]);
+  }, [web3ModalAccount, refereeUserAddress, connectWallet]);
 
   const BindFun = useCallback(async () => {
-    if (web3React.account) {
+    if (web3ModalAccount) {
       let tag = await web3.utils.isAddress(InputValue);
       if (!tag) return addMessage(t("221"));
       let res: any = await isRefereeAddress({ userAddress: InputValue });
@@ -622,7 +656,7 @@ const MainLayout: React.FC = () => {
         showLoding(true);
         console.log("isSuccessBind", "isSuccessBind");
         isSuccessBind = await Contracts.example?.bind(
-          web3React.account as string,
+          web3ModalAccount as string,
           InputValue as string
         );
       } catch (error: any) {
@@ -638,15 +672,43 @@ const MainLayout: React.FC = () => {
     } else {
       addMessage("Please link wallet");
     }
-  }, [web3React.account, InputValue]);
+  }, [web3ModalAccount, InputValue, connectWallet]);
 
   const ConnectWalletFun = async (type: number) => {
     if (type === 1) {
       connectWallet && connectWallet(connector);
     } else if (type === 2) {
       // connectWallet && connectWallet(walletConnectConnector);
+      setSelectWallet(false);
+      // await open();
+      await open();
     }
-    await LoginFun();
+  };
+  console.log(recordType, "recordType1212");
+
+  const ReturnObj = {
+    Robot: "4",
+    Node: "5",
+    Community: "6",
+    Invite: "7",
+    Exchange: "8",
+    Swap: "Swap",
+    Insurance: "9",
+    More: "10",
+    ZeroStroke: "11",
+    LotteryGame: "16",
+    SubscriptionQuotaRecord: "149",
+    SubscriptionQuotaAwardRecord:
+      recordType === 1 ? "342" : recordType === 2 ? "343" : "352",
+    RankRecord: recordType1 === 1 ? "344" : "349",
+    FinancialRecord: "272",
+    Announcement: recordType1 === 1 ? "345" : "351",
+    PledgeEarningsRecord:
+      recordType1 === 1 ? "346" : recordType1 === 2 ? "347" : "348",
+    PledgeAwardRecord: recordType === 1 ? "44" : "39",
+    NFTAwardRecord: "350",
+    LPPledgeAwardRecord: "353",
+    InitialSubscriptionRewards: recordType1 === 1 ? "354" : "355",
   };
 
   const ReturnBox = (name: any) => {
@@ -671,7 +733,9 @@ const MainLayout: React.FC = () => {
           }}
         >
           <ReturnIcon />
-          {name}
+          <TruncateMarkup lines={1}>
+            <div>{t(ReturnObj[String(name)])}</div>
+          </TruncateMarkup>
         </ReturnContainer>
       );
     } else {
@@ -687,7 +751,7 @@ const MainLayout: React.FC = () => {
   const allModalFun = async () => {
     // if (!!token)
     //   return await Contracts.example
-    //     .isBind(web3React?.account as string, "Referrer")
+    //     .isBind(web3ModalAccount as string, "Referrer")
     //     .then((res: any) => {
     //       if (res) {
     //         setBindModal(false);
@@ -702,7 +766,7 @@ const MainLayout: React.FC = () => {
     if (!!token) {
       console.log(222);
       return await Contracts.example
-        .isBind(web3React?.account as string, "Referrer")
+        .isBind(web3ModalAccount as string, "Referrer")
         .then((res: any) => {
           if (res) {
             setBindModal(false);
@@ -711,25 +775,27 @@ const MainLayout: React.FC = () => {
           }
         });
     } else if (initalToken) {
-      console.log(111);
-
       return setSelectWallet(false);
     } else {
       console.log(333);
 
-      setSelectWallet(true);
+      // setSelectWallet(true);
     }
   };
 
+  const preLoginFun = async () => {
+    if (!!initalToken) return;
+    await LoginFun();
+  };
+
   useEffect(() => {
-    console.log(web3React?.account, initalToken, "wo");
     allModalFun();
-  }, [web3React?.account, SelectWallet, token, initalToken, BindModal]);
+  }, [web3ModalAccount, token, initalToken, BindModal]);
 
   useEffect(() => {
     console.log(pathname, location.pathname, "pathname");
-    if (pathname) {
-      setItemActive(pathname);
+    if (!!pathname) {
+      setItemActive(pathname ?? "/");
     }
     setTimeout(() => {
       window.scrollTo(0, 0);
@@ -745,10 +811,17 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     if (!!initalToken) {
       dispatch(
-        createLoginSuccessAction(initalToken, web3React.account as string)
+        createLoginSuccessAction(initalToken, web3ModalAccount as string)
       );
     }
   }, [initalToken]);
+
+  useEffect(() => {
+    if (!!web3ModalAccount) {
+      new Contracts(walletProvider);
+      preLoginFun();
+    }
+  }, [web3ModalAccount, openState]);
 
   return (
     <MyLayout>
@@ -765,11 +838,16 @@ const MainLayout: React.FC = () => {
           {ReturnBox(String(pathname)?.slice(1))}
 
           <SetBox>
-            {token ? (
+            {web3ModalAccount ? (
               <>
-                <div className="Connect  pointer activeConnect">
+                <div
+                  className="Connect  pointer activeConnect"
+                  onClick={() => {
+                    open();
+                  }}
+                >
                   <img src={activeWalletIcon} alt="" />{" "}
-                  {AddrHandle(web3React.account as string, 6, 4)}
+                  {AddrHandle(web3ModalAccount as string, 6, 4)}
                 </div>
               </>
             ) : (
@@ -784,7 +862,8 @@ const MainLayout: React.FC = () => {
               <div
                 className="Connect  pointer activeConnect"
                 onClick={() => {
-                  setSelectWallet(true);
+                  // setSelectWallet(true);
+                  open();
                 }}
               >
                 Connect Wallet
@@ -807,76 +886,80 @@ const MainLayout: React.FC = () => {
           </SetBox>
         </div>
       </HeaderContainer>
-      <Content
-        className="MainContent"
-        style={{ position: "relative", zIndex: 99 }}
-      >
+      <Content className="MainContent" style={{ position: "relative" }}>
         <Outlet />
         {/* {!collapsed && <div className="Mask"></div>}setBindModal */}
       </Content>
 
-      <FooterContainer
-        className="app-footer"
-        style={{ position: "fixed", bottom: 0 }}
-      >
-        <div className="tabBox">
-          <div
-            className="tabItem"
-            onClick={() => {
-              navigateFun("/");
-            }}
-          >
-            <div className={menuActive("/")}>
-              <div className="menuTop">
-                <img src={iconActive("/")} alt="" />
+      {(ItemActive === "/" ||
+        ItemActive === "/PLEDGE" ||
+        ItemActive === "/NFT" ||
+        ItemActive === "/CHAT" ||
+        ItemActive === "") && (
+        <FooterContainer
+          className="app-footer"
+          style={{ position: "fixed", bottom: 0 }}
+        >
+          <div className="tabBox">
+            <div
+              className="tabItem"
+              onClick={() => {
+                navigateFun("/");
+              }}
+            >
+              <div className={menuActive("/")}>
+                <div className="menuTop">
+                  <img src={iconActive("/")} alt="" />
+                </div>
+                {t("1")}
               </div>
-              {t("1")}
+            </div>
+            <div
+              className="tabItem"
+              onClick={() => {
+                // return addMessage(t("Open soon"));
+                navigateFun("/PLEDGE");
+              }}
+            >
+              <div className={menuActive("/PLEDGE")}>
+                <div className="menuTop">
+                  <img src={iconActive("/PLEDGE")} alt="" />
+                </div>
+                {t("2")}
+              </div>
+            </div>
+            <div
+              className="tabItem"
+              onClick={() => {
+                // return addMessage(t("Open soon"));
+                navigateFun("/NFT");
+              }}
+            >
+              <div className={menuActive("/NFT")}>
+                <div className="menuTop">
+                  <img src={iconActive("/NFT")} alt="" />
+                </div>
+                {t("NFT")}
+              </div>
+            </div>
+            <div
+              className="tabItem"
+              onClick={() => {
+                return addMessage(t("Open soon"));
+                navigateFun("/CHAT");
+              }}
+            >
+              <div className={menuActive("/CHAT")}>
+                <div className="menuTop">
+                  <img src={iconActive("/CHAT")} alt="" />
+                </div>
+                {t("3")}
+              </div>
             </div>
           </div>
-          <div
-            className="tabItem"
-            onClick={() => {
-              // return addMessage(t("Open soon"));
-              navigateFun("/PLEDGE");
-            }}
-          >
-            <div className={menuActive("/PLEDGE")}>
-              <div className="menuTop">
-                <img src={iconActive("/PLEDGE")} alt="" />
-              </div>
-              {t("2")}
-            </div>
-          </div>
-          <div
-            className="tabItem"
-            onClick={() => {
-              // return addMessage(t("Open soon"));
-              navigateFun("/NFT");
-            }}
-          >
-            <div className={menuActive("/NFT")}>
-              <div className="menuTop">
-                <img src={iconActive("/NFT")} alt="" />
-              </div>
-              {t("NFT")}
-            </div>
-          </div>
-          <div
-            className="tabItem"
-            onClick={() => {
-              // return addMessage(t("Open soon"));
-              navigateFun("/CHAT");
-            }}
-          >
-            <div className={menuActive("/CHAT")}>
-              <div className="menuTop">
-                <img src={iconActive("/CHAT")} alt="" />
-              </div>
-              {t("3")}
-            </div>
-          </div>
-        </div>
-      </FooterContainer>
+        </FooterContainer>
+      )}
+
       <AllModal
         visible={BindModal}
         className="Modal"
@@ -966,7 +1049,7 @@ const MainLayout: React.FC = () => {
             </WalletItem>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(1);
+                ConnectWalletFun(2);
               }}
             >
               <BgIcon />
@@ -974,7 +1057,7 @@ const MainLayout: React.FC = () => {
             </WalletItem>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(1);
+                ConnectWalletFun(2);
               }}
             >
               <TpIcon />

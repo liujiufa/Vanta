@@ -436,3 +436,12 @@ export function drawAward(data: any) {
     },
   });
 }
+export function updateReinvest(data: any) {
+  return axois.request({
+    url: `/pledge/updateReinvest`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}

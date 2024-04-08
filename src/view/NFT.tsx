@@ -65,6 +65,7 @@ import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
@@ -682,6 +683,11 @@ const UpBtn_Container = styled.div`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [MyCardInfo, setMyCardInfo] = useState<any>({});
@@ -761,7 +767,10 @@ export default function Rank() {
       let res: any;
       try {
         showLoding(true);
-        res = await Contracts.example?.active(account as string, tokenId);
+        res = await Contracts.example?.active(
+          web3ModalAccount as string,
+          tokenId
+        );
       } catch (error: any) {
         showLoding(false);
         return addMessage(t("69"));
@@ -785,7 +794,7 @@ export default function Rank() {
       try {
         showLoding(true);
         res = await Contracts.example?.stakeLP(
-          account as string,
+          web3ModalAccount as string,
           value,
           period
         );
@@ -816,7 +825,10 @@ export default function Rank() {
       let item: any = await redemptionLp({});
       if (item?.code === 200 && item?.data) {
         console.log(item?.data, "1212");
-        res = await Contracts.example?.unStake(account as string, item?.data);
+        res = await Contracts.example?.unStake(
+          web3ModalAccount as string,
+          item?.data
+        );
       }
     } catch (error: any) {
       showLoding(false);
@@ -861,11 +873,6 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token]);
-
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
 
   const NFTBox = (isHoldNft: boolean, isLockNft: boolean) => {
     if (!!isLockNft) {

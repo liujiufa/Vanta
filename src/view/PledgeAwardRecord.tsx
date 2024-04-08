@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
   getPledgeOrderRecord,
   getPledgeUserAwardRecord,
+  updateReinvest,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
-import Table from "../components/Table";
-import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
@@ -400,7 +399,6 @@ const MySwitch = styled(Switch)``;
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
 
@@ -408,7 +406,7 @@ export default function Rank() {
   const [ActiveTab, setActiveTab] = useState<any>(
     Number((stateObj as any)?.type) ?? 1
   );
-  const [SubTab, setSubTab] = useState<any>(0);
+  const [SubTab, setSubTab] = useState<any>(-1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
@@ -418,8 +416,17 @@ export default function Rank() {
 
   //1:质押记录 2:赎回记录
   const recordType: number = Number((stateObj as any)?.type) ?? 1;
-  const onChange = (checked: boolean) => {
-    if (Number(SubTab) !== 0) return;
+  const onChange = (checked: boolean, id: any) => {
+    updateReinvest({ id: id, isReinvest: !!checked ? 1 : 0, num: 0 }).then(
+      (res: any) => {
+        // getInitData(SubTab);
+        getPledgeOrderRecord(SubTab).then((res: any) => {
+          if (res.code === 200) {
+            setRecordList(res?.data);
+          }
+        });
+      }
+    );
   };
 
   const subTabArr = {
@@ -431,6 +438,7 @@ export default function Rank() {
     ],
   };
   const getInitData = (type: number) => {
+    setRecordList([]);
     if (Number(ActiveTab) === 1) {
       getPledgeOrderRecord(type).then((res: any) => {
         if (res.code === 200) {
@@ -452,11 +460,6 @@ export default function Rank() {
     }
   }, [state.token, ActiveTab, SubTab]);
 
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
-
   const StateObj = (type: number) => {
     if (type === 0) {
       return <span style={{ color: "#D56819" }}>{t("302")}</span>;
@@ -477,7 +480,7 @@ export default function Rank() {
               setActiveTab(1);
             }}
           >
-            Pledge record
+            {t("319")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 2 ? "activeTab" : "tab"}
@@ -485,7 +488,7 @@ export default function Rank() {
               setActiveTab(2);
             }}
           >
-            redemption record
+            {t("320")}
           </NodeRecord_Tab_Item>
         </NodeRecord_Tab>
         <NodeRecord_Content>
@@ -511,10 +514,10 @@ export default function Rank() {
                   RecordList?.map((item: any, index: any) => (
                     <Award_Record_Content_Record_Content_Item key={index}>
                       <div>
-                        Pledge ID <span>{item?.orderNo}</span>
+                        {t("305")} <span>{item?.orderNo}</span>
                       </div>
                       <div>
-                        Pledge time{" "}
+                        {t("306")}{" "}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM",
@@ -523,11 +526,11 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        Pledge Quantity(MBK){" "}
+                        {t("307")}{" "}
                         <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
                       </div>
                       <div>
-                        Pledge Amount(USDT)
+                        {t("308")}
                         <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
                       </div>
                       <div>
@@ -535,21 +538,22 @@ export default function Rank() {
                         <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
                       </div>
                       <div>
-                        Pledge cycle<span>{t("48", { num: item?.cycle ?? 0 })}</span>
+                        {t("310")}
+                        <span>{t("48", { num: item?.cycle ?? 0 })}</span>
                       </div>
                       <div>
-                        Reinvestment at maturity
+                        {t("53")}
                         <span>
                           {" "}
                           <MySwitch
                             defaultChecked
                             checked={!!item?.isReinvest}
-                            onChange={onChange}
+                            onChange={(item1: any) => onChange(item1, item?.id)}
                           />
                         </span>
                       </div>
                       <div>
-                        maturity Time
+                        {t("311")}
                         <span>
                           {dateFormat(
                             "YYYY-mm-dd HH:MM",
@@ -584,14 +588,16 @@ export default function Rank() {
                       type={1}
                     >
                       <div>
-                        redemption time<span>2023-12-23 12:23</span>
+                        {t("324")}
+                        <span>2023-12-23 12:23</span>
                       </div>
                       <div>
-                        Redemption Quantity(MBK)
+                        {t("325")}
                         <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
                       </div>
                       <div>
-                        Corresponding Pledge ID<span>{item?.orderNo}</span>
+                        {t("326")}
+                        <span>{item?.orderNo}</span>
                       </div>
                       <div>
                         {t("198")}
@@ -611,57 +617,6 @@ export default function Rank() {
           )}
         </NodeRecord_Content>
       </NodeRecord>
-
-      <AllModal
-        visible={false}
-        className="Modal"
-        centered
-        width={"345px"}
-        closable={false}
-        footer={null}
-        onCancel={() => {
-          setActivationModal(false);
-        }}
-      >
-        <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
-
-          <ModalContainer_Close>
-            {" "}
-            <img
-              src={closeIcon}
-              alt=""
-              onClick={() => {
-                setActivationModal(false);
-              }}
-            />
-          </ModalContainer_Close>
-          <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
-            <ModalContainer_Title>
-              {t("Lottery is being drawn")}
-            </ModalContainer_Title>
-          </ModalContainer_Title_Container>
-
-          <ModalContainer_Content>
-            <LotteryContainer>
-              <LodingModeBox>
-                <img src={lodingModal} alt="" />
-              </LodingModeBox>
-              {true ? (
-                <div>
-                  Congratulations <span>First Prize 3000MBK</span>
-                </div>
-              ) : (
-                "The lottery is in progress, please wait."
-              )}
-              <LotteryContainer_Btn>
-                View the list of winners
-              </LotteryContainer_Btn>
-            </LotteryContainer>
-          </ModalContainer_Content>
-        </ModalContainer>
-      </AllModal>
     </NodeContainerBox>
   );
 }

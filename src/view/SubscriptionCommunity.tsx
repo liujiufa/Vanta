@@ -47,6 +47,7 @@ import closeIcon from "../assets/image/closeIcon.svg";
 import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { menuIcon3 } from "../assets/image/homeBox";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -384,6 +385,11 @@ const HomeContainerBox_Content_Bg3 = styled.div`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const token = useSelector<any, any>((state) => state.token);
   const [CommunitySoldBase, setCommunitySoldBase] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
@@ -428,7 +434,7 @@ export default function Rank() {
           console.log(item?.data, "1212");
 
           res = await Contracts.example?.activeCommunity(
-            account as string,
+            web3ModalAccount as string,
             item?.data
           );
         }

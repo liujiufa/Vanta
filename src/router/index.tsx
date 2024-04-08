@@ -12,7 +12,7 @@ const SubscriptionCommunity = React.lazy(
   () => import("../view/SubscriptionCommunity")
 );
 const Invite = React.lazy(() => import("../view/Invite"));
-const Exchange = React.lazy(() => import("../view/Exchange"));
+const Exchange = React.lazy(() => import("../view/Swap"));
 const Swap = React.lazy(() => import("../view/Swap"));
 const Insurance = React.lazy(() => import("../view/Insurance"));
 const LotteryGame = React.lazy(() => import("../view/LotteryGame"));

@@ -183,25 +183,6 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [ActiveTab, setActiveTab] = useState<any>(1);
-  const { width } = useViewport();
-  const Navigate = useNavigate();
-  const { getReward } = useGetReward();
-  const [Price, setPrice] = useState<any>("0");
-  const [InputValue1, setInputValue1] = useState<any>("");
-  const [InputValue2, setInputValue2] = useState<any>("");
-  const [swapType, setSwapType] = useState<any>(1);
-  const location = useLocation();
-  const {
-    TOKENBalance,
-    TOKENAllowance,
-    handleApprove,
-    handleTransaction,
-    handleUSDTRefresh,
-  } = useUSDTGroup(
-    contractAddress?.IPancakeRouter02,
-    Number(swapType) === 1 ? "USDT" : "MBK"
-  );
   const SwapObj = {
     1: [contractAddress?.USDT, contractAddress?.MBK],
     2: [contractAddress?.MBK, contractAddress?.USDT],
@@ -215,36 +196,6 @@ export default function Rank() {
     });
   };
 
-  // 1:USDT=>MBK 2:MBK=>USDT
-  const SwapFun = (value: string) => {
-    if (!account) return;
-    if (Number(value) <= 0) return;
-    handleTransaction(value, async (call: any) => {
-      let res: any;
-      try {
-        showLoding(true);
-        res =
-          await Contracts.example?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            account as string,
-            value,
-            0,
-            SwapObj[swapType ?? 1],
-            Number(new Date().valueOf()) + 1000
-          );
-      } catch (error: any) {
-        showLoding(false);
-        return addMessage(t("238"));
-      }
-      showLoding(false);
-      if (!!res?.status) {
-        call();
-        addMessage(t("239"));
-      } else {
-        addMessage(t("238"));
-      }
-    });
-  };
-
   const StateObj = (type: number) => {
     if (type === 1) {
       return <span style={{ color: "#D56819" }}>{t("203")}</span>;
@@ -253,84 +204,11 @@ export default function Rank() {
     }
   };
 
-  const getVilifyState = throttle(async (value: string) => {
-    if (!account) return;
-    return Contracts.example.getAmountsOut(
-      account as string,
-      value,
-      SwapObj[swapType ?? 1]
-    );
-  }, 1000);
-
-  const InputValueFun = async (e: any) => {
-    let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
-    if (Number(swapType) === 1) {
-      setInputValue1(value);
-      if (Number(value) > 0) {
-        getVilifyState(value)?.then((res: any) => {
-          setInputValue2(decimalNum(EthertoWei(res[1] ?? "0"), 2));
-        });
-      }
-    } else if (Number(swapType) === 2) {
-      setInputValue2(value);
-      if (Number(value) > 0) {
-        getVilifyState(value)?.then((res: any) => {
-          setInputValue1(decimalNum(EthertoWei(res[1] ?? "0"), 2));
-        });
-      }
-    }
-  };
-
-  const SelectPrice = () => {
-    Contracts.example
-      .getAmountsOut(account as string, "1", SwapObj[swapType])
-      ?.then((res: any) => {
-        console.log(res, "price");
-        setPrice(decimalNum(EthertoWei(res[1] ?? "0"), 2));
-      });
-  };
-
-  const CoinTopBox = (type: number) => {
-    if (type === 1) {
-      return (
-        <CoinBox_Item>
-          <img src={logo} />
-          <div>USDT</div>
-          <input
-            type="number"
-            placeholder={t("240")}
-            value={InputValue1}
-            onChange={InputValueFun}
-          />
-        </CoinBox_Item>
-      );
-    } else if (type === 2) {
-      return (
-        <CoinBox_Item>
-          <img src={logo} />
-          <div>MBK</div>
-          <input
-            type="number"
-            value={InputValue2}
-            placeholder={t("240")}
-            onChange={InputValueFun}
-          />
-        </CoinBox_Item>
-      );
-    }
-  };
-
   useEffect(() => {
     if (state.token) {
       getInitData();
     }
   }, [state.token]);
-
-  useEffect(() => {
-    if (account) {
-      SelectPrice();
-    }
-  }, [account, swapType]);
 
   return (
     <NodeContainerBox>

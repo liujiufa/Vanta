@@ -40,6 +40,7 @@ import yesIcon from "../assets/image/Subscription/yesIcon.svg";
 import { HelpIcon, menuIcon2 } from "../assets/image/homeBox";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -221,6 +222,11 @@ export const NodeInfo_Mid_Conditions = styled.div`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [NodeBaseInfo, setNodeBaseInfo] = useState<any>({});
@@ -255,7 +261,7 @@ export default function Rank() {
   };
 
   const buyNodeFun = (value: string) => {
-    if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.isHoldNft)
+    if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.userIsHoldNft)
       return addMessage(t("219"));
     if (Number(value) <= 0) return;
     if (!state.token) return;
@@ -267,7 +273,7 @@ export default function Rank() {
         let item: any = await buyNode({});
         if (item?.code === 200 && item?.data) {
           console.log(item?.data, "1212");
-          res = await Contracts.example?.buyNode(account as string, item?.data);
+          res = await Contracts.example?.buyNode(web3ModalAccount as string, item?.data);
         }
       } catch (error: any) {
         showLoding(false);
@@ -291,10 +297,7 @@ export default function Rank() {
     }
   }, [state.token]);
 
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
+   
 
   return (
     <NodeContainerBox>
@@ -327,7 +330,7 @@ export default function Rank() {
             {t("179")}
             <div>
               <img
-                src={!!NodeBaseInfo?.isHoldNft ? yesIcon : errorIcon}
+                src={!!NodeBaseInfo?.userIsHoldNft ? yesIcon : errorIcon}
                 alt=""
               />
               {t("180")}

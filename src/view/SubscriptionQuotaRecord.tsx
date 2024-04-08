@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { getRobotBuyRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
-import Table from "../components/Table";
-import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
@@ -421,7 +419,6 @@ const LotteryContainer_Btn = styled(Btn)`
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [SubTab, setSubTab] = useState<any>(0);
@@ -433,6 +430,7 @@ export default function Rank() {
   const [ActivationModal, setActivationModal] = useState(false);
   // 1确认中 2认购成功 3认购失败 4交易取消
   const getInitData = (type: any) => {
+    setRecordList([]);
     getRobotBuyRecord(type).then((res: any) => {
       if (res.code === 200) {
         setRecordList(res?.data);

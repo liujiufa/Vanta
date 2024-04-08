@@ -433,6 +433,7 @@ export default function Rank() {
   const [ActivationModal, setActivationModal] = useState(false);
 
   const getInitData = () => {
+    setRecordList([]);
     if (Number(ActiveTab) === -1) {
       getGameRecord(ActiveTab).then((res: any) => {
         if (res.code === 200) {
@@ -460,10 +461,6 @@ export default function Rank() {
     }
   }, [state.token, ActiveTab, SubTab]);
 
-  useEffect(() => {
-    if (account) {
-    }
-  }, [account]);
 
   const StateObj = (type: number) => {
     if (type === 1) {

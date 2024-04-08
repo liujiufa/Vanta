@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Web3 from "web3";
 import { useSign } from "./hooks/useSign";
+
 declare let window: any;
 
 const MessageBox = styled.div`
@@ -48,19 +49,21 @@ function App() {
   const dispatch = useDispatch();
   let state = useSelector<stateType, stateType>((state) => state);
 
-  useEffect(() => {
-    window?.ethereum?.on("accountsChanged", (accounts: string[]) => {
-      // 账号改了，刷新网页
-      window.location.reload();
-    });
-    window?.ethereum?.on("networkChanged", (accounts: string[]) => {
-      window.location.reload();
-    });
-  }, [web3React.account]);
+  // useEffect(() => {
+  //   window?.ethereum?.on("accountsChanged", (accounts: string[]) => {
+  //     // 账号改了，刷新网页
+  //     window.location.reload();
+  //   });
+  //   window?.ethereum?.on("networkChanged", (accounts: string[]) => {
+  //     window.location.reload();
+  //   });
+  // }, [web3React.account]);
 
-  useEffect(() => {
-    connectWallet && connectWallet(connector);
-  }, [connectWallet]);
+  // useEffect(() => {
+  //   connectWallet && connectWallet(connector);
+  // }, [connectWallet]);
+
+ 
 
   return (
     <ViewportProvider>

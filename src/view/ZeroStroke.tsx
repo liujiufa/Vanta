@@ -467,7 +467,7 @@ export default function Rank() {
   const [RecordList, setRecordList] = useState<any>([]);
   const [MyFreeInfo, setMyFreeInfo] = useState<any>({});
   const [ActiveTab, setActiveTab] = useState<any>(1);
-  const [SubTab, setSubTab] = useState<any>(1);
+  const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
@@ -485,6 +485,8 @@ export default function Rank() {
   }, [state.token]);
 
   const getRecordFun = () => {
+    setRecordList([]);
+
     if (Number(ActiveTab) === 1) {
       getFreeAwardRecord(SubTab).then((res: any) => {
         if (res.code === 200) {

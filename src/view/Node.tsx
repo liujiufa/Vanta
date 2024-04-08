@@ -46,6 +46,7 @@ import closeIcon from "../assets/image/closeIcon.svg";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { menuIcon2 } from "../assets/image/homeBox";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -451,6 +452,11 @@ const NodeInfo_Mid_Content = styled(FlexBox)`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const token = useSelector<any>((state) => state.token);
   const [RecordList, setRecordList] = useState<any>([]);
   const [MyNodeInfo, setMyNodeInfo] = useState<any>({});
@@ -481,18 +487,26 @@ export default function Rank() {
   }, [token]);
 
   const getRecordData = () => {
-    if (Number(ActiveTab) === 3)
+    setRecordList([]);
+    if (Number(ActiveTab) === 3) {
       return getNodeBuyRecord().then((res: any) => {
         if (res.code === 200) {
           setRecordList(res?.data);
         }
       });
-
-    getNodeAwardRecord(SubTab).then((res: any) => {
-      if (res.code === 200) {
-        setRecordList(res?.data);
-      }
-    });
+    } else if (Number(ActiveTab) === 2) {
+      return getNodeAwardRecord(45).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    } else {
+      getNodeAwardRecord(SubTab).then((res: any) => {
+        if (res.code === 200) {
+          setRecordList(res?.data);
+        }
+      });
+    }
   };
 
   // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
@@ -547,7 +561,7 @@ export default function Rank() {
           console.log(item?.data, "1212");
 
           res = await Contracts.example?.avtiveNode(
-            account as string,
+            web3ModalAccount as string,
             item?.data
           );
         }
@@ -559,6 +573,8 @@ export default function Rank() {
       if (!!res?.status) {
         call();
         getInitData();
+        setActivationModal(false);
+
         addMessage(t("70"));
       } else {
         addMessage(t("69"));
@@ -577,7 +593,7 @@ export default function Rank() {
           <NodeInfo_Mid_Content>
             <div>{t("102")}</div>
             <div>
-              {decimalNum(MyNodeInfo?.amount, 2) ?? 0} <span>mbk</span>
+              {decimalNum(MyNodeInfo?.amount, 6) ?? 0} <span>mbk</span>
             </div>
           </NodeInfo_Mid_Content>
           <NodeInfo_Top_Btn
@@ -731,7 +747,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        {t("195")} <span>{decimalNum(item?.amount, 2)}</span>
+                        {t("195")} <span>{decimalNum(item?.amount, 6)}</span>
                       </div>
                     </Award_Record_Content_Record_Content_Item>
                   ))
@@ -760,7 +776,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        {t("197")} <span>{decimalNum(item?.amount, 2)}</span>
+                        {t("197")} <span>{decimalNum(item?.amount, 6)}</span>
                       </div>
                       <div>
                         {t("198")}
@@ -800,7 +816,7 @@ export default function Rank() {
                         </span>
                       </div>
                       <div>
-                        {t("202")} <span>{decimalNum(item?.payNum, 2)}</span>
+                        {t("202")} <span>{decimalNum(item?.payNum, 6)}</span>
                       </div>
                       <div>
                         {t("198")}

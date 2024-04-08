@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  getInsureRank,
   getInsureResult,
   getInsureStatus,
   latestRecord,
@@ -301,7 +300,6 @@ const ReceiveBtn = styled(Btn)`
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [InsureRank, setInsureRank] = useState<any>([]);
   const [InsureStatus, setInsureStatus] = useState<any>({});

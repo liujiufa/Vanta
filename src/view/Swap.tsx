@@ -48,6 +48,7 @@ import { useInputValue } from "../hooks/useInputValue";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { throttle } from "lodash";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
@@ -181,6 +182,11 @@ const CoinBox_Transfer = styled(FlexBox)`
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [ActiveTab, setActiveTab] = useState<any>(1);
@@ -217,7 +223,7 @@ export default function Rank() {
 
   // 1:USDT=>MBK 2:MBK=>USDT
   const SwapFun = (value: string) => {
-    if (!account) return;
+    if (!web3ModalAccount) return;
     if (Number(value) <= 0) return;
     handleTransaction(value, async (call: any) => {
       let res: any;
@@ -225,7 +231,7 @@ export default function Rank() {
         showLoding(true);
         res =
           await Contracts.example?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            account as string,
+            web3ModalAccount as string,
             value,
             0,
             SwapObj[swapType ?? 1],
@@ -254,9 +260,9 @@ export default function Rank() {
   };
 
   const getVilifyState = throttle(async (value: string) => {
-    if (!account) return;
+    if (!web3ModalAccount) return;
     return Contracts.example.getAmountsOut(
-      account as string,
+      web3ModalAccount as string,
       value,
       SwapObj[swapType ?? 1]
     );
@@ -283,7 +289,7 @@ export default function Rank() {
 
   const SelectPrice = () => {
     Contracts.example
-      .getAmountsOut(account as string, "1", SwapObj[swapType])
+      .getAmountsOut(web3ModalAccount as string, "1", SwapObj[swapType])
       ?.then((res: any) => {
         console.log(res, "price");
         setPrice(decimalNum(EthertoWei(res[1] ?? "0"), 2));
@@ -327,18 +333,18 @@ export default function Rank() {
   }, [state.token]);
 
   useEffect(() => {
-    if (account) {
+    if (web3ModalAccount) {
       SelectPrice();
     }
-  }, [account, swapType]);
+  }, [web3ModalAccount, swapType]);
 
   return (
     <NodeContainerBox>
-      {location.pathname === "/View/Swap" && (
-        <NodeInfo>
-          <NodeInfo_Top>
-            <CoinBox>
-              {/* <CoinBox_Item>
+      {/* {location.pathname === "/View/Swap" && ( */}
+      <NodeInfo>
+        <NodeInfo_Top>
+          <CoinBox>
+            {/* <CoinBox_Item>
               <img src={logo} />
               <div>USDT</div>
               <input
@@ -347,22 +353,22 @@ export default function Rank() {
                 onClick={InputValueFun}
               />
             </CoinBox_Item> */}
-              {CoinTopBox(Number(swapType))}
-              <CoinBox_Transfer>
-                <img
-                  src={transferIcon}
-                  alt=""
-                  onClick={() => {
-                    setSwapType(Number(swapType) === 1 ? 2 : 1);
-                  }}
-                />
-                {Number(swapType) === 1
-                  ? `1USDT=${Price ?? "--"}MBK`
-                  : `1MBK=${Price ?? "--"}USDT`}
-              </CoinBox_Transfer>
-              {CoinTopBox(Number(swapType) === 1 ? 2 : 1)}
+            {CoinTopBox(Number(swapType))}
+            <CoinBox_Transfer>
+              <img
+                src={transferIcon}
+                alt=""
+                onClick={() => {
+                  setSwapType(Number(swapType) === 1 ? 2 : 1);
+                }}
+              />
+              {Number(swapType) === 1
+                ? `1USDT=${Price ?? "--"}MBK`
+                : `1MBK=${Price ?? "--"}USDT`}
+            </CoinBox_Transfer>
+            {CoinTopBox(Number(swapType) === 1 ? 2 : 1)}
 
-              {/* <CoinBox_Item>
+            {/* <CoinBox_Item>
               <img src={logo} />
               <div>MBK</div>
               <input
@@ -371,19 +377,77 @@ export default function Rank() {
                 placeholder={t("240")}
               />
             </CoinBox_Item> */}
-            </CoinBox>
-          </NodeInfo_Top>
+          </CoinBox>
+        </NodeInfo_Top>
 
-          <NodeInfo_Bottom
-            onClick={() => {
-              let amount = Number(swapType) === 1 ? InputValue1 : InputValue2;
-              SwapFun(String(amount));
-            }}
-          >
-            {t("241")}
-          </NodeInfo_Bottom>
-        </NodeInfo>
-      )}
+        <NodeInfo_Bottom
+          onClick={() => {
+            let amount = Number(swapType) === 1 ? InputValue1 : InputValue2;
+            SwapFun(String(amount));
+          }}
+        >
+          {t("241")}
+        </NodeInfo_Bottom>
+      </NodeInfo>
+      {/* )} */}
+
+      <DirectPush_Title_Container>
+        <img src={exchangeIcon} alt="" />
+        <ModalContainer_Title>{t("242")}</ModalContainer_Title>
+      </DirectPush_Title_Container>
+      <Award_Record_Content>
+        <Award_Record_Content_Record_Content>
+          {RecordList?.length > 0 ? (
+            RecordList?.map((item: any, index: any) => (
+              <Get_Record_Content_Record_Content_Item key={index} type={1}>
+                <div>
+                  {t("201")}{" "}
+                  <span>
+                    {dateFormat(
+                      "YYYY-mm-dd HH:MM:SS",
+                      new Date(item?.createTime)
+                    )}
+                  </span>
+                </div>
+                {/* {false ? (
+                  <> */}
+                <div>
+                  {t("243", { coinName: item?.formCoin })}{" "}
+                  <span>{item?.formNum}</span>
+                </div>
+                <div>
+                  {t("244", { coinName: item?.toCoin })}{" "}
+                  <span>{item?.toNum}</span>
+                </div>
+                {/* </>
+                ) : (
+                  <>
+                    <div>
+                      From (USDT) <span>{item?.formNum}</span>
+                    </div>
+                    <div>
+                      To (MBK) <span>{item?.toNum}</span>
+                    </div>
+                  </>
+                )} */}
+                <div>
+                  {t("245")} <span>{item?.coinPrice}</span>
+                </div>
+                <div>
+                  {t("198")}
+                  {StateObj(2)}
+                </div>
+                <div>
+                  {t("199")}
+                  <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                </div>
+              </Get_Record_Content_Record_Content_Item>
+            ))
+          ) : (
+            <NoData></NoData>
+          )}
+        </Award_Record_Content_Record_Content>
+      </Award_Record_Content>
     </NodeContainerBox>
   );
 }

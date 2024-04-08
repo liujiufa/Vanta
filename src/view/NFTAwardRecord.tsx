@@ -3,7 +3,6 @@ import { getCardAwardRecord, getCardBuyRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
-import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
@@ -419,7 +418,6 @@ const LotteryContainer_Btn = styled(Btn)`
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
@@ -449,6 +447,7 @@ export default function Rank() {
   };
 
   const getInitData = (type: number) => {
+    setRecordList([]);
     if (Number(ActiveTab) === 1) {
       getCardAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
