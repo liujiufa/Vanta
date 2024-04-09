@@ -744,6 +744,8 @@ export default function Rank() {
     getPledgeUserInfo().then((res: any) => {
       if (res.code === 200) {
         setPledgeUserInfo(res?.data);
+        if (Number(res?.data) <= 0) {
+        }
       }
     });
     getRedemptionAccountInfo().then((res: any) => {
@@ -767,7 +769,7 @@ export default function Rank() {
     setIsReinvest(checked);
   };
 
-  const pledgeFun = (value: string) => {
+  const pledgeFun = (value: string = "20") => {
     if (Number(value) < 20 || Number(value) % 20 !== 0)
       return addMessage(t("22"));
     if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
@@ -978,9 +980,13 @@ export default function Rank() {
                 <div>
                   <input
                     type=""
-                    placeholder={t(`357`, {
-                      num: PledgeUserInfo?.lastPledgeNum,
-                    })}
+                    placeholder={
+                      !!PledgeUserInfo?.lastPledgeNum
+                        ? t(`357`, {
+                            num: PledgeUserInfo?.lastPledgeNum,
+                          })
+                        : "20"
+                    }
                     value={!!InputValueAmount ? InputValueAmount : ""}
                     onChange={(e) => {
                       InputValueFun(e);

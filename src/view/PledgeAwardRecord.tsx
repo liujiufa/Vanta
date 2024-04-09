@@ -401,6 +401,7 @@ export default function Rank() {
   const { t, i18n } = useTranslation();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
+  const [ReRecordList, setReRecordList] = useState<any>([]);
 
   const { state: stateObj } = useLocation();
   const [ActiveTab, setActiveTab] = useState<any>(
@@ -448,7 +449,7 @@ export default function Rank() {
     } else if (Number(ActiveTab) === 2) {
       getPledgeUserAwardRecord(50).then((res: any) => {
         if (res.code === 200) {
-          setRecordList(res?.data);
+          setReRecordList(res?.data);
         }
       });
     }
@@ -581,8 +582,8 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
+                {ReRecordList?.length > 0 ? (
+                  ReRecordList?.map((item: any, index: any) => (
                     <Get_Record_Content_Record_Content_Item
                       key={index}
                       type={1}
@@ -593,11 +594,11 @@ export default function Rank() {
                       </div>
                       <div>
                         {t("325")}
-                        <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
+                        <span>{decimalNum(item?.amount ?? 0, 6)}</span>
                       </div>
                       <div>
                         {t("326")}
-                        <span>{item?.orderNo}</span>
+                        <span>{item?.pledgeOrderNo}</span>
                       </div>
                       <div>
                         {t("198")}

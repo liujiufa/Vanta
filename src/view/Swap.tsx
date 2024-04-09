@@ -276,6 +276,8 @@ export default function Rank() {
         getVilifyState(value)?.then((res: any) => {
           setInputValue2(decimalNum(EthertoWei(res[1] ?? "0"), 2));
         });
+      } else {
+        setInputValue2("");
       }
     } else if (Number(swapType) === 2) {
       setInputValue2(value);
@@ -283,6 +285,8 @@ export default function Rank() {
         getVilifyState(value)?.then((res: any) => {
           setInputValue1(decimalNum(EthertoWei(res[1] ?? "0"), 2));
         });
+      } else {
+        setInputValue1("");
       }
     }
   };

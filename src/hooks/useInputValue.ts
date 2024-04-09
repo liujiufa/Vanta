@@ -29,6 +29,8 @@ export const useInputValue = () => {
       getVilifyState(value)?.then((res: any) => {
         setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
       });
+    } else {
+      setInputValueAmountValue("0");
     }
   };
 
