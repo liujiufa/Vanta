@@ -524,7 +524,7 @@ export default function Rank() {
             {t("21", {
               time: dateFormat("HH:MM:SS", new Date(LatestRecord?.createTime)),
               address: AddrHandle(LatestRecord?.userAddress, 6, 6),
-              num: LatestRecord?.pledgeNum,
+              num: LatestRecord?.pledgeAmount,
             })}
           </div>
           {/* <div>12:24:46 0x12ds....fdee pledge value 3000USDT</div> */}

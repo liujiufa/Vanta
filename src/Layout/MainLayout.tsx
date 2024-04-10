@@ -945,7 +945,7 @@ const MainLayout: React.FC = () => {
             <div
               className="tabItem"
               onClick={() => {
-                return addMessage(t("Open soon"));
+                // return addMessage(t("Open soon"));
                 navigateFun("/CHAT");
               }}
             >

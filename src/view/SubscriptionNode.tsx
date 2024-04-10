@@ -261,8 +261,8 @@ export default function Rank() {
   };
 
   const buyNodeFun = (value: string) => {
-    if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.userIsHoldNft)
-      return addMessage(t("219"));
+    // if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.userIsHoldNft)
+    //   return addMessage(t("219"));
     if (Number(value) <= 0) return;
     if (!state.token) return;
 
@@ -273,7 +273,10 @@ export default function Rank() {
         let item: any = await buyNode({});
         if (item?.code === 200 && item?.data) {
           console.log(item?.data, "1212");
-          res = await Contracts.example?.buyNode(web3ModalAccount as string, item?.data);
+          res = await Contracts.example?.buyNode(
+            web3ModalAccount as string,
+            item?.data
+          );
         }
       } catch (error: any) {
         showLoding(false);
@@ -296,8 +299,6 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token]);
-
-   
 
   return (
     <NodeContainerBox>

@@ -424,7 +424,7 @@ export default function Rank() {
     console.log("item");
     if (!token) return;
     if (Number(value) <= 0) return;
-    handleTransaction(value, async (call: any) => {
+    handleTransaction(Number(value) + 50000 + "", async (call: any) => {
       let res: any;
       try {
         showLoding(true);
@@ -530,14 +530,14 @@ export default function Rank() {
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            if (
-              !!CommunitySoldBase?.isSatisfy &&
-              !!CommunitySoldBase?.CommunitySoldBase
-            ) {
-              setActivationModal(true);
-            } else {
-              return addMessage(t("220"));
-            }
+            // if (
+            //   !!CommunitySoldBase?.isSatisfy &&
+            //   !!CommunitySoldBase?.CommunitySoldBase
+            // ) {
+            setActivationModal(true);
+            // } else {
+            //   return addMessage(t("220"));
+            // }
           }}
         >
           {t("152")}

@@ -40,6 +40,7 @@ const LPPledgeAwardRecord = React.lazy(
 const InitialSubscriptionRewards = React.lazy(
   () => import("../view/InitialSubscriptionRewards")
 );
+const CHAT = React.lazy(() => import("../view/CHAT"));
 export default function Router() {
   return (
     <Suspense fallback={<PageLoding></PageLoding>}>
@@ -95,6 +96,7 @@ export default function Router() {
               path="InitialSubscriptionRewards"
               element={<InitialSubscriptionRewards />}
             ></Route>
+            <Route path="CHAT" element={<CHAT />}></Route>
           </Route>
           <Route path="" element={<Home />}></Route>
         </Route>

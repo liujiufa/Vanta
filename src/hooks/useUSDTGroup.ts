@@ -29,7 +29,10 @@ export default function useUSDTGroup(
    */
   const initTOKENBalance = useCallback(async () => {
     if (!!web3ModalAccount) {
-      const balance = await Contracts.example?.balanceOf(web3ModalAccount, coinName);
+      const balance = await Contracts.example?.balanceOf(
+        web3ModalAccount,
+        coinName
+      );
 
       setTOKENBalance(decimalNum(Web3.utils.fromWei(balance.toString()), 2));
     }
@@ -81,7 +84,10 @@ export default function useUSDTGroup(
    */
   const initSymbol = useCallback(async () => {
     if (!!web3ModalAccount) {
-      const symbol = await Contracts.example?.symbol(web3ModalAccount, coinName);
+      const symbol = await Contracts.example?.symbol(
+        web3ModalAccount,
+        coinName
+      );
       setSymbol(symbol);
     }
   }, [web3ModalAccount, contractAddress, coinName]);

@@ -471,7 +471,7 @@ export default function Rank() {
   const [MyCommunity, setMyCommunity] = useState<any>({});
   const [CommunityAwardRecord, setCommunityAwardRecord] = useState<any>([]);
   const [ActiveTab, setActiveTab] = useState<any>(1);
-  const [SubTab, setSubTab] = useState<any>(1);
+  const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
@@ -639,9 +639,9 @@ export default function Rank() {
             <Award_Record_Content>
               <Award_Record_Content_Tab_Content>
                 <Award_Record_Content_Tab_Item
-                  className={Number(SubTab) === 1 ? "activeSubTab" : ""}
+                  className={Number(SubTab) === 0 ? "activeSubTab" : ""}
                   onClick={() => {
-                    setSubTab(1);
+                    setSubTab(0);
                   }}
                 >
                   {t("189")}
