@@ -43,6 +43,7 @@ import { ZeroStrokeIcon } from "../assets/image/homeBox";
 import { HelpIconAuto, NodeInfo_Top_Rule } from "./Insurance";
 import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -398,21 +399,21 @@ export default function Rank() {
   const [SubTab, setSubTab] = useState<any>(0);
   const { width } = useViewport();
   const Navigate = useNavigate();
-  const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [dataLoding, setDataLoding] = useState<any>(true);
+
   const [ActivationModal, setActivationModal] = useState(false);
   const { state: stateObj } = useLocation();
   //(1:管理奖励记录) 1机器人-推荐奖励 2机器人-管理奖励 3机器人-平级奖励 4机器人-管理账户领取奖励
   //(2:业绩奖励记录) 5机器人-业绩明星奖励 6机器人-直推明星奖励 7机器人-NFT团队明星奖励 8机器人-业绩账户领取奖记录
   const TypeObj = {
-    1: "331",
+    1: "363",
     2: "332",
     3: "333",
     4: "334",
     5: "335",
     6: "336",
     7: "337",
+    52: "362",
   };
 
   const subTabArr = {
@@ -438,20 +439,31 @@ export default function Rank() {
   const getAwardRecord = (type: any) => {
     setRecordList([]);
     if (recordType === 1) {
+      setDataLoding(true);
       getRobotManageAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (recordType === 2) {
+      setDataLoding(true);
+
       getRobotPerformanceAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (recordType === 3) {
+      setDataLoding(true);
+
       getCardPioneerRecord(1).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
@@ -461,20 +473,32 @@ export default function Rank() {
   const getGetRecord = useCallback(() => {
     setRecordList([]);
     if (recordType === 1) {
+      setDataLoding(true);
+
       getRobotManageAwardRecord(4).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (recordType === 2) {
+      setDataLoding(true);
+
       getRobotPerformanceAwardRecord(8).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (recordType === 3) {
+      setDataLoding(true);
+
       getCardPioneerRecord(2).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
@@ -562,28 +586,39 @@ export default function Rank() {
                 </Award_Record_Content_Tab_Item> */}
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Award_Record_Content_Record_Content_Item key={index}>
-                      <div>
-                        {t("193")} <span>{t(TypeObj[item?.businessType])}</span>
-                      </div>
-                      <div>
-                        {t("201")}{" "}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("195")} <span>{decimalNum(item?.amount, 2)}</span>
-                      </div>
-                    </Award_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Award_Record_Content_Record_Content_Item key={index}>
+                        <div>
+                          {t("193")}{" "}
+                          <span>{t(TypeObj[item?.businessType])}</span>
+                        </div>
+                        {Number(SubTab) === 1 && (
+                          <div>
+                            {t("364")}{" "}
+                            <span>{AddrHandle(item?.sourceAddress, 6, 4)}</span>
+                          </div>
+                        )}
+                        <div>
+                          {t("201")}{" "}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("195")} <span>{decimalNum(item?.amount, 2)}</span>
+                        </div>
+                      </Award_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -591,38 +626,42 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        {t("201")}
-                        <span>
-                          {" "}
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("197")}
-                        <span>{decimalNum(item?.amount, 2)}</span>
-                      </div>
-                      <div>
-                        {t("198")}
-                        {StateObj(2)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          {t("201")}
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("197")}
+                          <span>{decimalNum(item?.amount, 2)}</span>
+                        </div>
+                        <div>
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>

@@ -662,6 +662,7 @@ export default function Rank() {
     handleTransaction,
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.Bot, "MBK");
+
   const [RobotInfo, setRobotInfo] = useState<any>({});
   const [RobotManageAwardInfo, setRobotManageAwardInfo] = useState<any>({});
   const [RobotPerformanceAwardInfo, setRobotPerformanceAwardInfo] =
@@ -689,6 +690,10 @@ export default function Rank() {
     if (!web3ModalAccount) return;
     return Contracts.example.queryUsdtByMbk(web3ModalAccount as string, value);
   }, 2000);
+  const getVilifyStateUSDTToMBK = throttle(async (value: string) => {
+    if (!web3ModalAccount) return;
+    return Contracts.example.queryMbkByUsdt(web3ModalAccount as string, value);
+  }, 2000);
 
   const InputValueFun = async (e: any) => {
     let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
@@ -697,6 +702,8 @@ export default function Rank() {
       getVilifyState(value)?.then((res: any) => {
         setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
       });
+    } else {
+      setInputValueAmountValue("0");
     }
   };
 
@@ -707,6 +714,8 @@ export default function Rank() {
       getVilifyState(value)?.then((res: any) => {
         setInputValueAmountValue(decimalNum(EthertoWei(res ?? "0"), 2));
       });
+    } else {
+      setInputValueAmountValue("0");
     }
   };
   // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
@@ -744,17 +753,22 @@ export default function Rank() {
         .then((res: any) => {
           console.log(res, "queryUserBuyBotInfo");
 
-          setUserBuyBotInfo(
-            decimalNum(EthertoWei(res[res?.length - 1] ?? "0"), 2)
-          );
+          if (Number(EthertoWei(res[res?.length - 1] ?? "0")) > 0) {
+            getVilifyStateUSDTToMBK(
+              EthertoWei(res[res?.length - 1] ?? "0")
+            )?.then((res1: any) => {
+              setUserBuyBotInfo(decimalNum(EthertoWei(res1 ?? "0"), 2));
+            });
+          }
         });
     }
   }, [web3ModalAccount]);
 
   const buyRobotFun = (value: string) => {
     if (Number(value) <= 0) return;
-    if (Number(UserBuyBotInfo) > Number(value))
-      return addMessage(t("358", { num: UserBuyBotInfo }));
+    if (Number(value) % 20 !== 0) return addMessage(t("366"));
+    if (Number(value) < UserBuyBotInfo)
+      return addMessage(t("367", { num: UserBuyBotInfo }));
 
     handleTransaction(value, async (call: any) => {
       let res: any;
@@ -800,7 +814,7 @@ export default function Rank() {
               <AvailableBox>
                 {t("144")}
                 <div>
-                  {RobotInfo?.amount ?? 0} <span>USDT</span>
+                  {Number(RobotInfo?.amount ?? 0) * 4 ?? 0} <span>USDT</span>
                 </div>
               </AvailableBox>
             </MyQuota_Box_Left>
@@ -818,7 +832,11 @@ export default function Rank() {
               {RobotInfo?.totalSubscriptionNum ?? 0} MBK
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
-              <div>{t("146")}</div>
+              <div>{t("370")}</div>
+              {RobotInfo?.realTotalSubscriptionValue ?? 0} USDT
+            </NodeInfo_Top_Item>
+            <NodeInfo_Top_Item>
+              <div>{t("371")}</div>
               {RobotInfo?.totalSubscriptionAmount ?? 0} USDT
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
@@ -853,7 +871,7 @@ export default function Rank() {
                   <input
                     type="number"
                     placeholder={t(`358`, {
-                      num: UserBuyBotInfo,
+                      num: UserBuyBotInfo ?? "-",
                     })}
                     value={!!InputValueAmount ? InputValueAmount : ""}
                     onChange={(e) => {
@@ -883,12 +901,21 @@ export default function Rank() {
                   {t("12")}
                 </NodeInfo_Mid_Rule_Robot>
               </InputContainer_Bottom>
+              <InputContainer_Bottom style={{ marginTop: "10px" }}>
+                <BalanceBox_InputContainer>
+                  {t("368")}{" "}
+                </BalanceBox_InputContainer>
+
+                <NodeInfo_Mid_Rule_Robot>
+                  {Number(InputValueAmountValue)} USDT
+                </NodeInfo_Mid_Rule_Robot>
+              </InputContainer_Bottom>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_LotteryGame_Reward>
             {t("151")}
             <div>
-              {InputValueAmountValue} <span>USDT</span>
+              {Number(InputValueAmountValue) * 4} <span>USDT</span>
             </div>
           </NodeInfo_Top_LotteryGame_Reward>
           <GetRewardBtn

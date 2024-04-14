@@ -38,6 +38,7 @@ import { ZeroStrokeIcon } from "../assets/image/homeBox";
 import { HelpIconAuto, NodeInfo_Top_Rule } from "./Insurance";
 import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -425,14 +426,18 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [dataLoding, setDataLoding] = useState<any>(true);
+
   const [ActivationModal, setActivationModal] = useState(false);
   // 1确认中 2认购成功 3认购失败 4交易取消
   const getInitData = (type: any) => {
+    setDataLoding(true);
+
     setRecordList([]);
     getRobotBuyRecord(type).then((res: any) => {
       if (res.code === 200) {
+        setDataLoding(false);
+
         setRecordList(res?.data);
       }
     });
@@ -504,42 +509,59 @@ export default function Rank() {
               </Award_Record_Content_Tab_Item>
             </Award_Record_Content_Tab_Content>
             <Award_Record_Content_Record_Content>
-              {RecordList?.length > 0 ? (
-                RecordList?.map((item: any, index: any) => (
-                  <Get_Record_Content_Record_Content_Item key={index} type={1}>
-                    <div>
-                      {t("315")}
-                      <span>
-                        {dateFormat(
-                          "YYYY-mm-dd HH:MM",
-                          new Date(item?.createTime)
-                        )}
-                      </span>
-                    </div>
-                    <div>
-                      {t("316")}
-                      <span>{decimalNum(item?.subscriptionValue, 2)}</span>
-                    </div>
-                    <div>
-                      {t("317")}
-                      <span>{decimalNum(item?.subscriptionNum, 2)}</span>
-                    </div>
-                    <div>
-                      {t("309")}
-                      <span>{decimalNum(item?.coinPrice, 2)}</span>
-                    </div>
-                    <div>
-                      {t("198")}
-                      {StateObj(item?.status)}
-                    </div>
-                    <div>
-                      {t("199")}
-                      <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                    </div>
-                  </Get_Record_Content_Record_Content_Item>
-                ))
+              {!dataLoding ? (
+                RecordList?.length > 0 ? (
+                  RecordList?.map((item: any, index: any) => (
+                    <Get_Record_Content_Record_Content_Item
+                      key={index}
+                      type={1}
+                    >
+                      <div>
+                        {t("315")}
+                        <span>
+                          {dateFormat(
+                            "YYYY-mm-dd HH:MM",
+                            new Date(item?.createTime)
+                          )}
+                        </span>
+                      </div>
+                      <div>
+                        {t("316")}
+                        <span>{decimalNum(item?.subscriptionValue, 2)}</span>
+                      </div>
+                      <div>
+                        {t("317")}
+                        <span>{decimalNum(item?.subscriptionNum, 2)}</span>
+                      </div>
+                      <div>
+                        {t("375")}
+                        <span>{decimalNum(item?.robotUser?.useValue, 2)}</span>
+                      </div>
+                      <div>
+                        {t("376")}
+                        <span>
+                          {decimalNum(item?.giveSubscriptionValue, 2)}
+                        </span>
+                      </div>
+                      <div>
+                        {t("309")}
+                        <span>{decimalNum(item?.coinPrice, 2)}</span>
+                      </div>
+                      <div>
+                        {t("198")}
+                        {StateObj(item?.status)}
+                      </div>
+                      <div>
+                        {t("199")}
+                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                      </div>
+                    </Get_Record_Content_Record_Content_Item>
+                  ))
+                ) : (
+                  <NoData></NoData>
+                )
               ) : (
-                <NoData></NoData>
+                <PageLoding></PageLoding>
               )}
             </Award_Record_Content_Record_Content>
           </Award_Record_Content>

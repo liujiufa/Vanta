@@ -1,10 +1,20 @@
 export const QBConfig = {
   credentials: {
-    appId: "YOUR_APP_ID_FROM_ADMIN_PANEL",
-    accountKey: "YOUR_ACCOUNT_KEY_FROM_ADMIN_PANEL",
-    authKey: "YOUR_AUTH_KEY_FROM_ADMIN_PANEL",
-    authSecret: "YOUR_AUTH_SECRET_FROM_ADMIN_PANEL",
+    // appId: 103174,
+    // accountKey: "ack_-ack_DTLiyKehjzJecpYyAGXd",
+    // authKey: "ak_vRpxG4kpbRgN237",
+    // authSecret: "as_XYYNLKcZ2jzJsvb",
+    // sessionToken: "",
+    appId: 103068,
+    accountKey: "ack_-ack_fWSNHVxTshsJcXYB4pjZ",
+    authKey: "ak_dzz83qUkYdAUhXg",
+    authSecret: "as_PNOw2gLdtavZggB",
     sessionToken: "",
+    // appId: 103001,
+    // accountKey: "ack_-cVBvAtxKCGeKW9tygy3",
+    // authKey: "ak_L3Swpr7QfYKAkjp",
+    // authSecret: "as_ZJEdLrZhHwwfT2Y",
+    // sessionToken: "",
   },
   appConfig: {
     chatProtocol: {

@@ -44,6 +44,7 @@ import { ZeroStrokeIcon } from "../assets/image/homeBox";
 import { HelpIconAuto, NodeInfo_Top_Rule } from "./Insurance";
 import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -432,8 +433,8 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [dataLoding, setDataLoding] = useState<any>(true);
+
   const [ActivationModal, setActivationModal] = useState(false);
 
   const subTabArr = {
@@ -447,28 +448,38 @@ export default function Rank() {
   };
 
   const getInitData = (type: -1 | 0 | 1 | 2) => {
+    setDataLoding(true);
+
     setRecordList([]);
     if (Number(ActiveTab) === 1) {
       getLpUserPledgeRecord(type).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (Number(ActiveTab) === 2) {
       getLpUserAwardRecord(40).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (Number(ActiveTab) === 3) {
       getLpUserAwardRecord(28).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (Number(ActiveTab) === 4) {
       getLpUserAwardRecord(29).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
@@ -552,50 +563,54 @@ export default function Rank() {
                 ))}
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Award_Record_Content_Record_Content_Item key={index}>
-                      <div>
-                        {t("305")}
-                        <span>{item?.orderNo}</span>
-                      </div>
-                      <div>
-                        {t("306")}{" "}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("323")} <span>{item?.num ?? 0}</span>
-                      </div>
-                      <div>
-                        {t("310")} <span>{item?.pledgeCycle ?? 0}天</span>
-                      </div>
-                      <div>
-                        {t("311")}{" "}
-                        <span>
-                          {" "}
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.endTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("198")}
-                        {pledgeStateObj(item?.status)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                      </div>
-                    </Award_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Award_Record_Content_Record_Content_Item key={index}>
+                        <div>
+                          {t("305")}
+                          <span>{item?.orderNo}</span>
+                        </div>
+                        <div>
+                          {t("306")}{" "}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("323")} <span>{item?.num ?? 0}</span>
+                        </div>
+                        <div>
+                          {t("310")} <span>{item?.pledgeCycle ?? 0}天</span>
+                        </div>
+                        <div>
+                          {t("311")}{" "}
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.endTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("198")}
+                          {pledgeStateObj(item?.status)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                        </div>
+                      </Award_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -604,37 +619,41 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Award_Record_Content_Record_Content_Item key={index}>
-                      <div>
-                        {t("324")}{" "}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("325")} <span>{item?.amount ?? 0}</span>
-                      </div>
-                      <div>
-                        {t("326")} <span>{item?.pledgeOrderNo ?? 0}</span>
-                      </div>
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Award_Record_Content_Record_Content_Item key={index}>
+                        <div>
+                          {t("324")}{" "}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("325")} <span>{item?.amount ?? 0}</span>
+                        </div>
+                        <div>
+                          {t("326")} <span>{item?.pledgeOrderNo ?? 0}</span>
+                        </div>
 
-                      <div>
-                        {t("198")}
-                        {StateObj(2)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                      </div>
-                    </Award_Record_Content_Record_Content_Item>
-                  ))
+                        <div>
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                        </div>
+                      </Award_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -643,34 +662,38 @@ export default function Rank() {
           {Number(ActiveTab) === 3 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        {t("200")}
-                        <span>{t("109")}</span>
-                      </div>
-                      <div>
-                        {t("201")}
-                        <span>
-                          {" "}
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("195")}
-                        <span>{item?.amount ?? 0}</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          {t("200")}
+                          <span>{t("109")}</span>
+                        </div>
+                        <div>
+                          {t("201")}
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("195")}
+                          <span>{item?.amount ?? 0}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -679,39 +702,43 @@ export default function Rank() {
           {Number(ActiveTab) === 4 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        {t("201")}
-                        <span>
-                          {" "}
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("197")}
-                        <span>{item?.amount ?? 0}</span>
-                      </div>
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          {t("201")}
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("197")}
+                          <span>{item?.amount ?? 0}</span>
+                        </div>
 
-                      <div>
-                        {t("198")}
-                        {StateObj(2)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
+                        <div>
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>

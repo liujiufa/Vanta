@@ -3,6 +3,7 @@ import {
   getInsureResult,
   getInsureStatus,
   latestRecord,
+  rank,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -46,6 +47,7 @@ import { HelpIcon, menuIcon7 } from "../assets/image/homeBox";
 import useTime from "../hooks/useTime";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import PageLoding from "../components/PageLoding";
 dayjs.extend(duration);
 
 const NodeContainerBox = styled(ContainerBox)`
@@ -304,12 +306,10 @@ export default function Rank() {
   const [InsureRank, setInsureRank] = useState<any>([]);
   const [InsureStatus, setInsureStatus] = useState<any>({});
   const [LastRecord, setLastRecord] = useState<any>({});
-  const [ActiveTab, setActiveTab] = useState<any>(1);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [dataLoding, setDataLoding] = useState<any>(true);
   const [diffTime, status, initDiffTime, setDiffTime] = useTime({
     initDiffTime: 0,
   });
@@ -359,8 +359,11 @@ export default function Rank() {
   }, [state.token, diffTime]);
 
   useEffect(() => {
-    getInsureResult().then((res: any) => {
+    setDataLoding(true);
+
+    rank().then((res: any) => {
       setInsureRank(res?.data ?? []);
+      setDataLoding(false);
     });
   }, []);
 
@@ -401,11 +404,16 @@ export default function Rank() {
               {AddrHandle(LastRecord?.userAddress, 6, 4)} pledge value
               {LastRecord?.pledgeAmount ?? 0}USDT */}
 
-              {t("21", {
-                time: dateFormat("HH:MM:SS", new Date(LastRecord?.createTime)),
-                address: AddrHandle(LastRecord?.userAddress, 6, 4),
-                num: LastRecord?.pledgeAmount,
-              })}
+              {LastRecord?.createTime
+                ? t("21", {
+                    time: dateFormat(
+                      "HH:MM:SS",
+                      new Date(LastRecord?.createTime)
+                    ),
+                    address: AddrHandle(LastRecord?.userAddress, 6, 4),
+                    num: LastRecord?.pledgeAmount,
+                  })
+                : "--:--:--"}
             </NodeInfo_Top_Message>
           </NodeInfo_Top>
         ) : (
@@ -456,40 +464,46 @@ export default function Rank() {
         <img src={DirectPushListIcon} />
         <ModalContainer_Title>{t("252")}</ModalContainer_Title>
       </DirectPush_Title_Container>
-      {InsureRank?.length > 0 ? (
-        <DirectPush_Content_Container>
-          <DirectPush_Content_Container_Header>
-            <div>{t("253")}</div>
-            <div>{t("254")}</div>
-            {i18n.language === "en" ? (
-              <div>
-                Current <div>pledge（USDT）</div>{" "}
-              </div>
-            ) : (
-              <div>{t("255")}</div>
-            )}
-            {i18n.language === "en" ? (
-              <div>
-                Compensation <div>multiple</div>
-              </div>
-            ) : (
-              <div>{t("256")}</div>
-            )}
-          </DirectPush_Content_Container_Header>
-          <DirectPush_Content_Container_Content>
-            {InsureRank?.map((item: any, index: any) => (
-              <DirectPush_Content_Container_Content_Item key={index}>
-                <div>{Number(index) + 1}</div>
-                <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
-                <div>{item?.pledgeAmount ?? 0}</div>
-                <div>{item?.multiple ?? 0}</div>
-              </DirectPush_Content_Container_Content_Item>
-            ))}
-          </DirectPush_Content_Container_Content>
-        </DirectPush_Content_Container>
+      {!dataLoding ? (
+        InsureRank?.length > 0 ? (
+          <DirectPush_Content_Container>
+            <DirectPush_Content_Container_Header>
+              <div>{t("253")}</div>
+              <div>{t("254")}</div>
+              {i18n.language === "en" ? (
+                <div>
+                  Current <div>pledge（USDT）</div>{" "}
+                </div>
+              ) : (
+                <div>{t("255")}</div>
+              )}
+              {i18n.language === "en" ? (
+                <div>
+                  Compensation <div>multiple</div>
+                </div>
+              ) : (
+                <div>{t("256")}</div>
+              )}
+            </DirectPush_Content_Container_Header>
+            <DirectPush_Content_Container_Content>
+              {InsureRank?.map((item: any, index: any) => (
+                <DirectPush_Content_Container_Content_Item key={index}>
+                  <div>{Number(index) + 1}</div>
+                  <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
+                  <div>{item?.pledgeAmount ?? 0}</div>
+                  <div>{item?.multiple ?? 0}</div>
+                </DirectPush_Content_Container_Content_Item>
+              ))}
+            </DirectPush_Content_Container_Content>
+          </DirectPush_Content_Container>
+        ) : (
+          <DirectPush_Content_Container>
+            <NoData />
+          </DirectPush_Content_Container>
+        )
       ) : (
         <DirectPush_Content_Container>
-          <NoData />
+          <PageLoding />
         </DirectPush_Content_Container>
       )}
     </NodeContainerBox>

@@ -445,3 +445,30 @@ export function updateReinvest(data: any) {
     },
   });
 }
+export function joinUnlockNftAwardPledge(data: any) {
+  return axois.request({
+    url: `/card/joinUnlockNftAwardPledge`,
+    method: "post",
+    data: {
+      ...data,
+    },
+  });
+}
+export function getUnLockNftAwardPledgeOrderRecord(status: number) {
+  return axois.request({
+    url: `/card/getUnLockNftAwardPledgeOrderRecord/${status}`,
+    method: "get",
+  });
+}
+export function getLpBase() {
+  return axois.request({
+    url: `/card/getLpBase`,
+    method: "get",
+  });
+}
+export function rank() {
+  return axois.request({
+    url: `/insure/rank`,
+    method: "get",
+  });
+}

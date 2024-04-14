@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -465,7 +466,7 @@ const ReturnContainer = styled(FlexSBCBox)`
   }
 `;
 
-const MainLayout: React.FC = () => {
+const MainLayout: any = () => {
   const web3 = new Web3();
 
   let dispatch = useDispatch();
@@ -510,6 +511,7 @@ const MainLayout: React.FC = () => {
   const initalToken = localStorage.getItem(
     (web3ModalAccount as string)?.toLowerCase()
   );
+  const initalQBToken = localStorage.getItem("qbToken");
 
   const langArr = [
     { key: "en", label: "English" },
@@ -537,7 +539,7 @@ const MainLayout: React.FC = () => {
     };
   });
 
-  const menu = <Menu onClick={changeLanguage} items={item} />;
+  const menu: any = <Menu onClick={changeLanguage} items={item} />;
 
   const location = useLocation();
   const pathname = startWord(location.pathname);
@@ -624,8 +626,9 @@ const MainLayout: React.FC = () => {
             showLoding(false);
             dispatch(
               createLoginSuccessAction(
+                web3ModalAccount as string,
                 res.data.token,
-                web3ModalAccount as string
+                res.data.qbToken
               )
             );
 
@@ -633,6 +636,7 @@ const MainLayout: React.FC = () => {
               (web3ModalAccount as string)?.toLowerCase(),
               res.data.token
             );
+            localStorage.setItem("qbToken", res.data.qbToken);
             setSelectWallet(false);
           } else {
             showLoding(false);
@@ -684,7 +688,6 @@ const MainLayout: React.FC = () => {
       await open();
     }
   };
-  console.log(recordType, "recordType1212");
 
   const ReturnObj = {
     Robot: "4",
@@ -709,6 +712,9 @@ const MainLayout: React.FC = () => {
     NFTAwardRecord: "350",
     LPPledgeAwardRecord: "353",
     InitialSubscriptionRewards: recordType1 === 1 ? "354" : "355",
+    SubscriptionCommunity: "372",
+    SubscriptionNode: "373",
+    SubscriptionNFT: "374",
   };
 
   const ReturnBox = (name: any) => {
@@ -811,7 +817,11 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     if (!!initalToken) {
       dispatch(
-        createLoginSuccessAction(initalToken, web3ModalAccount as string)
+        createLoginSuccessAction(
+          web3ModalAccount as string,
+          initalToken,
+          initalQBToken
+        )
       );
     }
   }, [initalToken]);

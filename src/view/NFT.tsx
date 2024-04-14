@@ -1,10 +1,15 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import {
   getFirstRoundAccountInfo,
+  getLpBase,
   getLpUserInfo,
   getMyCardInfo,
   getPioneerInfo,
+  getPledgeUserInfo,
   getSubscriptionAccountInfo,
+  getUserInfo,
+  joinUnlockNftAwardPledge,
   redemptionLp,
   userInfo,
 } from "../API/index";
@@ -66,6 +71,7 @@ import { contractAddress } from "../config";
 import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { useInputValue } from "../hooks/useInputValue";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
@@ -689,7 +695,7 @@ export default function Rank() {
     isConnected,
   } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
-  const [RecordList, setRecordList] = useState<any>([]);
+  const [UserInfo, setUserInfo] = useState<any>({});
   const [MyCardInfo, setMyCardInfo] = useState<any>({});
   const [PioneerInfo, setPioneerInfo] = useState<any>({});
   const [LpUserInfo, setLpUserInfo] = useState<any>({});
@@ -697,16 +703,18 @@ export default function Rank() {
   const [SubscriptionAccountInfo, setSubscriptionAccountInfo] = useState<any>(
     {}
   );
-  const { width } = useViewport();
+
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
   const [Days, setDays] = useState<any>(28);
   const [InputValueAmount, setInputValueAmount] = useState<any>("");
-  const [ActivationModal, setActivationModal] = useState(false);
+  const [PledgeNFTModal, setPledgeNFTModal] = useState(false);
   const [ActiveNFTModal, setActiveNFTModal] = useState(false);
   const [isDropDownShow, setIsDropDownShow] = useState(false);
   const [PledgeLPModal, setPledgeLPModal] = useState(false);
+  const [PledgeUserInfo, setPledgeUserInfo] = useState<any>({});
+  const [LpBase, setLpBase] = useState<any>([]);
+
   const {
     TOKENBalance,
     TOKENAllowance,
@@ -725,6 +733,14 @@ export default function Rank() {
     setDays(item?.key);
   };
 
+  const {
+    Price,
+    InputValueAmountValue,
+    InputValueAmount: PledgeNFTInputValueAmount,
+    MaxFun,
+    InputValueFun: PledgeNFTInputValueFun,
+  } = useInputValue();
+
   const items = [
     // { key: "20", label: <div>20DAY</div> },
     { key: "28", label: <div>{t("48", { num: 28 })}</div> },
@@ -734,6 +750,21 @@ export default function Rank() {
   const menu = <Menu onClick={changeTime} items={items} />;
 
   const getInitData = () => {
+    getUserInfo().then((res: any) => {
+      if (res.code === 200) {
+        setUserInfo(res?.data);
+      }
+    });
+    getLpBase().then((res: any) => {
+      if (res.code === 200) {
+        setLpBase(res?.data);
+      }
+    });
+    getPledgeUserInfo().then((res: any) => {
+      if (res.code === 200) {
+        setPledgeUserInfo(res?.data);
+      }
+    });
     getMyCardInfo().then((res: any) => {
       if (res.code === 200) {
         setMyCardInfo(res?.data);
@@ -789,6 +820,8 @@ export default function Rank() {
 
   const stakeLPFun = (value: string, period: number) => {
     if (Number(value) <= 0) return;
+    if (!UserInfo?.isNft && UserInfo?.teamLevel <= 5)
+      return addMessage(t("365"));
     MBK_USDT_handleTransaction(value, async (call: any) => {
       let res: any;
       try {
@@ -853,7 +886,8 @@ export default function Rank() {
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
   const getRewardFun = (value: any, type: any) => {
-    if (Number(value) <= 0) return addMessage(t("27"));
+    if (Number(value) <= 0)
+      return addMessage(Number(type) === 10 ? t("378") : t("27"));
     getReward(
       type,
       () => {
@@ -866,6 +900,50 @@ export default function Rank() {
   const InputValueFun = async (e: any) => {
     let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
     setInputValueAmount(value);
+  };
+
+  const pledgeFun = (value: string = "20") => {
+    if (Number(value) < 20 || Number(value) % 20 !== 0)
+      return addMessage(t("22"));
+    if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
+      return addMessage(t("23"));
+    if (
+      Number(value) * Number(Price) +
+        Number(PledgeUserInfo?.totalPledgeAmount) >
+      Number(PledgeUserInfo?.robotAmount)
+    )
+      return addMessage(t("24"));
+
+    handleTransaction(value, async (call: any) => {
+      let res: any;
+      try {
+        showLoding(true);
+
+        let item: any = await joinUnlockNftAwardPledge({
+          num: value,
+        });
+        if (item?.code === 200 && item?.data) {
+          res = await Contracts.example?.stake(
+            web3ModalAccount as string,
+            item?.data
+          );
+        } else {
+          showLoding(false);
+          return addMessage(res?.msg);
+        }
+      } catch (error: any) {
+        showLoding(false);
+        return addMessage(t("361"));
+      }
+      showLoding(false);
+      if (!!res?.status) {
+        call();
+        setPledgeNFTModal(false);
+        addMessage(t("360"));
+      } else {
+        addMessage(t("361"));
+      }
+    });
   };
 
   useEffect(() => {
@@ -1035,15 +1113,17 @@ export default function Rank() {
               <Purchase_Lottery_Entry>
                 {t("110")}
                 <Purchase_Lottery_Entry_Content>
-                  <Purchase_Lottery_Entry_Item>
-                    {t("48", { num: 28 })} 10000LP
-                  </Purchase_Lottery_Entry_Item>
-                  <Purchase_Lottery_Entry_Item>
+                  {LpBase?.map((item: any) => (
+                    <Purchase_Lottery_Entry_Item>
+                      {t("48", { num: item?.cycle })} {item?.pledgeNum}LP
+                    </Purchase_Lottery_Entry_Item>
+                  ))}
+                  {/* <Purchase_Lottery_Entry_Item>
                     {t("48", { num: 56 })} 10000LP
                   </Purchase_Lottery_Entry_Item>
                   <Purchase_Lottery_Entry_Item>
                     {t("48", { num: 84 })} 10000LP
-                  </Purchase_Lottery_Entry_Item>
+                  </Purchase_Lottery_Entry_Item> */}
                 </Purchase_Lottery_Entry_Content>
               </Purchase_Lottery_Entry>
             </NodeInfo_Top>
@@ -1117,7 +1197,8 @@ export default function Rank() {
             <BtnBox>
               <div
                 onClick={() => {
-                  Navigate("/View/Pledge");
+                  // Navigate("/View/Pledge");
+                  setPledgeNFTModal(true);
                 }}
               >
                 {t("123")}
@@ -1132,7 +1213,7 @@ export default function Rank() {
               <div
                 onClick={() => {
                   Navigate("/View/InitialSubscriptionRewards", {
-                    state: { recordType: 1 },
+                    state: { recordType: 1, type: 1 },
                   });
                 }}
               >
@@ -1380,14 +1461,14 @@ export default function Rank() {
       </AllModal>
 
       <Staking_Mining_Modal
-        visible={false}
+        visible={PledgeNFTModal}
         className="Modal"
         centered
         width={"345px"}
         closable={false}
         footer={null}
         onCancel={() => {
-          setActivationModal(false);
+          setPledgeNFTModal(false);
         }}
       >
         <Staking_Mining_Modal_ModalContainer>
@@ -1399,7 +1480,7 @@ export default function Rank() {
               src={closeIcon}
               alt=""
               onClick={() => {
-                setActivationModal(false);
+                setPledgeNFTModal(false);
               }}
             />
           </ModalContainer_Close>
@@ -1411,15 +1492,17 @@ export default function Rank() {
             <Staking_Mining_Container>
               <NodeInfo_Bottom_Item>
                 {t("135")}
-                <span>3000 USDT</span>
+                <span>
+                  {decimalNum(PledgeUserInfo?.robotAmount ?? 0, 2)}USDT
+                </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("136")}
-                <span>1MBK=30.00USDT</span>
+                <span>1MBK={Price ?? "-"}USDT</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("137")}
-                <span>3000 Day</span>
+                <span>{t("48", { num: PledgeUserInfo?.cycle ?? 0 })}</span>
               </NodeInfo_Bottom_Item>
             </Staking_Mining_Container>
 
@@ -1427,13 +1510,31 @@ export default function Rank() {
               {/* Pledge quantity */}
               <InputBox>
                 <div>
-                  <input type="" /> MBK
+                  <input
+                    type="number"
+                    value={
+                      !!PledgeNFTInputValueAmount
+                        ? PledgeNFTInputValueAmount
+                        : ""
+                    }
+                    onChange={(e) => {
+                      PledgeNFTInputValueFun(e);
+                    }}
+                  />{" "}
+                  MBK
                 </div>{" "}
-                <div>{t("49")}</div>
+                <div
+                  onClick={() => {
+                    MaxFun(SubscriptionAccountInfo?.freezeAmount ?? 0);
+                  }}
+                >
+                  {t("49")}
+                </div>
               </InputBox>
             </InputBox_Item_Last>
             <BalanceBox>
-              {t("50")}: <span>100,000.00</span>MBK
+              {t("50")}:{" "}
+              <span>{SubscriptionAccountInfo?.freezeAmount ?? 0}</span>MBK
               <NodeInfo_Top_Rule_Staking_Mining>
                 <HelpIconAuto /> {t("12")}
               </NodeInfo_Top_Rule_Staking_Mining>
@@ -1444,12 +1545,18 @@ export default function Rank() {
           <Released_For_Claim>
             {t("138")}
             <div>
-              3000 <span>USDT</span>
+              {InputValueAmountValue ?? "0"} <span>USDT</span>
             </div>
           </Released_For_Claim>
         </Staking_Mining_Modal_Bottom>
         <UpBtn_Container>
-          <UpBtn>{t("139")}</UpBtn>
+          <UpBtn
+            onClick={() => {
+              pledgeFun(PledgeNFTInputValueAmount);
+            }}
+          >
+            {t("139")}
+          </UpBtn>
         </UpBtn_Container>
       </Staking_Mining_Modal>
 

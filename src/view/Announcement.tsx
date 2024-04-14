@@ -8,7 +8,13 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle, EthertoWei, NumSplic, addMessage } from "../utils/tool";
+import {
+  AddrHandle,
+  EthertoWei,
+  NumSplic,
+  addMessage,
+  dateFormat,
+} from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -39,6 +45,7 @@ import {
   Award_Record_Content_Record_Box,
   Award_Record_Content_Title_Content,
 } from "./RankRecord";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -338,27 +345,27 @@ export default function Rank() {
   const [RecordList, setRecordList] = useState<any>([]);
   const [UserInfo, setUserInfo] = useState<any>({});
   const [SubTab, setSubTab] = useState<any>(0);
-  const { width } = useViewport();
-  const Navigate = useNavigate();
-  const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  const [ActivationModal, setActivationModal] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [dataLoding, setDataLoding] = useState<any>(true);
+
   const { DatePickerComponent, setPrecision, DateString } = useSelectDate();
   const { state: stateObj } = useLocation();
   // 2:小区新增业绩排名 1:游戏抽奖开奖结果公示
   const recordType: number = Number((stateObj as any)?.recordType);
   const getInitData = () => {
+    setDataLoding(true);
     setRecordList([]);
     if (Number(recordType) === 1) {
-      hitRecord({ date: DateString, level: SubTab, myself: false }).then(
-        (res: any) => {
-          if (res.code === 200) {
-            setRecordList(res?.data);
-          }
+      hitRecord({
+        date: dateFormat("YYYY-mm-dd", new Date(DateString.valueOf())),
+        level: SubTab,
+        myself: false,
+      }).then((res: any) => {
+        if (res.code === 200) {
+          setDataLoding(false);
+
+          setRecordList(res?.data);
         }
-      );
+      });
     } else {
       getRobotRankRecord({
         month: DateString?.getMonth() + 1,
@@ -366,6 +373,8 @@ export default function Rank() {
         year: DateString?.getFullYear(),
       }).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
@@ -428,17 +437,21 @@ export default function Rank() {
                 </Award_Record_Content_Title_Content>
                 <Award_Record_Content_Record_Content>
                   <Award_Record_Content_Record_Box>
-                    {RecordList?.length > 0 ? (
-                      RecordList?.map((item: any, index: any) => (
-                        <Award_Record_Content_Record_Content_Item key={index}>
-                          <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
-                          <div>{NumSplic(item?.hitAmount, 2)}</div>
-                          <div>{t("293", { num: item?.level })}</div>
-                          {/* <div>{item?.level}等</div> */}
-                        </Award_Record_Content_Record_Content_Item>
-                      ))
+                    {!dataLoding ? (
+                      RecordList?.length > 0 ? (
+                        RecordList?.map((item: any, index: any) => (
+                          <Award_Record_Content_Record_Content_Item key={index}>
+                            <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                            <div>{NumSplic(item?.hitAmount, 2)}</div>
+                            <div>{t("293", { num: item?.level })}</div>
+                            {/* <div>{item?.level}等</div> */}
+                          </Award_Record_Content_Record_Content_Item>
+                        ))
+                      ) : (
+                        <NoData></NoData>
+                      )
                     ) : (
-                      <NoData></NoData>
+                      <PageLoding></PageLoding>
                     )}
                   </Award_Record_Content_Record_Box>
                 </Award_Record_Content_Record_Content>

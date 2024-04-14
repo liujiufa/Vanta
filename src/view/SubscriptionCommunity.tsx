@@ -570,7 +570,7 @@ export default function Rank() {
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
             <img src={menuIcon3} alt="" />
-            <ModalContainer_Title>{t("187")}</ModalContainer_Title>
+            <ModalContainer_Title>{t("207")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
             {t("188")}

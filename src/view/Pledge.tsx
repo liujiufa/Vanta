@@ -773,7 +773,7 @@ export default function Rank() {
     if (Number(value) < 20 || Number(value) % 20 !== 0)
       return addMessage(t("22"));
     if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
-      return addMessage(t("23"));
+      return addMessage(t("369", { num: PledgeUserInfo?.lastPledgeNum }));
     if (
       Number(value) * Number(Price) +
         Number(PledgeUserInfo?.totalPledgeAmount) >
@@ -964,7 +964,8 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("45")}</div>
-                {decimalNum(PledgeUserInfo?.robotAmount ?? 0, 2)}USDT
+                {decimalNum(Number(PledgeUserInfo?.robotAmount) * 4 ?? 0, 2)}
+                USDT
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("46")}</div>
@@ -979,7 +980,7 @@ export default function Rank() {
               <InputBox>
                 <div>
                   <input
-                    type=""
+                    type="number"
                     placeholder={
                       !!PledgeUserInfo?.lastPledgeNum
                         ? t(`357`, {

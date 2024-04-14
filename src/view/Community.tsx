@@ -46,6 +46,7 @@ import closeIcon from "../assets/image/closeIcon.svg";
 import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { menuIcon3 } from "../assets/image/homeBox";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -475,7 +476,7 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
+  const [dataLoding, setDataLoding] = useState<any>(true);
 
   const typeObj = {
     34: "97",
@@ -495,15 +496,20 @@ export default function Rank() {
   //0-All 34-社区激活记录 35-社区LP加权奖励 36-社区平均分配奖励 37-社区小区加权奖励 38-社区账户奖励领取记录
 
   const getInitAwardRecord = (type: 0 | 34 | 35 | 36 | 37 | 38) => {
+    setDataLoding(true);
     if (Number(ActiveTab) === 1 || Number(ActiveTab) === 3) {
       getCommunityAwardRecord(type)?.then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setCommunityAwardRecord(res?.data);
         }
       });
     } else if (Number(ActiveTab) === 2) {
       getCommunityAwardRecord(38)?.then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setCommunityAwardRecord(res?.data);
         }
       });
@@ -672,29 +678,34 @@ export default function Rank() {
                 </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {CommunityAwardRecord?.length > 0 ? (
-                  CommunityAwardRecord?.map((item: any, index: any) => (
-                    <Award_Record_Content_Record_Content_Item key={index}>
-                      <div>
-                        {t("193")} <span>{t(typeObj[item?.businessType])}</span>
-                      </div>
-                      <div>
-                        {t("194")}{" "}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("195")}{" "}
-                        <span>{decimalNum(item?.amount ?? 0, 2)}</span>
-                      </div>
-                    </Award_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  CommunityAwardRecord?.length > 0 ? (
+                    CommunityAwardRecord?.map((item: any, index: any) => (
+                      <Award_Record_Content_Record_Content_Item key={index}>
+                        <div>
+                          {t("193")}{" "}
+                          <span>{t(typeObj[item?.businessType])}</span>
+                        </div>
+                        <div>
+                          {t("194")}{" "}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("195")}{" "}
+                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                        </div>
+                      </Award_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -702,38 +713,42 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {CommunityAwardRecord?.length > 0 ? (
-                  CommunityAwardRecord?.map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        {t("196")}{" "}
-                        <span>
-                          {" "}
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("197")}{" "}
-                        <span>{decimalNum(item?.amount ?? 0, 2)}</span>
-                      </div>
-                      <div>
-                        {t("198")}
-                        {StateObj(2)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  CommunityAwardRecord?.length > 0 ? (
+                    CommunityAwardRecord?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          {t("196")}{" "}
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("197")}{" "}
+                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -741,41 +756,45 @@ export default function Rank() {
           {Number(ActiveTab) === 3 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {CommunityAwardRecord?.length > 0 ? (
-                  CommunityAwardRecord?.map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        {t("200")} <span>{t("97")}</span>
-                      </div>
-                      <div>
-                        {t("201")}{" "}
-                        <span>
-                          {" "}
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM:SS",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("202")}{" "}
-                        <span>{decimalNum(item?.amount ?? 0, 2)}</span>
-                      </div>
-                      <div>
-                        {t("198")}
-                        {StateObj(2)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.txId, 6, 6)}</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  CommunityAwardRecord?.length > 0 ? (
+                    CommunityAwardRecord?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          {t("200")} <span>{t("97")}</span>
+                        </div>
+                        <div>
+                          {t("201")}{" "}
+                          <span>
+                            {" "}
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM:SS",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("202")}{" "}
+                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.txId, 6, 6)}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>

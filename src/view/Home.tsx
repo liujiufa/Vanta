@@ -184,7 +184,7 @@ const ActionList = styled(FlexBox)`
     line-height: normal;
     text-transform: capitalize;
     letter-spacing: 0em;
-
+    overflow: hidden;
     font-variation-settings: "opsz" auto;
     color: #d56819;
     white-space: nowrap;

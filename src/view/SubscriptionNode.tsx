@@ -261,8 +261,8 @@ export default function Rank() {
   };
 
   const buyNodeFun = (value: string) => {
-    // if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.userIsHoldNft)
-    //   return addMessage(t("219"));
+    if (!NodeBaseInfo?.isCommunityNftNum || !NodeBaseInfo?.userIsHoldNft)
+      return addMessage(t("219"));
     if (Number(value) <= 0) return;
     if (!state.token) return;
 

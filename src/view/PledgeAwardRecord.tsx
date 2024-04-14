@@ -43,6 +43,7 @@ import { ZeroStrokeIcon } from "../assets/image/homeBox";
 import { HelpIconAuto, NodeInfo_Top_Rule } from "./Insurance";
 import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -412,8 +413,7 @@ export default function Rank() {
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  const [ActivationModal, setActivationModal] = useState(false);
+  const [dataLoding, setDataLoding] = useState<any>(true);
 
   //1:质押记录 2:赎回记录
   const recordType: number = Number((stateObj as any)?.type) ?? 1;
@@ -421,8 +421,12 @@ export default function Rank() {
     updateReinvest({ id: id, isReinvest: !!checked ? 1 : 0, num: 0 }).then(
       (res: any) => {
         // getInitData(SubTab);
+        setDataLoding(true);
+
         getPledgeOrderRecord(SubTab).then((res: any) => {
           if (res.code === 200) {
+            setDataLoding(false);
+
             setRecordList(res?.data);
           }
         });
@@ -439,16 +443,22 @@ export default function Rank() {
     ],
   };
   const getInitData = (type: number) => {
+    setDataLoding(true);
+
     setRecordList([]);
     if (Number(ActiveTab) === 1) {
       getPledgeOrderRecord(type).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setRecordList(res?.data);
         }
       });
     } else if (Number(ActiveTab) === 2) {
       getPledgeUserAwardRecord(50).then((res: any) => {
         if (res.code === 200) {
+          setDataLoding(false);
+
           setReRecordList(res?.data);
         }
       });
@@ -511,70 +521,76 @@ export default function Rank() {
                 ))}
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content_Record_Content>
-                {RecordList?.length > 0 ? (
-                  RecordList?.map((item: any, index: any) => (
-                    <Award_Record_Content_Record_Content_Item key={index}>
-                      <div>
-                        {t("305")} <span>{item?.orderNo}</span>
-                      </div>
-                      <div>
-                        {t("306")}{" "}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM",
-                            new Date(item?.createTime)
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        {t("307")}{" "}
-                        <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
-                      </div>
-                      <div>
-                        {t("308")}
-                        <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
-                      </div>
-                      <div>
-                        {t("309")}
-                        <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
-                      </div>
-                      <div>
-                        {t("310")}
-                        <span>{t("48", { num: item?.cycle ?? 0 })}</span>
-                      </div>
-                      <div>
-                        {t("53")}
-                        <span>
-                          {" "}
-                          <MySwitch
-                            defaultChecked
-                            checked={!!item?.isReinvest}
-                            onChange={(item1: any) => onChange(item1, item?.id)}
-                          />
-                        </span>
-                      </div>
-                      <div>
-                        {t("311")}
-                        <span>
-                          {dateFormat(
-                            "YYYY-mm-dd HH:MM",
-                            new Date(item?.endTime)
-                          )}
-                        </span>
-                      </div>
+                {!dataLoding ? (
+                  RecordList?.length > 0 ? (
+                    RecordList?.map((item: any, index: any) => (
+                      <Award_Record_Content_Record_Content_Item key={index}>
+                        <div>
+                          {t("305")} <span>{item?.orderNo}</span>
+                        </div>
+                        <div>
+                          {t("306")}{" "}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.createTime)
+                            )}
+                          </span>
+                        </div>
+                        <div>
+                          {t("307")}{" "}
+                          <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          {t("308")}
+                          <span>{decimalNum(item?.pledgeAmount ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          {t("309")}
+                          <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
+                        </div>
+                        <div>
+                          {t("310")}
+                          <span>{t("48", { num: item?.cycle ?? 0 })}</span>
+                        </div>
+                        <div>
+                          {t("53")}
+                          <span>
+                            {" "}
+                            <MySwitch
+                              defaultChecked
+                              checked={!!item?.isReinvest}
+                              onChange={(item1: any) =>
+                                onChange(item1, item?.id)
+                              }
+                            />
+                          </span>
+                        </div>
+                        <div>
+                          {t("311")}
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.endTime)
+                            )}
+                          </span>
+                        </div>
 
-                      <div>
-                        {t("198")}
-                        {StateObj(item?.status)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.pledgeHash, 6, 6)}</span>
-                      </div>
-                    </Award_Record_Content_Record_Content_Item>
-                  ))
+                        <div>
+                          {t("198")}
+                          {StateObj(item?.status)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.pledgeHash, 6, 6)}</span>
+                        </div>
+                      </Award_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
@@ -582,36 +598,40 @@ export default function Rank() {
           {Number(ActiveTab) === 2 && (
             <Award_Record_Content>
               <Award_Record_Content_Record_Content>
-                {ReRecordList?.length > 0 ? (
-                  ReRecordList?.map((item: any, index: any) => (
-                    <Get_Record_Content_Record_Content_Item
-                      key={index}
-                      type={1}
-                    >
-                      <div>
-                        {t("324")}
-                        <span>2023-12-23 12:23</span>
-                      </div>
-                      <div>
-                        {t("325")}
-                        <span>{decimalNum(item?.amount ?? 0, 6)}</span>
-                      </div>
-                      <div>
-                        {t("326")}
-                        <span>{item?.pledgeOrderNo}</span>
-                      </div>
-                      <div>
-                        {t("198")}
-                        {StateObj(2)}
-                      </div>
-                      <div>
-                        {t("199")}
-                        <span>{AddrHandle(item?.redemptionHash, 6, 6)}</span>
-                      </div>
-                    </Get_Record_Content_Record_Content_Item>
-                  ))
+                {!dataLoding ? (
+                  ReRecordList?.length > 0 ? (
+                    ReRecordList?.map((item: any, index: any) => (
+                      <Get_Record_Content_Record_Content_Item
+                        key={index}
+                        type={1}
+                      >
+                        <div>
+                          {t("324")}
+                          <span>2023-12-23 12:23</span>
+                        </div>
+                        <div>
+                          {t("325")}
+                          <span>{decimalNum(item?.amount ?? 0, 6)}</span>
+                        </div>
+                        <div>
+                          {t("326")}
+                          <span>{item?.pledgeOrderNo}</span>
+                        </div>
+                        <div>
+                          {t("198")}
+                          {StateObj(2)}
+                        </div>
+                        <div>
+                          {t("199")}
+                          <span>{AddrHandle(item?.redemptionHash, 6, 6)}</span>
+                        </div>
+                      </Get_Record_Content_Record_Content_Item>
+                    ))
+                  ) : (
+                    <NoData></NoData>
+                  )
                 ) : (
-                  <NoData></NoData>
+                  <PageLoding></PageLoding>
                 )}
               </Award_Record_Content_Record_Content>
             </Award_Record_Content>
