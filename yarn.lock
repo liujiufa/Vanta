@@ -5441,11 +5441,6 @@
   "resolved" "https://registry.npmmirror.com/clsx/-/clsx-1.2.1.tgz"
   "version" "1.2.1"
 
-"clsx@^2.1.0":
-  "integrity" "sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg=="
-  "resolved" "https://registry.npmmirror.com/clsx/-/clsx-2.1.0.tgz"
-  "version" "2.1.0"
-
 "co@^4.6.0":
   "integrity" "sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ=="
   "resolved" "https://registry.npmmirror.com/co/-/co-4.6.0.tgz"
@@ -12095,10 +12090,10 @@
   "resolved" "https://registry.npmmirror.com/quick-lru/-/quick-lru-5.1.1.tgz"
   "version" "5.1.1"
 
-"quickblox-react-ui-kit@^0.3.0":
-  "integrity" "sha512-Ts9pGoaGcQXKyCou5l0YOle5JVrfWGM1HTuY/OnPh6CPEgbF2QhmmdRC2zwnKE0/I6g1Fc7ls4tgxBQAWPKqeg=="
-  "resolved" "https://registry.npmmirror.com/quickblox-react-ui-kit/-/quickblox-react-ui-kit-0.3.0.tgz"
-  "version" "0.3.0"
+"quickblox-react-ui-kit@0.2.8":
+  "integrity" "sha512-HarIVw1RshoSvS8xJSs+SaQDUStDIdRI+PQCOQsSVaHUhfknTd/y2fmpYuaQRXvN98nGgV7i++AHHsbM/m4F6g=="
+  "resolved" "https://registry.npmmirror.com/quickblox-react-ui-kit/-/quickblox-react-ui-kit-0.2.8.tgz"
+  "version" "0.2.8"
   dependencies:
     "@types/node" "^16.18.6"
     "@types/react" "^18.0.26"
@@ -12112,12 +12107,11 @@
     "react-dom" "^18.2.0"
     "react-router-dom" "^6.11.1"
     "react-scripts" "5.0.1"
-    "react-toastify" "^10.0.4"
     "rxjs" "^7.8.0"
     "typescript" "^4.9.3"
     "web-vitals" "^2.1.4"
 
-"quickblox@^2.16.3":
+"quickblox@^2.16.1":
   "integrity" "sha512-a1rssQ3X1crfvS20xko7aWCUKlLk1ZycosDcKRjKUO3pyM+sPGIhSzoVKzFJbTj3CO4chGRGCoC/eDIixSh/Ig=="
   "resolved" "https://registry.npmmirror.com/quickblox/-/quickblox-2.16.3.tgz"
   "version" "2.16.3"
@@ -12867,13 +12861,6 @@
   dependencies:
     "cxs" "^6.2.0"
     "react-motion" "^0.5.2"
-
-"react-toastify@^10.0.4":
-  "integrity" "sha512-mNKt2jBXJg4O7pSdbNUfDdTsK9FIdikfsIE/yUCxbAEXl4HMyJaivrVFcn3Elvt5xvCQYhUZm+hqTIu1UXM3Pw=="
-  "resolved" "https://registry.npmmirror.com/react-toastify/-/react-toastify-10.0.5.tgz"
-  "version" "10.0.5"
-  dependencies:
-    "clsx" "^2.1.0"
 
 "react-truncate-markup@^5.1.2":
   "integrity" "sha512-eEq6T8Rs+wz98cRYzQECGFNBfXwRYraLg/kz52f6DRBKmzxqB+GYLeDkVe/zrC+2vh5AEwM6nSYFvDWEBljd0w=="

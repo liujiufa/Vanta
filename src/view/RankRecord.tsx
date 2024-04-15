@@ -33,6 +33,7 @@ import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
 import { NodeRecord_Date_Select } from "./Announcement";
 import { useSelectDate } from "../hooks/useSelectDate";
+import PageLoding from "../components/PageLoding";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -319,13 +320,14 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  const [ActivationModal, setActivationModal] = useState(false);
+  const [dataLoding, setDataLoding] = useState<any>(true);
+
   const { DatePickerComponent, DateString, setDateString } = useSelectDate();
   const recordType: number = Number((typeObj as any)?.recordType);
   // 1机器人业绩明星 2机器人-直推明星 3机器人-NFT团队明星 4-质押业绩明星 5-质押直推明星 6-质押NFT团队明星 7NFT-先锋排名
   const getInitData = () => {
+    setDataLoding(true);
+
     setRecordList([]);
     getRobotRankRecord({
       month: DateString?.getMonth() + 1,
@@ -333,6 +335,8 @@ export default function Rank() {
       year: DateString?.getFullYear(),
     }).then((res: any) => {
       if (res.code === 200) {
+        setDataLoding(false);
+
         setRecordList(res?.data);
       }
     });
@@ -343,14 +347,6 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token, ActiveTab, DateString, recordType]);
-
-  const StateObj = (type: number) => {
-    if (type === 1) {
-      return <span style={{ color: "#D56819" }}>{t("203")}</span>;
-    } else if (type === 2) {
-      return <span style={{ color: "#0256FF" }}>{t("204")}</span>;
-    }
-  };
 
   return (
     <NodeContainerBox>
@@ -397,16 +393,20 @@ export default function Rank() {
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
-                  {RecordList?.length > 0 ? (
-                    RecordList?.map((item: any, index: any) => (
-                      <Award_Record_Content_Record_Content_Item key={index}>
-                        <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
-                        <div>{NumSplic(item?.performance, 2)}</div>
-                        <div>{item?.rankNo}</div>
-                      </Award_Record_Content_Record_Content_Item>
-                    ))
+                  {!dataLoding ? (
+                    RecordList?.length > 0 ? (
+                      RecordList?.map((item: any, index: any) => (
+                        <Award_Record_Content_Record_Content_Item key={index}>
+                          <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                          <div>{NumSplic(item?.performance, 2)}</div>
+                          <div>{item?.rankNo}</div>
+                        </Award_Record_Content_Record_Content_Item>
+                      ))
+                    ) : (
+                      <NoData></NoData>
+                    )
                   ) : (
-                    <NoData></NoData>
+                    <PageLoding></PageLoding>
                   )}
                 </Award_Record_Content_Record_Box>
               </Award_Record_Content_Record_Content>
@@ -421,16 +421,20 @@ export default function Rank() {
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
-                  {RecordList?.length > 0 ? (
-                    RecordList?.map((item: any, index: any) => (
-                      <Award_Record_Content_Record_Content_Item key={index}>
-                        <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
-                        <div>{NumSplic(item?.performance, 2)}</div>
-                        <div>{item?.rankNo}</div>
-                      </Award_Record_Content_Record_Content_Item>
-                    ))
+                  {!dataLoding ? (
+                    RecordList?.length > 0 ? (
+                      RecordList?.map((item: any, index: any) => (
+                        <Award_Record_Content_Record_Content_Item key={index}>
+                          <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                          <div>{NumSplic(item?.performance, 2)}</div>
+                          <div>{item?.rankNo}</div>
+                        </Award_Record_Content_Record_Content_Item>
+                      ))
+                    ) : (
+                      <NoData></NoData>
+                    )
                   ) : (
-                    <NoData></NoData>
+                    <PageLoding></PageLoding>
                   )}
                 </Award_Record_Content_Record_Box>
               </Award_Record_Content_Record_Content>
@@ -445,16 +449,20 @@ export default function Rank() {
               </Award_Record_Content_Title_Content>
               <Award_Record_Content_Record_Content>
                 <Award_Record_Content_Record_Box>
-                  {RecordList?.length > 0 ? (
-                    RecordList?.map((item: any, index: any) => (
-                      <Award_Record_Content_Record_Content_Item key={index}>
-                        <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
-                        <div>{NumSplic(item?.performance, 2)}</div>
-                        <div>{item?.rankNo}</div>
-                      </Award_Record_Content_Record_Content_Item>
-                    ))
+                  {!dataLoding ? (
+                    RecordList?.length > 0 ? (
+                      RecordList?.map((item: any, index: any) => (
+                        <Award_Record_Content_Record_Content_Item key={index}>
+                          <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
+                          <div>{NumSplic(item?.performance, 2)}</div>
+                          <div>{item?.rankNo}</div>
+                        </Award_Record_Content_Record_Content_Item>
+                      ))
+                    ) : (
+                      <NoData></NoData>
+                    )
                   ) : (
-                    <NoData></NoData>
+                    <PageLoding></PageLoding>
                   )}
                 </Award_Record_Content_Record_Box>
               </Award_Record_Content_Record_Content>

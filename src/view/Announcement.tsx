@@ -232,11 +232,14 @@ const Award_Record_Content_Record_Content = styled.div`
 `;
 
 const Award_Record_Content_Record_Content_Item = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 10px 15px;
   > div {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-content: center;
     width: 100%;
 
@@ -343,7 +346,6 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const [RecordList, setRecordList] = useState<any>([]);
-  const [UserInfo, setUserInfo] = useState<any>({});
   const [SubTab, setSubTab] = useState<any>(0);
   const [dataLoding, setDataLoding] = useState<any>(true);
 
@@ -362,7 +364,6 @@ export default function Rank() {
       }).then((res: any) => {
         if (res.code === 200) {
           setDataLoding(false);
-
           setRecordList(res?.data);
         }
       });
@@ -374,7 +375,6 @@ export default function Rank() {
       }).then((res: any) => {
         if (res.code === 200) {
           setDataLoding(false);
-
           setRecordList(res?.data);
         }
       });
@@ -384,7 +384,7 @@ export default function Rank() {
   useEffect(() => {
     getInitData();
     if (Number(recordType) === 1) return setPrecision("day");
-  }, [SubTab, recordType]);
+  }, [SubTab, recordType, DateString]);
 
   return (
     <NodeContainerBox>
@@ -442,7 +442,7 @@ export default function Rank() {
                         RecordList?.map((item: any, index: any) => (
                           <Award_Record_Content_Record_Content_Item key={index}>
                             <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
-                            <div>{NumSplic(item?.hitAmount, 2)}</div>
+                            <div>{NumSplic(item?.hitAmount, 2)}MBK</div>
                             <div>{t("293", { num: item?.level })}</div>
                             {/* <div>{item?.level}等</div> */}
                           </Award_Record_Content_Record_Content_Item>

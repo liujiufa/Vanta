@@ -11,15 +11,7 @@ import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  ContainerBox,
-  FlexBox,
-  FlexCCBox,
-  FlexECBox,
-  FlexSACBox,
-  FlexSBCBox,
-  FlexSCBox,
-} from "../components/FlexBox";
+import { ContainerBox } from "../components/FlexBox";
 import { contractAddress } from "../config";
 import { throttle } from "lodash";
 
@@ -31,11 +23,34 @@ import {
   LoginData,
   AuthorizationData,
   QBDataContextType,
+  useQbUIKitDataContext,
 } from "quickblox-react-ui-kit";
 
 import { QBConfig } from "../QBconfig";
-
+import {
+  prepareSDK,
+  createUserAction,
+  logout,
+  createUserSession,
+  connectToChatServer,
+  UserCreationStatus,
+  UserData,
+} from "../QBHeplers";
+import { Btn } from "./NFT";
+import { startWord } from "../utils/tool";
+import PageLoding from "../components/PageLoding";
 const NodeContainerBox = styled(ContainerBox)`
+  width: 100%;
+  padding: 0px;
+  .message-view-container {
+    max-height: calc(100vh - 56px) !important;
+    min-height: calc(100vh - 56px) !important;
+  }
+  > div {
+    width: 100%;
+  }
+`;
+const LoginBtn = styled(Btn)`
   width: 100%;
 `;
 
@@ -44,11 +59,22 @@ export default function Rank() {
   const { account } = useWeb3React();
   const state = useSelector<stateType, stateType>((state) => state);
   const qbToken = useSelector<stateType, stateType>((state) => state?.qbToken);
-  const qbUIKitContext: QBDataContextType = React.useContext(qbDataContext);
+  const [theme, setTheme] = useState("dark");
+
+  const qbUIKitContext: QBDataContextType = useQbUIKitDataContext();
 
   const [isUserAuthorized, setUserAuthorized] = React.useState(false);
   const [isSDKInitialized, setSDKInitialized] = React.useState(false);
-  console.log(qbToken, "qbToken");
+
+  const [currentUser, setCurrentUser] = React.useState({
+    login: "",
+    password: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const location = useLocation();
+
+  const pathname = startWord(location.pathname);
 
   const getInitData = () => {
     // getExchangeRecord().then((res: any) => {
@@ -58,11 +84,22 @@ export default function Rank() {
     // });
   };
 
-  useEffect(() => {
-    if (state.token) {
-      getInitData();
-    }
-  }, [state.token]);
+  var params = {
+    login: "liujiufa12",
+    password: "liujiufa",
+    nameTheme: theme,
+  };
+
+  const loginHandler = async (data: any): Promise<void> => {
+    setErrorMessage("");
+    const loginData: LoginData = {
+      login: data.login,
+      password: data.password,
+    };
+    setCurrentUser(loginData);
+    setTheme(data.nameTheme);
+    await loginAction(loginData);
+  };
 
   const prepareSDK = async (): Promise<void> => {
     // check if we have installed SDK
@@ -81,29 +118,33 @@ export default function Rank() {
     const ACCOUNT_KEY = QBConfig.credentials.accountKey;
     const CONFIG = QBConfig.appConfig;
 
-    QB.init(APPLICATION_ID, AUTH_KEY, AUTH_SECRET, ACCOUNT_KEY, CONFIG);
+    QB?.init(APPLICATION_ID, AUTH_KEY, AUTH_SECRET, ACCOUNT_KEY, CONFIG);
   };
 
-  var provider = "facebook";
-  var accessToken = qbToken;
+  const loginAction = async (loginData: LoginData): Promise<void> => {
+    console.log(loginData, "loginData");
 
-  var accessTokenSecret = null;
-
-  var params = { login: "garry", password: "garry5santos" };
-  // QB.createSession(
-  //   {
-  //     provider: provider,
-  //     keys: {
-  //       token: accessToken,
-  //       secret: accessTokenSecret,
-  //     },
-  //   },
-  //   function (error, result) {
-  //     if (error) {
-  //     } else {
-  //     }
-  //   }
-  // );
+    if (isSDKInitialized && !isUserAuthorized) {
+      if (loginData.login.length > 0 && loginData.password.length > 0) {
+        await createUserSession(loginData)
+          .then(async (resultUserSession) => {
+            await connectToChatServer(resultUserSession, currentUser.login)
+              .then(async (authData) => {
+                await qbUIKitContext.authorize(authData);
+                qbUIKitContext.setSubscribeOnSessionExpiredListener(() => {
+                  console.timeLog("call OnSessionExpiredListener ... start");
+                  console.log("OnSessionExpiredListener ... end");
+                });
+                setSDKInitialized(true);
+                setUserAuthorized(true);
+                document.documentElement.setAttribute("data-theme", theme);
+              })
+              .catch((errorChatConnection) => {});
+          })
+          .catch((errorUserSession) => {});
+      }
+    }
+  };
 
   useEffect(() => {
     if (!isSDKInitialized) {
@@ -129,7 +170,7 @@ export default function Rank() {
                 const password: string = session.token;
                 const paramsConnect = { userId, password };
 
-                QB.chat.connect(
+                QB?.chat.connect(
                   paramsConnect,
                   async function (errorConnect: any, resultConnect: any) {
                     if (errorConnect) {
@@ -160,6 +201,34 @@ export default function Rank() {
     }
   }, []);
 
+  useEffect(() => {
+    if (state.token) {
+      getInitData();
+    }
+  }, [state.token]);
+
+  useEffect(() => {
+    if (isSDKInitialized) {
+      if (
+        currentUser &&
+        currentUser.login.length > 0 &&
+        currentUser.password.length > 0
+      ) {
+        loginAction(currentUser);
+      } else {
+        console.log("auth flow has canceled ...");
+      }
+    }
+  }, [isSDKInitialized]);
+
+  useEffect(() => {
+    if (String(pathname) === "/CHAT") {
+      console.log("12");
+
+      loginHandler(params);
+    }
+  }, [pathname]);
+
   return (
     <NodeContainerBox>
       {
@@ -167,7 +236,14 @@ export default function Rank() {
         isSDKInitialized && isUserAuthorized ? (
           <QuickBloxUIKitDesktopLayout />
         ) : (
-          <div>wait while SDK is initializing...</div>
+          // <LoginBtn
+          //   onClick={() => {
+          //     loginHandler(params);
+          //   }}
+          // >
+          //   登陆
+          // </LoginBtn>
+          <PageLoding></PageLoding>
         )
       }
     </NodeContainerBox>

@@ -55,6 +55,7 @@ const MessageBox = styled.div`
     right: 0 !important;
   }
 `;
+
 function App() {
   const web3React = useWeb3React();
   const { connectWallet } = useConnectWallet();
@@ -64,20 +65,12 @@ function App() {
   const dispatch = useDispatch();
   let state = useSelector<stateType, stateType>((state) => state);
 
-  const currentUser: LoginData = {
-    login: "garry",
-    password: "garry5santos",
-  };
-
   return (
     <ViewportProvider>
       <QuickBloxUIKitProvider
         maxFileSize={100 * 1000000}
         accountData={{ ...QBConfig.credentials }}
-        loginData={{
-          login: currentUser.login,
-          password: currentUser.password,
-        }}
+        qbConfig={{ ...QBConfig }} // NEW !!!
       >
         <div className="App">
           <MessageBox>

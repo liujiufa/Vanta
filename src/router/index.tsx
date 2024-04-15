@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import PageLoding from "../components/PageLoding";
+import DataPageLoding from "../components/DataPageLoding";
 import MainLayout from "../Layout/MainLayout";
 import DeputyLayout from "../Layout/DeputyLayout";
 const Home = React.lazy(() => import("../view/Home"));
@@ -43,7 +43,7 @@ const InitialSubscriptionRewards = React.lazy(
 const CHAT = React.lazy(() => import("../view/CHAT"));
 export default function Router() {
   return (
-    <Suspense fallback={<PageLoding></PageLoding>}>
+    <Suspense fallback={<DataPageLoding></DataPageLoding>}>
       <Routes>
         <Route path="/*" element={<MainLayout />}>
           <Route path=":address/">

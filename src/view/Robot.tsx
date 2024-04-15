@@ -652,7 +652,7 @@ export default function Rank() {
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
   const [Price, setPrice] = useState<any>("");
-  const [UserBuyBotInfo, setUserBuyBotInfo] = useState<any>("");
+  const [UserBuyBotInfo, setUserBuyBotInfo] = useState<any>("-");
   const [InputValueAmount, setInputValueAmount] = useState<any>("");
   const [InputValueAmountValue, setInputValueAmountValue] = useState<any>("0");
   const {
@@ -751,14 +751,15 @@ export default function Rank() {
       Contracts.example
         ?.queryUserBuyBotInfo(web3ModalAccount as string)
         .then((res: any) => {
-          console.log(res, "queryUserBuyBotInfo");
-
           if (Number(EthertoWei(res[res?.length - 1] ?? "0")) > 0) {
-            getVilifyStateUSDTToMBK(
-              EthertoWei(res[res?.length - 1] ?? "0")
-            )?.then((res1: any) => {
-              setUserBuyBotInfo(decimalNum(EthertoWei(res1 ?? "0"), 2));
-            });
+            Contracts.example
+              ?.queryMbkByUsdt1(
+                web3ModalAccount as string,
+                res[res?.length - 1] + ""
+              )
+              ?.then((res1: any) => {
+                setUserBuyBotInfo(decimalNum(EthertoWei(res1 ?? "0"), 2));
+              });
           }
         });
     }
@@ -788,11 +789,16 @@ export default function Rank() {
         Contracts.example
           ?.queryUserBuyBotInfo(web3ModalAccount as string)
           .then((res: any) => {
-            console.log(res, "queryUserBuyBotInfo");
-
-            setUserBuyBotInfo(
-              decimalNum(EthertoWei(res[res?.length - 1] ?? "0"), 2)
-            );
+            if (Number(EthertoWei(res[res?.length - 1] ?? "0")) > 0) {
+              Contracts.example
+                ?.queryMbkByUsdt1(
+                  web3ModalAccount as string,
+                  res[res?.length - 1] + ""
+                )
+                ?.then((res1: any) => {
+                  setUserBuyBotInfo(decimalNum(EthertoWei(res1 ?? "0"), 2));
+                });
+            }
           });
         addMessage(t("165"));
       } else {
@@ -814,7 +820,7 @@ export default function Rank() {
               <AvailableBox>
                 {t("144")}
                 <div>
-                  {Number(RobotInfo?.amount ?? 0) * 4 ?? 0} <span>USDT</span>
+                  {Number(RobotInfo?.amount ?? 0) ?? 0} <span>USDT</span>
                 </div>
               </AvailableBox>
             </MyQuota_Box_Left>

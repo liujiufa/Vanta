@@ -116,7 +116,7 @@ const NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame = styled(NodeInfo_Top_Tip)`
   margin: 0px;
 `;
 
-const Btn = styled(FlexCCBox)`
+export const Btn = styled(FlexCCBox)`
   padding: 10px 15px;
   font-family: "PingFang SC";
   font-size: 14px;
@@ -885,10 +885,12 @@ export default function Rank() {
   // * 14-零撸账户
   // * 15-节点奖励账户
   // * 16-保险池赔付账户
-  const getRewardFun = (value: any, type: any) => {
+  const getRewardFun = async (value: any, type: any) => {
+    console.log(value, "value");
+
     if (Number(value) <= 0)
       return addMessage(Number(type) === 10 ? t("378") : t("27"));
-    getReward(
+    await getReward(
       type,
       () => {
         getInitData();

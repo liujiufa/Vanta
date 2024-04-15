@@ -490,7 +490,7 @@ export default function Rank() {
                 <DirectPush_Content_Container_Content_Item key={index}>
                   <div>{Number(index) + 1}</div>
                   <div>{AddrHandle(item?.userAddress, 6, 4)}</div>
-                  <div>{item?.pledgeAmount ?? 0}</div>
+                  <div>{item?.pledgeNum ?? 0}</div>
                   <div>{item?.multiple ?? 0}</div>
                 </DirectPush_Content_Container_Content_Item>
               ))}

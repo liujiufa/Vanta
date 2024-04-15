@@ -297,4 +297,10 @@ export class Contracts {
       .queryUserBuyBotInfo(addr)
       .call({ from: addr });
   }
+  queryMbkByUsdt1(addr: string, amount: any) {
+    this.verification("Bot");
+    return this.contract.Bot?.methods
+      .queryMbkByUsdt1(amount)
+      .call({ from: addr });
+  }
 }

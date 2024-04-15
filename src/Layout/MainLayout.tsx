@@ -493,6 +493,7 @@ const MainLayout: any = () => {
   } = useWeb3ModalAccount();
   const { open: openState, selectedNetworkId } = useWeb3ModalState();
   const { state: stateObj } = useLocation();
+  console.log(ItemActive, "ItemActive");
 
   const recordType: number = Number((stateObj as any)?.type);
   // 机器人
@@ -715,14 +716,14 @@ const MainLayout: any = () => {
     SubscriptionCommunity: "372",
     SubscriptionNode: "373",
     SubscriptionNFT: "374",
+    CHAT: "3",
   };
 
   const ReturnBox = (name: any) => {
     if (
       String(name) === "/" ||
       String(name) === "PLEDGE" ||
-      String(name) === "NFT" ||
-      String(name) === "CHAT"
+      String(name) === "NFT"
     ) {
       return (
         <LogoContainer
@@ -903,9 +904,7 @@ const MainLayout: any = () => {
 
       {(ItemActive === "/" ||
         ItemActive === "/PLEDGE" ||
-        ItemActive === "/NFT" ||
-        ItemActive === "/CHAT" ||
-        ItemActive === "") && (
+        ItemActive === "/NFT") && (
         <FooterContainer
           className="app-footer"
           style={{ position: "fixed", bottom: 0 }}

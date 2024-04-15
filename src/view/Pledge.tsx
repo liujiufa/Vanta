@@ -798,7 +798,7 @@ export default function Rank() {
           );
         } else {
           showLoding(false);
-          return addMessage(res?.msg);
+          return addMessage(item?.msg);
         }
       } catch (error: any) {
         showLoding(false);
