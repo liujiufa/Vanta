@@ -541,19 +541,19 @@ export default function Rank() {
             <img src={helpIcon} alt="" />
             {t("12")}
           </RewardItem_Rule>
-          <RewardItem_Title>{t("11")} MBK</RewardItem_Title>
+          <RewardItem_Title>{t("11")} VTB</RewardItem_Title>
           <RewardItem_Subtitle>{t("13")}</RewardItem_Subtitle>
           <RewardItem_Info>
             <RewardItem_Info_Item>
               {t("14")}
               <RewardItem_Info_Item_Value>
-                {decimalNum(MyFreeInfo?.refereeAmount, 2) ?? 0} <span>MBK</span>
+                {decimalNum(MyFreeInfo?.refereeAmount, 2) ?? 0} <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
               {t("15")}
               <RewardItem_Info_Item_Value>
-                {decimalNum(MyFreeInfo?.shareAmount, 2) ?? 0} <span>MBK</span>
+                {decimalNum(MyFreeInfo?.shareAmount, 2) ?? 0} <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
           </RewardItem_Info>
@@ -575,14 +575,14 @@ export default function Rank() {
               {t("18")}
               <RewardItem_Info_Item_Value>
                 {decimalNum(MyFreeInfo?.yesterdayLotteryAmount, 2) ?? 0}{" "}
-                <span>MBK</span>
+                <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
               {t("19")}
               <RewardItem_Info_Item_Value>
                 {decimalNum(MyFreeInfo?.todayPoolAmount, 2) ?? 0}{" "}
-                <span>MBK</span>
+                <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
           </RewardItem_Info>

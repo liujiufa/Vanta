@@ -601,7 +601,7 @@ export default function Rank() {
           <NodeInfo_Mid_Content>
             <div>{t("102")}</div>
             <div>
-              {decimalNum(MyNodeInfo?.amount, 6) ?? 0} <span>mbk</span>
+              {decimalNum(MyNodeInfo?.amount, 6) ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Mid_Content>
           <NodeInfo_Top_Btn
@@ -657,7 +657,7 @@ export default function Rank() {
         <NodeInfo_Bottom>
           <NodeInfo_Bottom_Item>
             {t("182")}
-            <span>{MyNodeInfo?.awardPool ?? 0} MBK</span>
+            <span>{MyNodeInfo?.awardPool ?? 0} VTB</span>
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
             {t("184")}
@@ -669,7 +669,7 @@ export default function Rank() {
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
             {t("186")}
-            <span>{MyNodeInfo?.totalNodeAward ?? 0} MBK</span>
+            <span>{MyNodeInfo?.totalNodeAward ?? 0} VTB</span>
           </NodeInfo_Bottom_Item>
         </NodeInfo_Bottom>
       </NodeInfo>
@@ -897,7 +897,7 @@ export default function Rank() {
               {t("97")}
             </UpBtn>
             <BalanceBox>
-              {t("50")}: <span>{TOKENBalance ?? 0}</span>MBK
+              {t("50")}: <span>{TOKENBalance ?? 0}</span>VTB
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

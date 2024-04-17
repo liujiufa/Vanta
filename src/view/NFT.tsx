@@ -21,15 +21,7 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import {
-  AddrHandle,
-  EthertoWei,
-  NumSplic,
-  addMessage,
-  dateFormat,
-  decimalNum,
-  showLoding,
-} from "../utils/tool";
+import { addMessage, dateFormat, decimalNum, showLoding } from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -54,6 +46,7 @@ import {
   LPPledgeIcon,
   NFTIcon,
   NFTImg,
+  NFTImgBg,
   PledgeLPIcon,
   SubscriptionRewardsIcon,
 } from "../assets/image/NFTBox";
@@ -355,11 +348,19 @@ const ModalContainer_Title_Container_Box_Left = styled.div`
   padding: 8px;
 `;
 const NFTContainer = styled(FlexCCBox)`
+  position: relative;
   width: 100%;
   max-width: 91px;
   > img {
     width: 100%;
     object-fit: contain;
+    &:last-child {
+      width: 45%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 `;
 
@@ -907,8 +908,8 @@ export default function Rank() {
   const pledgeFun = (value: string = "20") => {
     if (Number(value) < 20 || Number(value) % 20 !== 0)
       return addMessage(t("22"));
-    if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
-      return addMessage(t("23"));
+    // if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
+    //   return addMessage(t("23"));
     if (
       Number(value) * Number(Price) +
         Number(PledgeUserInfo?.totalPledgeAmount) >
@@ -931,7 +932,7 @@ export default function Rank() {
           );
         } else {
           showLoding(false);
-          return addMessage(res?.msg);
+          return addMessage(item?.msg);
         }
       } catch (error: any) {
         showLoding(false);
@@ -973,6 +974,7 @@ export default function Rank() {
                 </ModalContainer_Title_Container_Box_Left>
                 <NFTContainer>
                   <img src={NFTImg} alt="" />
+                  <img src={NFTImgBg} alt="" />
                 </NFTContainer>
               </ModalContainer_Title_Container_Box>
             </Active_NodeInfo_Top>
@@ -998,7 +1000,7 @@ export default function Rank() {
             <NodeInfo_Bottom_NFT>
               <NodeInfo_Bottom_Item>
                 {t("78")}
-                <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
+                <span>{MyCardInfo?.poolNum ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("79")}
@@ -1010,7 +1012,7 @@ export default function Rank() {
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("81")}
-                <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
+                <span>{MyCardInfo?.totalAmount ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_NFT>
           </NodeInfo>
@@ -1039,13 +1041,13 @@ export default function Rank() {
                   </NodeInfo_Bottom_Item>
                   <NodeInfo_Bottom_Item>
                     {t("133")}
-                    <span>{PioneerInfo?.totalAmount ?? 0} MBK</span>
+                    <span>{PioneerInfo?.totalAmount ?? 0} VTB</span>
                   </NodeInfo_Bottom_Item>
                 </NodeInfo_Bottom_NFT>
                 <To_Be_Collected>
                   {t("102")}
                   <div>
-                    {PioneerInfo?.amount ?? 0} <span>MBK</span>
+                    {PioneerInfo?.amount ?? 0} <span>VTB</span>
                   </div>
                 </To_Be_Collected>
               </NodeInfo_Top_LotteryGame>
@@ -1132,11 +1134,11 @@ export default function Rank() {
             <NodeInfo_Bottom>
               <NodeInfo_Bottom_Item>
                 {t("111")}
-                <span>{LpUserInfo?.totalDrawAmount ?? 0} MBK</span>
+                <span>{LpUserInfo?.totalDrawAmount ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("112")}
-                <span>{LpUserInfo?.amount ?? 0} MBK</span>
+                <span>{LpUserInfo?.amount ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("113")}
@@ -1185,15 +1187,15 @@ export default function Rank() {
               {t("119")}
               <NodeInfo_Bottom_Item>
                 {t("120")}
-                <span>{SubscriptionAccountInfo?.freezeAmount ?? 0} MBK</span>
+                <span>{SubscriptionAccountInfo?.freezeAmount ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("121")}
-                <span>{SubscriptionAccountInfo?.totalAmount ?? 0} MBK</span>
+                <span>{SubscriptionAccountInfo?.totalAmount ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("122")}
-                <span>{SubscriptionAccountInfo?.amount ?? 0} MBK</span>
+                <span>{SubscriptionAccountInfo?.amount ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_Subscription_Rewards>
             <BtnBox>
@@ -1226,7 +1228,7 @@ export default function Rank() {
               {t("125")}
               <NodeInfo_Bottom_Item>
                 {t("126")}
-                <span>{FirstRoundAccountInfo?.unLockNum ?? 0} MBK</span>
+                <span>{FirstRoundAccountInfo?.unLockNum ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("127")}
@@ -1240,18 +1242,18 @@ export default function Rank() {
               <NodeInfo_Bottom_Item>
                 {t("128")}
                 <span>
-                  {FirstRoundAccountInfo?.communityAddPerformance ?? 0} MBK
+                  {FirstRoundAccountInfo?.communityAddPerformance ?? 0} VTB
                 </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("129")}
-                <span>{FirstRoundAccountInfo?.maturityUnlockNum ?? 0} MBK</span>
+                <span>{FirstRoundAccountInfo?.maturityUnlockNum ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_Subscription_Rewards1>
             <To_Be_Collected>
               {t("102")}
               <div>
-                {FirstRoundAccountInfo?.amount ?? 0} <span>MBK</span>
+                {FirstRoundAccountInfo?.amount ?? 0} <span>VTB</span>
               </div>
             </To_Be_Collected>
             <BtnBox>
@@ -1289,6 +1291,7 @@ export default function Rank() {
               </ModalContainer_Title_Container_Box_Left>
               <NFTContainer>
                 <img src={NFTImg} alt="" />
+                <img src={NFTImgBg} alt="" />
               </NFTContainer>
             </ModalContainer_Title_Container_Box>
           </Active_NodeInfo_Top>
@@ -1312,7 +1315,7 @@ export default function Rank() {
           <NodeInfo_Bottom_NFT>
             <NodeInfo_Bottom_Item>
               {t("78")}
-              <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
+              <span>{MyCardInfo?.poolNum ?? 0} VTB</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
               {t("79")}
@@ -1324,7 +1327,7 @@ export default function Rank() {
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
               {t("81")}
-              <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
+              <span>{MyCardInfo?.totalAmount ?? 0} VTB</span>
             </NodeInfo_Bottom_Item>
           </NodeInfo_Bottom_NFT>
         </NodeInfo>
@@ -1349,7 +1352,7 @@ export default function Rank() {
           <NodeInfo_Bottom>
             <NodeInfo_Bottom_Item>
               {t("78")}
-              <span>{MyCardInfo?.poolNum ?? 0} MBK</span>
+              <span>{MyCardInfo?.poolNum ?? 0} VTB</span>
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
               {t("79")}
@@ -1361,7 +1364,7 @@ export default function Rank() {
             </NodeInfo_Bottom_Item>
             <NodeInfo_Bottom_Item>
               {t("81")}
-              <span>{MyCardInfo?.totalAmount ?? 0} MBK</span>
+              <span>{MyCardInfo?.totalAmount ?? 0} VTB</span>
             </NodeInfo_Bottom_Item>
           </NodeInfo_Bottom>
         </NodeInfo>
@@ -1437,7 +1440,7 @@ export default function Rank() {
                     value={InputValueAmount}
                     onChange={InputValueFun}
                   />{" "}
-                  MBK_USDT_LP
+                  VTB_USDT_LP
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -1449,7 +1452,7 @@ export default function Rank() {
               </InputBox>
             </InputBox_Item_Last>
             <BalanceBox>
-              {t("50")}: <span>{MBK_USDT_TOKENBalance ?? 0}</span>MBK_USDT
+              {t("50")}: <span>{MBK_USDT_TOKENBalance ?? 0}</span>VTB_USDT
             </BalanceBox>
             <UpBtn
               onClick={() => {
@@ -1500,7 +1503,7 @@ export default function Rank() {
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("136")}
-                <span>1MBK={Price ?? "-"}USDT</span>
+                <span>1VTB={Price ?? "-"}USDT</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("137")}
@@ -1523,7 +1526,7 @@ export default function Rank() {
                       PledgeNFTInputValueFun(e);
                     }}
                   />{" "}
-                  MBK
+                  VTB
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -1536,7 +1539,7 @@ export default function Rank() {
             </InputBox_Item_Last>
             <BalanceBox>
               {t("50")}:{" "}
-              <span>{SubscriptionAccountInfo?.freezeAmount ?? 0}</span>MBK
+              <span>{SubscriptionAccountInfo?.freezeAmount ?? 0}</span>VTB
               <NodeInfo_Top_Rule_Staking_Mining>
                 <HelpIconAuto /> {t("12")}
               </NodeInfo_Top_Rule_Staking_Mining>
@@ -1601,7 +1604,7 @@ export default function Rank() {
               {t("97")}
             </UpBtn>
             <BalanceBox>
-              {t("50")}: <span>{decimalNum(TOKENBalance, 2)}</span>MBK
+              {t("50")}: <span>{decimalNum(TOKENBalance, 2)}</span>VTB
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

@@ -49,6 +49,7 @@ import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { throttle } from "lodash";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { TetherLogo, VTBLogo } from "../assets/image/exchangeBox";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
@@ -304,7 +305,7 @@ export default function Rank() {
     if (type === 1) {
       return (
         <CoinBox_Item>
-          <img src={logo} />
+          <TetherLogo />
           <div>USDT</div>
           <input
             type="number"
@@ -317,8 +318,8 @@ export default function Rank() {
     } else if (type === 2) {
       return (
         <CoinBox_Item>
-          <img src={logo} />
-          <div>MBK</div>
+          <VTBLogo />
+          <div>VTB</div>
           <input
             type="number"
             value={InputValue2}
@@ -367,14 +368,14 @@ export default function Rank() {
                 }}
               />
               {Number(swapType) === 1
-                ? `1USDT=${Price ?? "--"}MBK`
-                : `1MBK=${Price ?? "--"}USDT`}
+                ? `1USDT=${Price ?? "--"}VTB`
+                : `1VTB=${Price ?? "--"}USDT`}
             </CoinBox_Transfer>
             {CoinTopBox(Number(swapType) === 1 ? 2 : 1)}
 
             {/* <CoinBox_Item>
               <img src={logo} />
-              <div>MBK</div>
+              <div>VTB</div>
               <input
                 type="number"
                 readOnly={true}
@@ -430,7 +431,7 @@ export default function Rank() {
                       From (USDT) <span>{item?.formNum}</span>
                     </div>
                     <div>
-                      To (MBK) <span>{item?.toNum}</span>
+                      To (VTB) <span>{item?.toNum}</span>
                     </div>
                   </>
                 )} */}

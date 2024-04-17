@@ -394,7 +394,7 @@ export default function Rank() {
 
             <Pool_Amount>
               <div>{t("251")}</div>
-              {InsureStatus?.poolNum ?? 0} MBK
+              {InsureStatus?.poolNum ?? 0} VTB
             </Pool_Amount>
             <NodeInfo_Top_Message>
               {/* {dateFormat(
@@ -430,7 +430,7 @@ export default function Rank() {
               <NodeInfo_Bottom_Box_Tip>
                 <div> {t("259")}</div>{" "}
                 <div>
-                  {InsureStatus?.waitReceiveAmount ?? 0} <span>mbk</span>
+                  {InsureStatus?.waitReceiveAmount ?? 0} <span>VTB</span>
                 </div>
               </NodeInfo_Bottom_Box_Tip>
               <ReceiveBtn
@@ -444,7 +444,7 @@ export default function Rank() {
             <NodeInfo_Bottom_Bottom_Box>
               <Pool_Amount>
                 <div>{t("251")}</div>
-                {InsureStatus?.poolNum ?? 0} MBK
+                {InsureStatus?.poolNum ?? 0} VTB
               </Pool_Amount>
               <NodeInfo_Top_Message>
                 {t("21", {

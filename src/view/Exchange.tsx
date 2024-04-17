@@ -247,7 +247,7 @@ export default function Rank() {
                       From (USDT) <span>{item?.formNum}</span>
                     </div>
                     <div>
-                      To (MBK) <span>{item?.toNum}</span>
+                      To (VTB) <span>{item?.toNum}</span>
                     </div>
                   </>
                 )} */}

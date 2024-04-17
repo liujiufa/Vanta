@@ -54,6 +54,7 @@ import { FlexBox, FlexCCBox, FlexSBCBox } from "../components/FlexBox";
 import { useSign } from "../hooks/useSign";
 import {
   BgIcon,
+  Logo,
   MetaMaskIcon,
   OkxIcon,
   ReturnIcon,
@@ -726,17 +727,21 @@ const MainLayout: any = () => {
       String(name) === "NFT"
     ) {
       return (
-        <LogoContainer
+        <Logo
           onClick={() => {
             Navigate("/View/");
           }}
-        ></LogoContainer>
+        ></Logo>
       );
     } else if (!!name) {
       return (
         <ReturnContainer
           onClick={() => {
-            Navigate(-1);
+            if (String(name) === "/CHAT") {
+              Navigate("/View/");
+            } else {
+              Navigate(-1);
+            }
           }}
         >
           <ReturnIcon />
@@ -747,11 +752,11 @@ const MainLayout: any = () => {
       );
     } else {
       return (
-        <LogoContainer
+        <Logo
           onClick={() => {
             Navigate("/View/");
           }}
-        ></LogoContainer>
+        ></Logo>
       );
     }
   };

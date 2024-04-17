@@ -489,7 +489,7 @@ export default function Rank() {
                 Number(CommunitySoldBase?.currentPrice) / Number(Price),
                 2
               ) ?? 0}{" "}
-              <span>MBK</span>
+              <span>VTB</span>
             </div>
             <div>
               {" "}
@@ -502,11 +502,11 @@ export default function Rank() {
           </NodeInfo_Mid_Rule>
           <NodeInfo_Mid_Item_First>
             {t("91")}
-            <span>1MBK={Price ?? "--"}USDT</span>
+            <span>1VTB={Price ?? "--"}USDT</span>
           </NodeInfo_Mid_Item_First>
           {/* <NodeInfo_Mid_Item_First>
-            Equivalent MBK quantity
-            <span>3000 MBK</span>
+            Equivalent VTB quantity
+            <span>3000 VTB</span>
           </NodeInfo_Mid_Item_First> */}
           <NodeInfo_Mid_Conditions>
             {t("216")}
@@ -594,7 +594,7 @@ export default function Rank() {
               {t("97")}
             </UpBtn>
             <BalanceBox>
-              {t("50")}: <span>{TOKENBalance}</span>MBK
+              {t("50")}: <span>{TOKENBalance}</span>VTB
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

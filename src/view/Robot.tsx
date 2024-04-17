@@ -835,7 +835,7 @@ export default function Rank() {
           <NodeInfo_Top_Item_Box>
             <NodeInfo_Top_Item>
               <div>{t("145")}</div>
-              {RobotInfo?.totalSubscriptionNum ?? 0} MBK
+              {RobotInfo?.totalSubscriptionNum ?? 0} VTB
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("370")}</div>
@@ -870,7 +870,7 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("91")}</div>
-                1MBK={Price ?? "--"}USDT
+                1VTB={Price ?? "--"}USDT
               </NodeInfo_Top_Item>
               <InputBox>
                 <div>
@@ -884,7 +884,7 @@ export default function Rank() {
                       InputValueFun(e);
                     }}
                   />{" "}
-                  MBK
+                  VTB
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -898,7 +898,7 @@ export default function Rank() {
                 <BalanceBox_InputContainer>
                   {t("50")}{" "}
                   <div>
-                    {TOKENBalance} <span>mbk</span>
+                    {TOKENBalance} <span>VTB</span>
                   </div>
                 </BalanceBox_InputContainer>
 
@@ -954,12 +954,12 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("57")}</div>
-                {RobotManageAwardInfo?.teamPerformanceNum ?? 0} MBK(
+                {RobotManageAwardInfo?.teamPerformanceNum ?? 0} VTB(
                 {RobotManageAwardInfo?.teamPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("58")}</div>
-                {RobotManageAwardInfo?.communityPerformanceNum ?? 0} MBK(
+                {RobotManageAwardInfo?.communityPerformanceNum ?? 0} VTB(
                 {RobotManageAwardInfo?.communityPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
             </InputContainer>
@@ -968,18 +968,18 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("156")}</div>
-                {RobotManageAwardInfo?.totalRefereeAward ?? 0} MBK
+                {RobotManageAwardInfo?.totalRefereeAward ?? 0} VTB
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("157")}</div>
-                {RobotManageAwardInfo?.totalManageAward ?? 0} MBK
+                {RobotManageAwardInfo?.totalManageAward ?? 0} VTB
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info>
           <NodeInfo_Top_Management_Reward>
             {t("102")}
             <div>
-              {RobotManageAwardInfo?.amount ?? 0} <span>MBK</span>
+              {RobotManageAwardInfo?.amount ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn
@@ -1012,18 +1012,18 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("159")}</div>
-                {RobotPerformanceAwardInfo?.totalPerformanceStarNum ?? 0} MBK
+                {RobotPerformanceAwardInfo?.totalPerformanceStarNum ?? 0} VTB
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("160")}</div>
-                {RobotPerformanceAwardInfo?.totalPerformanceRefereeNum ?? 0} MBK
+                {RobotPerformanceAwardInfo?.totalPerformanceRefereeNum ?? 0} VTB
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_Management_Reward>
             {t("102")}
             <div>
-              {RobotPerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
+              {RobotPerformanceAwardInfo?.amount ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn

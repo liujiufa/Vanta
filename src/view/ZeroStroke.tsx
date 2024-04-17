@@ -553,17 +553,17 @@ export default function Rank() {
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>{t("261")}</div>
-            {MyFreeInfo?.shareAmount ?? 0} MBK
+            {MyFreeInfo?.shareAmount ?? 0} VTB
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>{t("260")}</div>
-            {MyFreeInfo?.refereeAmount ?? 0} MBK
+            {MyFreeInfo?.refereeAmount ?? 0} VTB
           </NodeInfo_Top_Item>
         </NodeInfo_Top>
         <NodeInfo_Mid>
           <div>{t("264")}</div>
           <div>
-            {MyFreeInfo?.waitReceiveAmount ?? 0} <span>MBK</span>
+            {MyFreeInfo?.waitReceiveAmount ?? 0} <span>VTB</span>
           </div>
         </NodeInfo_Mid>
         <NodeInfo_Bottom>

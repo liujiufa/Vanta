@@ -601,7 +601,7 @@ export default function Rank() {
                       <Award_Record_Content_Record_Content_Item key={index}>
                         <div>
                           {t("193")}{" "}
-                          <span>{t("293", { num: item?.businessType })}</span>
+                          <span>{t("293", { num: item?.level })}</span>
                           {/* {t("193")} <span>{item?.businessType}等奖</span> */}
                         </div>
                         <div>
@@ -712,7 +712,7 @@ export default function Rank() {
               </LodingModeBox>
               {true ? (
                 <div>
-                  Congratulations <span>First Prize 3000MBK</span>
+                  Congratulations <span>First Prize 3000VTB</span>
                 </div>
               ) : (
                 "The lottery is in progress, please wait."

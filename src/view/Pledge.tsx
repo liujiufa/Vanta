@@ -852,7 +852,7 @@ export default function Rank() {
               <AvailableBox>
                 {t("29")}
                 <div>
-                  {PledgeUserInfo?.currentPledgeNum ?? 0} <span>MBK</span>
+                  {PledgeUserInfo?.currentPledgeNum ?? 0} <span>VTB</span>
                 </div>
               </AvailableBox>
             </MyQuota_Box_Left>
@@ -871,7 +871,7 @@ export default function Rank() {
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("32")}</div>
-              {PledgeUserInfo?.totalPledgeNum ?? 0} MBK
+              {PledgeUserInfo?.totalPledgeNum ?? 0} VTB
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("33")}</div>
@@ -879,13 +879,13 @@ export default function Rank() {
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("34")}</div>
-              {PledgeUserInfo?.totalEarnNum ?? 0} MBK
+              {PledgeUserInfo?.totalEarnNum ?? 0} VTB
             </NodeInfo_Top_Item>
           </NodeInfo_Top_Item_Box>
           <NodeInfo_Top_Management_Reward>
             {t("35")}
             <div>
-              {PledgeUserInfo?.amount ?? 0} <span>MBK</span>
+              {PledgeUserInfo?.amount ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Top_Management_Reward>
 
@@ -928,11 +928,11 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("40")}</div>
-                {TRedemptionAccountInfo?.totalAmount ?? 0} MBK
+                {TRedemptionAccountInfo?.totalAmount ?? 0} VTB
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item style={{ color: "#D56819" }}>
                 <div>{t("41")}</div>
-                {TRedemptionAccountInfo?.amount ?? 0} MBK
+                {TRedemptionAccountInfo?.amount ?? 0} VTB
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info_Bottom>
@@ -964,12 +964,12 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("45")}</div>
-                {decimalNum(Number(PledgeUserInfo?.robotAmount) * 4 ?? 0, 2)}
+                {decimalNum(Number(PledgeUserInfo?.robotAmount) ?? 0, 2)}
                 USDT
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("46")}</div>
-                1MBK={Price ?? "--"}USDT
+                1VTB={Price ?? "--"}USDT
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item style={{ marginBottom: "18px" }}>
                 <div>{t("47")}</div>
@@ -993,7 +993,7 @@ export default function Rank() {
                       InputValueFun(e);
                     }}
                   />{" "}
-                  MBK
+                  VTB
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -1007,7 +1007,7 @@ export default function Rank() {
                 <BalanceBox_InputContainer>
                   {t("50")}{" "}
                   <div>
-                    {TOKENBalance} <span>mbk</span>
+                    {TOKENBalance} <span>VTB</span>
                   </div>
                 </BalanceBox_InputContainer>
 
@@ -1067,12 +1067,12 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("57")}</div>
-                {PledgeManageAward?.teamPerformanceNum ?? 0} MBK(
+                {PledgeManageAward?.teamPerformanceNum ?? 0} VTB(
                 {PledgeManageAward?.teamPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("58")}</div>
-                {PledgeManageAward?.communityPerformanceNum ?? 0} MBK(
+                {PledgeManageAward?.communityPerformanceNum ?? 0} VTB(
                 {PledgeManageAward?.communityPerformanceValue ?? 0}USDT)
               </NodeInfo_Top_Item>
             </InputContainer>
@@ -1081,18 +1081,18 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("59")}</div>
-                {PledgeManageAward?.totalRefereeAward ?? 0} MBK
+                {PledgeManageAward?.totalRefereeAward ?? 0} VTB
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("60")}</div>
-                {PledgeManageAward?.totalManageAward ?? 0} MBK
+                {PledgeManageAward?.totalManageAward ?? 0} VTB
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_Management_Info>
           <NodeInfo_Top_Management_Reward>
             {t("61")}
             <div>
-              {PledgeManageAward?.amount ?? 0} <span>MBK</span>
+              {PledgeManageAward?.amount ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn
@@ -1125,20 +1125,20 @@ export default function Rank() {
             <InputContainer>
               <NodeInfo_Top_Item>
                 <div>{t("64")}</div>
-                {PledgePerformanceAwardInfo?.totalPerformanceStarNum ?? 0} MBK
+                {PledgePerformanceAwardInfo?.totalPerformanceStarNum ?? 0} VTB
               </NodeInfo_Top_Item>
               <NodeInfo_Top_Item>
                 <div>{t("65")}</div>
                 {PledgePerformanceAwardInfo?.totalPerformanceRefereeNum ??
                   0}{" "}
-                MBK
+                VTB
               </NodeInfo_Top_Item>
             </InputContainer>
           </NodeInfo_Top_LotteryGame_Info>
           <NodeInfo_Top_Management_Reward>
             {t("61")}
             <div>
-              {PledgePerformanceAwardInfo?.amount ?? 0} <span>MBK</span>
+              {PledgePerformanceAwardInfo?.amount ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Top_Management_Reward>
           <GetRewardBtn

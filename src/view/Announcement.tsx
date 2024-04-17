@@ -442,7 +442,7 @@ export default function Rank() {
                         RecordList?.map((item: any, index: any) => (
                           <Award_Record_Content_Record_Content_Item key={index}>
                             <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
-                            <div>{NumSplic(item?.hitAmount, 2)}MBK</div>
+                            <div>{NumSplic(item?.hitAmount, 2)}VTB</div>
                             <div>{t("293", { num: item?.level })}</div>
                             {/* <div>{item?.level}等</div> */}
                           </Award_Record_Content_Record_Content_Item>

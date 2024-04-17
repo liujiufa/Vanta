@@ -352,13 +352,13 @@ export default function Rank() {
         <NodeInfo_Mid>
           <NodeInfo_Mid_Item_First>
             {t("91")}
-            <span>1MBK={Price ?? "--"}USDT</span>
+            <span>1VTB={Price ?? "--"}USDT</span>
           </NodeInfo_Mid_Item_First>
           <NodeInfo_Mid_Title>{t("92")}</NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
             <div>
               {decimalNum(EthertoWei(NFTPrice?.mbkAmount ?? "0"), 2)}{" "}
-              <span>MBK</span>
+              <span>VTB</span>
             </div>
             <div>
               {" "}

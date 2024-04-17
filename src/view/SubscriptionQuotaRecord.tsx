@@ -606,7 +606,7 @@ export default function Rank() {
               </LodingModeBox>
               {true ? (
                 <div>
-                  Congratulations <span>First Prize 3000MBK</span>
+                  Congratulations <span>First Prize 3000VTB</span>
                 </div>
               ) : (
                 "The lottery is in progress, please wait."

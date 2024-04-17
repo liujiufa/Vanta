@@ -622,11 +622,11 @@ export default function Rank() {
 
           <NodeInfo_Top_Item>
             <div>{t("268")}</div>
-            {GameProfit?.useAmount ?? 0} MBK
+            {GameProfit?.useAmount ?? 0} VTB
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>{t("269")}</div>
-            {GameProfit?.profitAmount ?? 0} MBK
+            {GameProfit?.profitAmount ?? 0} VTB
           </NodeInfo_Top_Item>
           <NodeInfo_Top_Item>
             <div>{t("270")}</div>
@@ -659,7 +659,7 @@ export default function Rank() {
                     readOnly={true}
                     // onChange={InputValueFun}
                   />{" "}
-                  MBK
+                  VTB
                 </div>{" "}
                 <div
                   onClick={() => {
@@ -672,18 +672,18 @@ export default function Rank() {
               <BalanceBox_InputContainer>
                 {t("50")}{" "}
                 <div>
-                  {TOKENBalance} <span>mbk</span>
+                  {TOKENBalance} <span>VTB</span>
                 </div>
               </BalanceBox_InputContainer>
             </InputContainer>
 
             <NodeInfo_Top_Item>
               <div>{t("275")}</div>
-              {GamePoolInfo?.todayAddPoolAmount ?? 0} MBK
+              {GamePoolInfo?.todayAddPoolAmount ?? 0} VTB
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("276")}</div>
-              {GamePoolInfo?.todayGamePoolAmount ?? 0} MBK
+              {GamePoolInfo?.todayGamePoolAmount ?? 0} VTB
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("277")}</div>
@@ -707,7 +707,7 @@ export default function Rank() {
           <NodeInfo_Top_LotteryGame_Reward>
             {t("278")}
             <div>
-              {GameProfit?.waitReceiveAmount ?? 0} <span>mbk</span>
+              {GameProfit?.waitReceiveAmount ?? 0} <span>VTB</span>
             </div>
           </NodeInfo_Top_LotteryGame_Reward>
           <GetRewardBtn
@@ -735,11 +735,11 @@ export default function Rank() {
           <NodeInfo_Top_ReservePool>
             <NodeInfo_Top_Item>
               <div>{t("281")}</div>
-              {GamePoolInfo?.todayAddReadyPoolAmount ?? 0} MBK
+              {GamePoolInfo?.todayAddReadyPoolAmount ?? 0} VTB
             </NodeInfo_Top_Item>
             <NodeInfo_Top_Item>
               <div>{t("282")}</div>
-              {GamePoolInfo?.readyPoolTotalAmount ?? 0} MBK
+              {GamePoolInfo?.readyPoolTotalAmount ?? 0} VTB
             </NodeInfo_Top_Item>
           </NodeInfo_Top_ReservePool>
         </NodeInfo_Top_LotteryGame>
@@ -774,7 +774,7 @@ export default function Rank() {
             <ModalContainer_Title>{t("187")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
-            Activation requires destroying MBK
+            Activation requires destroying VTB
             <span>100</span>
             <UpBtn
               onClick={() => {
@@ -784,7 +784,7 @@ export default function Rank() {
               {t("97")}
             </UpBtn>
             <BalanceBox>
-              {t("50")}: <span>100,000.00</span>MBK
+              {t("50")}: <span>100,000.00</span>VTB
             </BalanceBox>
           </ModalContainer_Content>
         </ModalContainer>

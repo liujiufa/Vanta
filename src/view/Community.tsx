@@ -567,7 +567,7 @@ export default function Rank() {
             <NodeInfo_Mid_Content>
               <div>{t("102")}</div>
               <div>
-                {decimalNum(MyCommunity?.amount ?? 0, 2)} <span>mbk</span>
+                {decimalNum(MyCommunity?.amount ?? 0, 2)} <span>VTB</span>
               </div>
             </NodeInfo_Mid_Content>
             <NodeInfo_Top_Btn
@@ -608,7 +608,7 @@ export default function Rank() {
           </NodeInfo_Bottom_Item>
           <NodeInfo_Bottom_Item>
             {t("210")}
-            <span>{decimalNum(MyCommunity?.totalAmount ?? 0, 2)} MBK</span>
+            <span>{decimalNum(MyCommunity?.totalAmount ?? 0, 2)} VTB</span>
           </NodeInfo_Bottom_Item>
         </NodeInfo_Bottom>
       </NodeInfo>

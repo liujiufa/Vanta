@@ -39,12 +39,23 @@ import {
 import { Btn } from "./NFT";
 import { startWord } from "../utils/tool";
 import PageLoding from "../components/PageLoding";
+import UserPageLoding from "../components/UserPageLoding";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
   padding: 0px;
   .message-view-container {
-    max-height: calc(100vh - 56px) !important;
-    min-height: calc(100vh - 56px) !important;
+    /* max-height: calc(100vh - 56px) !important;
+    min-height: calc(100vh - 56px) !important; */
+  }
+  .desktop-layout-main-container {
+    max-width: 450px !important;
+    @media (min-width: 450px) {
+      display: block;
+    }
+  }
+  .column-container {
+    width: 100% !important;
+    max-width: 450px !important;
   }
   > div {
     width: 100%;
@@ -120,6 +131,13 @@ export default function Rank() {
 
     QB?.init(APPLICATION_ID, AUTH_KEY, AUTH_SECRET, ACCOUNT_KEY, CONFIG);
   };
+  const logoutUIKitHandler = async () => {
+    qbUIKitContext.release();
+    setCurrentUser({ login: "", password: "" });
+    setUserAuthorized(false);
+    document.documentElement.setAttribute("data-theme", "dark");
+    navigate("/sign-in");
+  };
 
   const loginAction = async (loginData: LoginData): Promise<void> => {
     console.log(loginData, "loginData");
@@ -128,22 +146,36 @@ export default function Rank() {
       if (loginData.login.length > 0 && loginData.password.length > 0) {
         await createUserSession(loginData)
           .then(async (resultUserSession) => {
+            console.log(resultUserSession, "resultUserSession");
+
             await connectToChatServer(resultUserSession, currentUser.login)
               .then(async (authData) => {
                 await qbUIKitContext.authorize(authData);
                 qbUIKitContext.setSubscribeOnSessionExpiredListener(() => {
                   console.timeLog("call OnSessionExpiredListener ... start");
+                  logoutUIKitHandler();
+
                   console.log("OnSessionExpiredListener ... end");
                 });
                 setSDKInitialized(true);
                 setUserAuthorized(true);
                 document.documentElement.setAttribute("data-theme", theme);
               })
-              .catch((errorChatConnection) => {});
+              .catch((errorChatConnection) => {
+                handleError(errorChatConnection);
+              });
           })
-          .catch((errorUserSession) => {});
+          .catch((errorUserSession) => {
+            handleError(errorUserSession);
+          });
       }
     }
+  };
+  const handleError = (error: any): void => {
+    console.log("error:", JSON.stringify(error));
+    const errorToShow = error.message.errors[0] || "Unexpected error";
+    setErrorMessage(errorToShow);
+    setUserAuthorized(false);
   };
 
   useEffect(() => {
@@ -243,7 +275,7 @@ export default function Rank() {
           // >
           //   登陆
           // </LoginBtn>
-          <PageLoding></PageLoding>
+          <UserPageLoding></UserPageLoding>
         )
       }
     </NodeContainerBox>
