@@ -1,6 +1,6 @@
 import React from "react";
 // import { Web3Provider } from "@ethersproject/providers";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
 import { Web3ReactProvider } from "@web3-react/core";
@@ -65,8 +65,11 @@ createWeb3Modal({
     "20459438007b75f4f4acb98bf29aa3b800550309646d375da5fd4aac6c2a2c66",
   ],
 });
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     {/* @ts-ignore  */}
     <Provider store={store}>
@@ -76,8 +79,7 @@ ReactDOM.render(
         </BrowserRouter>
       </Web3ReactProvider>
     </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 reportWebVitals();

@@ -15,6 +15,9 @@
     "@web3-react/walletconnect-v2": "^8.5.1",
     "@web3modal/ethers": "^4.1.5",
     "@web3modal/siwe": "^4.1.5",
+    "@types/node": "^16.18.28",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
     "ant-design": "^1.0.0",
     "antd": "^4.24.1",
     "antd-mobile": "^5.34.0",
@@ -22,6 +25,7 @@
     "axios": "^0.26.0",
     "big.js": "^6.1.1",
     "copy-to-clipboard": "^3.3.1",
+    "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
     "customize-cra": "^1.0.0",
     "dotenv": "^16.0.3",
@@ -34,15 +38,15 @@
     "os-browserify": "^0.3.0",
     "quickblox": "^2.16.1",
     "quickblox-react-ui-kit": "0.2.8",
-    "react": "^18.0.0-rc.3",
     "react-app-rewired": "^2.2.1",
-    "react-dom": "^18.0.0-rc.3",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
     "react-i18next": "^11.16.9",
     "react-is": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-redux": "^7.2.6",
-    "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0",
+    "react-router-dom": "^6.4.3",
+    "react-scripts": "5.0.1",
     "react-text-loop-next": "^0.0.3",
     "react-truncate-markup": "^5.1.2",
     "redux": "^4.1.2",
@@ -53,7 +57,7 @@
     "stream-http": "^3.2.0",
     "styled-components": "^5.3.3",
     "swiper": "^8.4.7",
-    "typescript": "^4.5.5",
+    "typescript": "^4.9.5",
     "url": "^0.11.0",
     "use-sync-external-store": "^1.2.0",
     "vconsole": "^3.15.1",
@@ -62,10 +66,9 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "dotenv -e .env.production react-app-rewired build",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject",
-    "webpack": "webpack --version"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -92,10 +95,10 @@
     "@types/lodash": "^4.14.191",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
-    "@types/node": "^16.11.25",
+    "@types/node": "^16.18.28",
     "@types/pubsub-js": "^1.8.3",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.11",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
     "@types/sockjs-client": "^1.5.1",
     "@types/stompjs": "^2.3.5",
     "@types/styled-components": "^5.1.22",
@@ -111,5 +114,9 @@
   },
   "optionalDependencies": {
     "animate.css": "^4.1.1"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   }
 }

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { getExchangeRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ContainerBox } from "../components/FlexBox";
 import { contractAddress } from "../config";
 import { throttle } from "lodash";
-
+// @ts-ignore
 import * as QB from "quickblox/quickblox";
 import {
   QuickBloxUIKitProvider,
@@ -261,12 +261,23 @@ export default function Rank() {
     }
   }, [pathname]);
 
+  const CustomLink = forwardRef((props: any, ref: any) => (
+    <QuickBloxUIKitDesktopLayout
+      ref={ref}
+      AIAssist={{
+        enabled: true,
+        default: false,
+      }}
+    />
+  ));
+
   return (
     <NodeContainerBox>
       {
         // React states indicating the ability to render UI
         isSDKInitialized && isUserAuthorized ? (
-          <QuickBloxUIKitDesktopLayout />
+          // <QuickBloxUIKitDesktopLayout />
+          <CustomLink />
         ) : (
           // <LoginBtn
           //   onClick={() => {

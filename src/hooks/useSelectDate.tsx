@@ -66,7 +66,7 @@ export function useSelectDate() {
   const [DateString, setDateString] = useState<any>(new Date());
   const [Precision, setPrecision] = useState<any>("month");
   // const [];
-  const labelRenderer = useCallback((type, data) => {
+  const labelRenderer = useCallback((type: any, data: any) => {
     switch (type) {
       case "year":
         return `${data}年`;
