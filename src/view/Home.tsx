@@ -54,6 +54,8 @@ import {
   menuIcon8,
 } from "../assets/image/homeBox";
 import { SwapUrl } from "../config";
+import PageLoding from "../components/PageLoding";
+import InfiniteHorizontalScroll from "../components/InitialMessages";
 
 const HomeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -99,47 +101,20 @@ const Announcement = styled(FlexSBCBox)`
   padding: 12px 15px;
   border-radius: 10px;
   background: #d56819;
-  .announcement-container {
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .announcement-list {
-    display: flex;
-    animation: scroll 10s linear infinite;
-    margin-bottom: 0px;
-    > li {
-      min-width: 342px;
-      width: 100%;
-    }
-  }
-
-  @keyframes scroll {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
 `;
 
-const Announcement_Left = styled.div``;
+const Announcement_Left = styled.div`
+  width: 20px;
+`;
 const Announcement_Mid = styled.div`
-  flex: 1;
-  margin: 0px 10px;
-  font-family: "PingFang SC";
-  font-size: 14px;
-  font-weight: normal;
-  line-height: normal;
-  text-transform: capitalize;
-  letter-spacing: 0em;
-  overflow: hidden;
-
-  font-variation-settings: "opsz" auto;
-  color: #333333;
+  width: calc(100% - 60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
-const Announcement_Right = styled.div``;
+const Announcement_Right = styled.div`
+  width: 20px;
+`;
 
 const MenuList = styled(FlexSBCBox)`
   width: 100%;
@@ -390,6 +365,7 @@ const BannerListArr = [
   { img: bannerImg1 },
   { img: bannerImg1 },
 ];
+export const GameTooltip = styled.div``;
 
 export default function Rank() {
   const { t, i18n } = useTranslation();
@@ -407,16 +383,18 @@ export default function Rank() {
   const containerRef = useRef<any>(null);
   const listRef = useRef<any>(null);
 
-  useEffect(() => {
-    const containerWidth = containerRef.current.offsetWidth;
-    const listWidth = listRef.current.offsetWidth;
+  const [dataLoding, setDataLoding] = useState(true);
+  // useEffect(() => {
+  //   const containerWidth = containerRef.current?.offsetWidth;
+  //   const listWidth = listRef.current?.offsetWidth;
 
-    if (listWidth > containerWidth) {
-      listRef.current.style.width = `${listWidth}px`;
-    } else {
-      listRef.current.style.width = "100%";
-    }
-  }, []);
+  //   if (listWidth > containerWidth) {
+  //     // listRef.current.style.width = "100%";
+  //     listRef.current.style.width = `${listWidth}px`;
+  //   } else {
+  //     listRef.current.style.width = "100%";
+  //   }
+  // }, []);
 
   const MenuListArr = [
     { img: menuIcon1, name: "4", route: "Robot" },
@@ -430,8 +408,10 @@ export default function Rank() {
   ];
 
   const getInitData = () => {
+    setDataLoding(true);
     getBannerList().then((res: any) => {
       if (res.code === 200) {
+        setDataLoding(false);
         setBannerList(res?.data);
       }
     });
@@ -477,7 +457,17 @@ export default function Rank() {
       <MyCarousel>
         <Carousel autoplay>
           {BannerList?.map((item: any, index: any) => (
-            <div key={index} className="item">
+            <div
+              key={index}
+              className="item"
+              onClick={() => {
+                if (!!item?.linkNoticeId) {
+                  Navigate("/View/NoticeDetail", {
+                    state: { id: item?.linkNoticeId },
+                  });
+                }
+              }}
+            >
               <img src={item?.bannerUrl} alt="" />
             </div>
           ))}
@@ -488,14 +478,16 @@ export default function Rank() {
           {" "}
           <img src={announcementIcon} alt="" />{" "}
         </Announcement_Left>
-        <Announcement_Mid ref={containerRef}>
-          <ul className="announcement-list" ref={listRef}>
-            {NoticeList?.map((item: any, index: any) => (
-              <li key={index}>{item?.content}</li>
-            ))}
-          </ul>
+
+        <Announcement_Mid>
+          <InfiniteHorizontalScroll list={NoticeList} />
         </Announcement_Mid>
-        <Announcement_Right>
+
+        <Announcement_Right
+          onClick={() => {
+            Navigate("/View/Notice");
+          }}
+        >
           <img src={outLinkIcon} alt="" />
         </Announcement_Right>
       </Announcement>
@@ -533,44 +525,93 @@ export default function Rank() {
 
       <RewardContainer>
         <RewardItem
-          onClick={() => {
-            Navigate("/View/ZeroStroke");
-          }}
+        // onClick={() => {
+        //   Navigate("/View/ZeroStroke");
+        // }}
         >
-          <RewardItem_Rule>
-            <img src={helpIcon} alt="" />
-            {t("12")}
-          </RewardItem_Rule>
-          <RewardItem_Title>{t("11")} VTB</RewardItem_Title>
-          <RewardItem_Subtitle>{t("13")}</RewardItem_Subtitle>
-          <RewardItem_Info>
+          <Tooltip title={t("379")} autoAdjustOverflow showArrow={false}>
+            <RewardItem_Rule>
+              <img src={helpIcon} alt="" />
+              {t("12")}
+            </RewardItem_Rule>
+          </Tooltip>
+
+          <RewardItem_Title
+            onClick={() => {
+              Navigate("/View/ZeroStroke");
+            }}
+          >
+            {t("11")} VTB
+          </RewardItem_Title>
+          <RewardItem_Subtitle
+            onClick={() => {
+              Navigate("/View/ZeroStroke");
+            }}
+          >
+            {t("13")}
+          </RewardItem_Subtitle>
+          <RewardItem_Info
+            onClick={() => {
+              Navigate("/View/ZeroStroke");
+            }}
+          >
             <RewardItem_Info_Item>
-              {t("14")}
+              {t("430")}
               <RewardItem_Info_Item_Value>
-                {decimalNum(MyFreeInfo?.refereeAmount, 2) ?? 0} <span>VTB</span>
+                {MyFreeInfo?.validUserCount ?? 0} <span></span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
-              {t("15")}
+              {t("431")}
               <RewardItem_Info_Item_Value>
-                {decimalNum(MyFreeInfo?.shareAmount, 2) ?? 0} <span>VTB</span>
+                {decimalNum(MyFreeInfo?.shareAmount ?? "0", 2) ?? 0}{" "}
+                <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
           </RewardItem_Info>
         </RewardItem>
 
         <RewardItem
-          onClick={() => {
-            Navigate("/View/LotteryGame");
-          }}
+        // onClick={() => {
+        //   Navigate("/View/LotteryGame");
+        // }}
         >
-          <RewardItem_Rule>
-            <img src={helpIcon} alt="" />
-            {t("12")}
-          </RewardItem_Rule>
-          <RewardItem_Title>{t("16")}</RewardItem_Title>
-          <RewardItem_Subtitle>{t("17")}</RewardItem_Subtitle>
-          <RewardItem_Info>
+          <Tooltip
+            title={
+              <GameTooltip>
+                <div>{t("383")}</div>
+                <div>{t("380")}</div>
+                <div>{t("384")}</div>
+                <div>{t("385")}</div>
+              </GameTooltip>
+            }
+            autoAdjustOverflow
+            showArrow={false}
+          >
+            <RewardItem_Rule>
+              <img src={helpIcon} alt="" />
+              {t("12")}
+            </RewardItem_Rule>
+          </Tooltip>
+          <RewardItem_Title
+            onClick={() => {
+              Navigate("/View/LotteryGame");
+            }}
+          >
+            {t("16")}
+          </RewardItem_Title>
+          <RewardItem_Subtitle
+            onClick={() => {
+              Navigate("/View/LotteryGame");
+            }}
+          >
+            {t("17")}
+          </RewardItem_Subtitle>
+          <RewardItem_Info
+            onClick={() => {
+              Navigate("/View/LotteryGame");
+            }}
+          >
             <RewardItem_Info_Item>
               {t("18")}
               <RewardItem_Info_Item_Value>
@@ -594,7 +635,11 @@ export default function Rank() {
         {CoinPriceList?.length > 0 ? (
           <HotQuotes_Content>
             {CoinPriceList?.map((item: any, index: any) => (
-              <HotQuotes_Content_Item>
+              <HotQuotes_Content_Item
+                onClick={() => {
+                  window.open(item?.quotesLink);
+                }}
+              >
                 <img src={item?.icon} alt="" />
                 <HotQuotes_Content_Item_Right>
                   <HotQuotes_Content_Item_Right_Top>
@@ -602,7 +647,7 @@ export default function Rank() {
                     <div>${item?.price}</div>
                   </HotQuotes_Content_Item_Right_Top>
                   <HotQuotes_Content_Item_Right_Buttom add={true}>
-                    {item?.apiSymbol ?? "-"}
+                    {item?.fullName ?? "-"}
                     <div>{item?.changeRate}%</div>
                   </HotQuotes_Content_Item_Right_Buttom>
                 </HotQuotes_Content_Item_Right>

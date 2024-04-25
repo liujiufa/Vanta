@@ -262,7 +262,7 @@ export default function Rank() {
 
   const getVilifyState = throttle(async (value: string) => {
     if (!web3ModalAccount) return;
-    return Contracts.example.getAmountsOut(
+    return Contracts.example?.getAmountsOut(
       web3ModalAccount as string,
       value,
       SwapObj[swapType ?? 1]
@@ -294,7 +294,7 @@ export default function Rank() {
 
   const SelectPrice = () => {
     Contracts.example
-      .getAmountsOut(web3ModalAccount as string, "1", SwapObj[swapType])
+      ?.getAmountsOut(web3ModalAccount as string, "1", SwapObj[swapType])
       ?.then((res: any) => {
         console.log(res, "price");
         setPrice(decimalNum(EthertoWei(res[1] ?? "0"), 2));

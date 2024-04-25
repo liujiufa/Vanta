@@ -472,3 +472,9 @@ export function rank() {
     method: "get",
   });
 }
+export function getNoticeInfo(id: any) {
+  return axois.request({
+    url: `/home/getNoticeInfo/${id}`,
+    method: "get",
+  });
+}

@@ -697,7 +697,7 @@ export default function Rank() {
                         </div>
                         <div>
                           {t("195")}{" "}
-                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                          <span>{decimalNum(item?.amount ?? 0, 6)}</span>
                         </div>
                       </Award_Record_Content_Record_Content_Item>
                     ))
@@ -732,7 +732,7 @@ export default function Rank() {
                         </div>
                         <div>
                           {t("197")}{" "}
-                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                          <span>{decimalNum(item?.amount ?? 0, 6)}</span>
                         </div>
                         <div>
                           {t("198")}
@@ -778,7 +778,7 @@ export default function Rank() {
                         </div>
                         <div>
                           {t("202")}{" "}
-                          <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                          <span>{decimalNum(item?.amount ?? 0, 6)}</span>
                         </div>
                         <div>
                           {t("198")}

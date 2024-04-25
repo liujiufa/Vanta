@@ -43,6 +43,7 @@ import { contractAddress } from "../config";
 import { useInputValue } from "../hooks/useInputValue";
 import { NFTIcon } from "../assets/image/NFTBox";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { GameTooltip } from "./Home";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -260,7 +261,9 @@ export default function Rank() {
 
   const getContractsData = async () => {
     let data = await Contracts.example?.queryPrice(web3ModalAccount as string);
-    let nftBuyed = await Contracts.example?.totalSupply(web3ModalAccount as string);
+    let nftBuyed = await Contracts.example?.totalSupply(
+      web3ModalAccount as string
+    );
 
     setNFTPrice({ ...data, supply: nftBuyed });
   };
@@ -366,8 +369,27 @@ export default function Rank() {
             </div>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
-            <img src={helpIcon} alt="" />
-            {t("12")}
+            <Tooltip
+              title={
+                <GameTooltip>
+                  <div>{t("388")}</div>
+                  <div style={{ fontWeight: 500, marginTop: "8px" }}>
+                    {t("389")}
+                  </div>
+                  <div>{t("390")}</div>
+                  <div>{t("391")}</div>
+                  <div>{t("392")}</div>
+                  <div>{t("393")}</div>
+                  <div>{t("394")}</div>
+                  <div style={{ marginTop: "8px" }}>{t("395")}</div>
+                </GameTooltip>
+              }
+              autoAdjustOverflow
+              showArrow={false}
+            >
+              <img src={helpIcon} alt="" />
+              {t("12")}
+            </Tooltip>
           </NodeInfo_Mid_Rule>
 
           {Number(CardBase?.roundNum) === 1 && (

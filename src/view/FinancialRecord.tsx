@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { getGameDrawRecord, getGameRecord, userInfo } from "../API/index";
+import {
+  getGameDrawRecord,
+  getGameRecord,
+  hitRecord,
+  userInfo,
+} from "../API/index";
 import "../assets/style/Home.scss";
 import NoData from "../components/NoData";
 import Table from "../components/Table";
@@ -203,23 +208,23 @@ const ModalContainer_Content = styled.div`
   }
 `;
 
-const HomeContainerBox_Content_Bg3 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -101px;
-  width: 261px;
-  height: 261px;
-  flex-shrink: 0;
-  border-radius: 261px;
-  opacity: 0.4;
-  background: linear-gradient(
-    131deg,
-    rgba(113, 112, 242, 0.4) 35.38%,
-    rgba(152, 102, 234, 0.4) 85.25%
-  );
-  filter: blur(99.5px);
-  z-index: -1;
-`;
+// const HomeContainerBox_Content_Bg3 = styled.div`
+//   position: absolute;
+//   bottom: -15px;
+//   right: -101px;
+//   width: 261px;
+//   height: 261px;
+//   flex-shrink: 0;
+//   border-radius: 261px;
+//   opacity: 0.4;
+//   background: linear-gradient(
+//     131deg,
+//     rgba(113, 112, 242, 0.4) 35.38%,
+//     rgba(152, 102, 234, 0.4) 85.25%
+//   );
+//   filter: blur(99.5px);
+//   z-index: -1;
+// `;
 
 const Award_Record_Content = styled.div`
   width: 100%;
@@ -335,6 +340,11 @@ const Get_Record_Content_Record_Content_Item = styled(
   Award_Record_Content_Record_Content_Item
 )<{ type: any }>`
   > div {
+    > span {
+      max-width: 200px;
+      width: 100%;
+      word-break: break-all;
+    }
     &:last-child {
       > span {
         font-family: "PingFang SC";
@@ -446,7 +456,7 @@ export default function Rank() {
         }
       });
     } else if (Number(ActiveTab) === 0) {
-      getGameRecord(SubTab).then((res: any) => {
+      hitRecord({ date: "", level: SubTab, myself: true }).then((res: any) => {
         if (res.code === 200) {
           setDataLoding(false);
 
@@ -488,7 +498,7 @@ export default function Rank() {
               setActiveTab(-1);
             }}
           >
-            {t("296")}
+            {t("420")}
           </NodeRecord_Tab_Item>
           <NodeRecord_Tab_Item
             className={Number(ActiveTab) === 0 ? "activeTab" : "tab"}
@@ -527,9 +537,21 @@ export default function Rank() {
                             )}
                           </span>
                         </div>
-                        <div>
+                        {/* <div>
                           {t("300")}
                           <span>{item?.payAmount ?? 0}</span>
+                        </div> */}
+                        <div>
+                          {t("421")}
+                          <span>{item?.payAmount ?? 0}</span>
+                        </div>
+                        <div>
+                          {t("422")}
+                          <span>{item?.orderNum ?? 0}</span>
+                        </div>
+                        <div>
+                          {t("423")}
+                          <span>{item?.orderNoList ?? 0}</span>
                         </div>
                         <div>
                           {t("198")}
@@ -603,6 +625,10 @@ export default function Rank() {
                           {t("193")}{" "}
                           <span>{t("293", { num: item?.level })}</span>
                           {/* {t("193")} <span>{item?.businessType}等奖</span> */}
+                        </div>
+                        <div>
+                          {t("424")}
+                          <span>{item?.orderNo ?? 0}</span>
                         </div>
                         <div>
                           {t("201")}{" "}
@@ -686,7 +712,7 @@ export default function Rank() {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}

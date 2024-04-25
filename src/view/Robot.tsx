@@ -902,10 +902,12 @@ export default function Rank() {
                   </div>
                 </BalanceBox_InputContainer>
 
-                <NodeInfo_Mid_Rule_Robot>
-                  <HelpIcon />
-                  {t("12")}
-                </NodeInfo_Mid_Rule_Robot>
+                <Tooltip title={t("381")} autoAdjustOverflow showArrow={false}>
+                  <NodeInfo_Mid_Rule_Robot>
+                    <HelpIcon />
+                    {t("12")}
+                  </NodeInfo_Mid_Rule_Robot>
+                </Tooltip>
               </InputContainer_Bottom>
               <InputContainer_Bottom style={{ marginTop: "10px" }}>
                 <BalanceBox_InputContainer>

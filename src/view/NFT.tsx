@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import {
   getFirstRoundAccountInfo,
@@ -65,11 +64,14 @@ import errorIcon from "../assets/image/Subscription/errorIcon.svg";
 import yesIcon from "../assets/image/Subscription/yesIcon.svg";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { useInputValue } from "../hooks/useInputValue";
+import { GameTooltip } from "./Home";
+import { useSign } from "../hooks/useSign";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
 `;
 
 const NodeInfo = styled.div`
+  position: relative;
   width: 100%;
   border-radius: 10px;
   border: 1px solid rgba(213, 104, 25, 0.2);
@@ -163,6 +165,8 @@ const NodeInfo_Bottom_Subscription_Rewards = styled(NodeInfo_Bottom)`
 const NodeInfo_Bottom_Subscription_Rewards1 = styled(
   NodeInfo_Bottom_Subscription_Rewards
 )`
+  position: relative;
+
   padding-top: 10px;
   border-top: 1px solid rgba(213, 104, 25, 0.2);
 `;
@@ -308,24 +312,24 @@ const BalanceBox = styled(FlexBox)`
   }
 `;
 
-const HomeContainerBox_Content_Bg3 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -101px;
-  width: 261px;
-  height: 261px;
-  flex-shrink: 0;
-  border-radius: 261px;
-  opacity: 0.4;
-  background: linear-gradient(
-    131deg,
-    rgba(113, 112, 242, 0.4) 35.38%,
-    rgba(152, 102, 234, 0.4) 85.25%
-  );
-  filter: blur(99.5px);
-  z-index: -1;
-  z-index: -1;
-`;
+// const HomeContainerBox_Content_Bg3 = styled.div`
+//   position: absolute;
+//   bottom: -15px;
+//   right: -101px;
+//   width: 261px;
+//   height: 261px;
+//   flex-shrink: 0;
+//   border-radius: 261px;
+//   opacity: 0.4;
+//   background: linear-gradient(
+//     131deg,
+//     rgba(113, 112, 242, 0.4) 35.38%,
+//     rgba(152, 102, 234, 0.4) 85.25%
+//   );
+//   filter: blur(99.5px);
+//   z-index: -1;
+//   z-index: -1;
+// `;
 
 const ModalContainer_SubTitle = styled.div`
   font-family: PingFang SC;
@@ -715,6 +719,7 @@ export default function Rank() {
   const [PledgeLPModal, setPledgeLPModal] = useState(false);
   const [PledgeUserInfo, setPledgeUserInfo] = useState<any>({});
   const [LpBase, setLpBase] = useState<any>([]);
+  const { signFun } = useSign();
 
   const {
     TOKENBalance,
@@ -905,48 +910,69 @@ export default function Rank() {
     setInputValueAmount(value);
   };
 
-  const pledgeFun = (value: string = "20") => {
+  const pledgeFun = async (value: string = "20") => {
+    if (!state?.token) return;
     if (Number(value) < 20 || Number(value) % 20 !== 0)
       return addMessage(t("22"));
     // if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
     //   return addMessage(t("23"));
     if (
-      Number(value) * Number(Price) +
-        Number(PledgeUserInfo?.totalPledgeAmount) >
-      Number(PledgeUserInfo?.robotAmount)
+      Number(value) * Number(Price) >
+      Number(PledgeUserInfo?.maxBuyRobotAmount)
     )
+      // if (
+      //   Number(value) * Number(Price) +
+      //     Number(PledgeUserInfo?.totalPledgeAmount) >
+      //   Number(PledgeUserInfo?.robotAmount)
+      // )
       return addMessage(t("24"));
 
-    handleTransaction(value, async (call: any) => {
-      let res: any;
-      try {
-        showLoding(true);
+    // handleTransaction(value, async (call: any) => {
+    //   let res: any;
+    //   try {
+    //     showLoding(true);
 
-        let item: any = await joinUnlockNftAwardPledge({
-          num: value,
-        });
-        if (item?.code === 200 && item?.data) {
-          res = await Contracts.example?.stake(
-            web3ModalAccount as string,
-            item?.data
-          );
+    //     let item: any = await joinUnlockNftAwardPledge({
+    //       num: value,
+    //     });
+    //     if (item?.code === 200 && item?.data) {
+    //       res = await Contracts.example?.stake(
+    //         web3ModalAccount as string,
+    //         item?.data
+    //       );
+    //     } else {
+    //       showLoding(false);
+    //       return addMessage(item?.msg);
+    //     }
+    //   } catch (error: any) {
+    //     showLoding(false);
+    //     return addMessage(t("361"));
+    //   }
+    //   showLoding(false);
+    //   if (!!res?.status) {
+    //     call();
+    //     setPledgeNFTModal(false);
+    //     addMessage(t("360"));
+    //   } else {
+    //     addMessage(t("361"));
+    //   }
+    // });
+
+    await signFun((res: any) => {
+      joinUnlockNftAwardPledge({
+        ...res,
+        num: value,
+      }).then((res: any) => {
+        if (res.code === 200) {
+          showLoding(false);
+          setPledgeNFTModal(false);
+          addMessage(t("360"));
         } else {
           showLoding(false);
-          return addMessage(item?.msg);
+          addMessage(res.msg);
         }
-      } catch (error: any) {
-        showLoding(false);
-        return addMessage(t("361"));
-      }
-      showLoding(false);
-      if (!!res?.status) {
-        call();
-        setPledgeNFTModal(false);
-        addMessage(t("360"));
-      } else {
-        addMessage(t("361"));
-      }
-    });
+      });
+    }, `userAddress=${web3ModalAccount as string}`);
   };
 
   useEffect(() => {
@@ -1098,7 +1124,7 @@ export default function Rank() {
                       }
                       alt=""
                     />
-                    {t("108")}
+                    {t("108", { num: PioneerInfo?.communityNftNum ?? 0 })}
                   </div>
                 </NodeInfo_Mid_Conditions>
               </NodeInfo_Top_LotteryGame>
@@ -1106,9 +1132,26 @@ export default function Rank() {
           )}
           <NodeInfo>
             <NodeInfo_Top>
-              <NodeInfo_Top_Rule>
-                <HelpIconAuto /> {t("12")}
-              </NodeInfo_Top_Rule>
+              <Tooltip
+                title={
+                  <GameTooltip>
+                    <div>{t("407")}</div>
+                    <div style={{ fontWeight: 500, marginTop: "8px" }}>
+                      {t("408")}
+                    </div>
+                    <div>{t("409")}</div>
+                    <div>{t("410")}</div>
+                    <div>{t("411")}</div>
+                    <div>{t("412")}</div>
+                  </GameTooltip>
+                }
+                autoAdjustOverflow
+                showArrow={false}
+              >
+                <NodeInfo_Top_Rule style={{ zIndex: 999 }}>
+                  <HelpIconAuto /> {t("12")}
+                </NodeInfo_Top_Rule>
+              </Tooltip>
               <ModalContainer_Title_Container>
                 <img src={LPPledgeIcon} />
                 <ModalContainer_Title>{t("109")}</ModalContainer_Title>
@@ -1177,6 +1220,19 @@ export default function Rank() {
             </BtnBox>
           </NodeInfo>
           <NodeInfo>
+            <Tooltip
+              title={
+                <GameTooltip>
+                  <div>{t("413")}</div>
+                </GameTooltip>
+              }
+              autoAdjustOverflow
+              showArrow={false}
+            >
+              <NodeInfo_Top_Rule style={{ zIndex: 999 }}>
+                <HelpIconAuto /> {t("12")}
+              </NodeInfo_Top_Rule>
+            </Tooltip>
             <NodeInfo_Top_NFT_Pioneer>
               <ModalContainer_Title_Container>
                 <img src={SubscriptionRewardsIcon} />
@@ -1225,8 +1281,21 @@ export default function Rank() {
               </div>
             </BtnBox>
             <NodeInfo_Bottom_Subscription_Rewards1>
+              <Tooltip
+                title={
+                  <GameTooltip>
+                    <div>{t("414")}</div>
+                  </GameTooltip>
+                }
+                autoAdjustOverflow
+                showArrow={false}
+              >
+                <NodeInfo_Top_Rule style={{ zIndex: 999, marginTop: "0px" }}>
+                  <HelpIconAuto /> {t("12")}
+                </NodeInfo_Top_Rule>
+              </Tooltip>
               {t("125")}
-              <NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item style={{ marginTop: "12px" }}>
                 {t("126")}
                 <span>{FirstRoundAccountInfo?.unLockNum ?? 0} VTB</span>
               </NodeInfo_Bottom_Item>
@@ -1388,7 +1457,7 @@ export default function Rank() {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}
@@ -1477,7 +1546,7 @@ export default function Rank() {
         }}
       >
         <Staking_Mining_Modal_ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}
@@ -1577,7 +1646,7 @@ export default function Rank() {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}

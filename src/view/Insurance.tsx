@@ -48,6 +48,7 @@ import useTime from "../hooks/useTime";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import PageLoding from "../components/PageLoding";
+import { GameTooltip } from "./Home";
 dayjs.extend(duration);
 
 const NodeContainerBox = styled(ContainerBox)`
@@ -372,9 +373,31 @@ export default function Rank() {
       <NodeInfo>
         {Number(InsureStatus?.status) !== 3 ? (
           <NodeInfo_Top>
-            <NodeInfo_Top_Rule>
-              <HelpIconAuto /> {t("12")}{" "}
-            </NodeInfo_Top_Rule>
+            <Tooltip
+              title={
+                <GameTooltip>
+                  <div style={{ fontWeight: 500 }}>{t("396")}</div>
+                  <div>{t("397")}</div>
+                  <div>{t("398")}</div>
+                  <div>{t("399")}</div>
+                  <div>{t("400")}</div>
+                  <div>{t("401")}</div>
+                  <div>{t("402")}</div>
+                  <div>{t("403")}</div>
+                  <div>{t("404")}</div>
+                  <div style={{ fontWeight: 500, marginTop: "8px" }}>
+                    {t("405")}
+                  </div>
+                  <div>{t("406")}</div>
+                </GameTooltip>
+              }
+              autoAdjustOverflow
+              showArrow={false}
+            >
+              <NodeInfo_Top_Rule>
+                <HelpIconAuto /> {t("12")}{" "}
+              </NodeInfo_Top_Rule>
+            </Tooltip>
             <ModalContainer_Title_Container>
               <img src={menuIcon7} />
               <ModalContainer_Title>{t("248")}</ModalContainer_Title>

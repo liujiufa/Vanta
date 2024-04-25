@@ -542,17 +542,17 @@ export default function Rank() {
                           </div>
                           <div>
                             {t("307")}{" "}
-                            <span>{decimalNum(item?.pledgeNum ?? 0, 2)}</span>
+                            <span>{decimalNum(item?.pledgeNum ?? 0, 6)}</span>
                           </div>
                           <div>
                             {t("308")}
                             <span>
-                              {decimalNum(item?.pledgeAmount ?? 0, 2)}
+                              {decimalNum(item?.pledgeAmount ?? 0, 6)}
                             </span>
                           </div>
                           <div>
                             {t("309")}
-                            <span>{decimalNum(item?.coinPrice ?? 0, 2)}</span>
+                            <span>{decimalNum(item?.coinPrice ?? 0, 6)}</span>
                           </div>
                           <div>
                             {t("310")}
@@ -621,7 +621,7 @@ export default function Rank() {
                           </div>
                           <div>
                             {t("327")}
-                            <span>{decimalNum(item?.amount ?? 0, 2)}</span>
+                            <span>{decimalNum(item?.amount ?? 0, 6)}</span>
                           </div>
 
                           <div>

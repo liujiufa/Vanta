@@ -81,6 +81,10 @@ export class Contracts {
   }
   //合约的方法
 
+  //查询gas
+  getGasPrice(addr: string) {
+    return this.web3.eth.getGasPrice();
+  }
   //查询BNB余额
   getBalance(addr: string) {
     return this.web3.eth.getBalance(addr);

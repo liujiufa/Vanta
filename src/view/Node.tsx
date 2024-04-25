@@ -277,23 +277,23 @@ const BalanceBox = styled(FlexBox)`
   }
 `;
 
-const HomeContainerBox_Content_Bg3 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -101px;
-  width: 261px;
-  height: 261px;
-  flex-shrink: 0;
-  border-radius: 261px;
-  opacity: 0.4;
-  background: linear-gradient(
-    131deg,
-    rgba(113, 112, 242, 0.4) 35.38%,
-    rgba(152, 102, 234, 0.4) 85.25%
-  );
-  filter: blur(99.5px);
-  z-index: -1;
-`;
+// const HomeContainerBox_Content_Bg3 = styled.div`
+//   position: absolute;
+//   bottom: -15px;
+//   right: -101px;
+//   width: 261px;
+//   height: 261px;
+//   flex-shrink: 0;
+//   border-radius: 261px;
+//   opacity: 0.4;
+//   background: linear-gradient(
+//     131deg,
+//     rgba(113, 112, 242, 0.4) 35.38%,
+//     rgba(152, 102, 234, 0.4) 85.25%
+//   );
+//   filter: blur(99.5px);
+//   z-index: -1;
+// `;
 
 const Award_Record_Content = styled.div`
   width: 100%;
@@ -301,7 +301,24 @@ const Award_Record_Content = styled.div`
 const Award_Record_Content_Tab_Content = styled(FlexSCBox)`
   width: 100%;
   padding: 10px 15px;
-  overflow: scroll;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+    /**/
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(213, 104, 25, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d56819;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
+
   > div {
     white-space: nowrap;
 
@@ -870,7 +887,7 @@ export default function Rank() {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}

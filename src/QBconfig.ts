@@ -10,6 +10,16 @@ export const QBConfig = {
     authKey: "ak_L3Swpr7QfYKAkjp",
     authSecret: "as_ZJEdLrZhHwwfT2Y",
     sessionToken: "",
+    // appId: 103068,
+    // accountKey: "ack_-ack_fWSNHVxTshsJcXYB4pjZ",
+    // authKey: "ak_dzz83qUkYdAUhXg",
+    // authSecret: "as_PNOw2gLdtavZggB",
+    // sessionToken: "",
+    // appId: 103174,
+    // accountKey: "ack_-ack_DTLiyKehjzJecpYyAGXd",
+    // authKey: "ak_vRpxG4kpbRgN237",
+    // authSecret: "as_XYYNLKcZ2jzJsvb",
+    // sessionToken: "",
   },
   configAIApi: {
     AIAnswerAssistWidgetConfig: {

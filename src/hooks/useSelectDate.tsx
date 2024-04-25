@@ -88,7 +88,11 @@ export function useSelectDate() {
   const DatePickerComponent = () => (
     <>
       <InputContainer>
-        <input type="text" readOnly={true} value={DateString.toDateString()} />{" "}
+        <input
+          type="text"
+          readOnly={true}
+          value={DateString.toLocaleDateString()}
+        />{" "}
         <MyCalendarIcon onClick={() => setVisible(true)} />
       </InputContainer>
       <MyDatePicker
@@ -99,7 +103,7 @@ export function useSelectDate() {
         max={now}
         precision={Precision}
         onConfirm={(val) => {
-          Toast.show(val.toDateString());
+          Toast.show(val.toLocaleDateString());
           setDateString(val);
           setVisible(false); // 如果需要在确认后关闭 DatePicker
         }}

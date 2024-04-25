@@ -2,8 +2,7 @@
 import React, { useState, useEffect, forwardRef } from "react";
 import { getExchangeRecord, userInfo } from "../API/index";
 import "../assets/style/Home.scss";
-import NoData from "../components/NoData";
-import Table from "../components/Table";
+import "../App.scss";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
@@ -14,32 +13,30 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ContainerBox } from "../components/FlexBox";
 import { contractAddress } from "../config";
 import { throttle } from "lodash";
+
 // @ts-ignore
 import * as QB from "quickblox/quickblox";
 import {
-  QuickBloxUIKitProvider,
-  qbDataContext,
   QuickBloxUIKitDesktopLayout,
   LoginData,
   AuthorizationData,
   QBDataContextType,
   useQbUIKitDataContext,
+  DefaultTheme,
 } from "quickblox-react-ui-kit";
 
 import { QBConfig } from "../QBconfig";
 import {
-  prepareSDK,
-  createUserAction,
-  logout,
   createUserSession,
   connectToChatServer,
   UserCreationStatus,
   UserData,
 } from "../QBHeplers";
 import { Btn } from "./NFT";
-import { startWord } from "../utils/tool";
+import { addMessage, startWord } from "../utils/tool";
 import PageLoding from "../components/PageLoding";
 import UserPageLoding from "../components/UserPageLoding";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
   padding: 0px;
@@ -65,12 +62,41 @@ const LoginBtn = styled(Btn)`
   width: 100%;
 `;
 
+//DefaultTheme implements UiKitTheme
+class CustomTheme extends DefaultTheme {
+  divider = (): string => "var(--divider)";
+  mainText = (): string => "#FFFFFF";
+  fontFamily = (): string => "Roboto";
+  chatInput = (): string => "var(--chat-input)";
+  /*
+The DefaultTheme contains other theme methods :
+caption = (): string => 'var(--caption)';
+disabledElements = (): string => 'var(--disabled-elements)';
+dropdownBackground = (): string => 'var(--dropdown-background)';
+error = (): string => 'var(--error)';
+fieldBorder = (): string => 'var(--field-border)';
+hightlight = (): string => 'var(--hightlight)';
+incomingBackground = (): string => 'var(--incoming-background)';
+inputElements = (): string => 'var(--input-elements)';
+mainBackground = (): string => 'var(--main-background)';
+mainElements = (): string => 'var(--main-elements)';
+outgoingBackground = (): string => 'var(--outgoing-background)';
+secondaryBackground = (): string => 'var(--secondary-background)';
+secondaryElements = (): string => 'var(--secondary-elements)';
+secondaryText = (): string => 'var(--secondary-text)';
+*/
+}
+
 export default function Rank() {
   const { t, i18n } = useTranslation();
-  const { account } = useWeb3React();
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   const state = useSelector<stateType, stateType>((state) => state);
   const qbToken = useSelector<stateType, stateType>((state) => state?.qbToken);
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("mydark");
 
   const qbUIKitContext: QBDataContextType = useQbUIKitDataContext();
 
@@ -87,6 +113,8 @@ export default function Rank() {
 
   const pathname = startWord(location.pathname);
 
+  console.log(qbToken, web3ModalAccount, "qbToken");
+  const Navigate = useNavigate();
   const getInitData = () => {
     // getExchangeRecord().then((res: any) => {
     //   if (res.code === 200) {
@@ -95,9 +123,15 @@ export default function Rank() {
     // });
   };
 
+  // var params = {
+  //   login: web3ModalAccount,
+  //   password: qbToken,
+  //   nameTheme: theme,
+  // };
   var params = {
-    login: "liujiufa12",
-    password: "liujiufa",
+    login: String(web3ModalAccount).toLowerCase(),
+    password: qbToken,
+    web3ModalAccount,
     nameTheme: theme,
   };
 
@@ -135,8 +169,6 @@ export default function Rank() {
     qbUIKitContext.release();
     setCurrentUser({ login: "", password: "" });
     setUserAuthorized(false);
-    document.documentElement.setAttribute("data-theme", "dark");
-    navigate("/sign-in");
   };
 
   const loginAction = async (loginData: LoginData): Promise<void> => {
@@ -254,12 +286,15 @@ export default function Rank() {
   }, [isSDKInitialized]);
 
   useEffect(() => {
-    if (String(pathname) === "/CHAT") {
+    if (!!qbToken && !!web3ModalAccount) {
       console.log("12");
 
       loginHandler(params);
+    } else {
+      addMessage("请重新登录账号");
+      return Navigate("/View/");
     }
-  }, [pathname]);
+  }, [qbToken]);
 
   const CustomLink = forwardRef((props: any, ref: any) => (
     <QuickBloxUIKitDesktopLayout
@@ -268,6 +303,7 @@ export default function Rank() {
         enabled: true,
         default: false,
       }}
+      theme={new CustomTheme()}
     />
   ));
 

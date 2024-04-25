@@ -1,0 +1,45 @@
+.parent {
+  display: flex;
+  height: 14px;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.parent::-webkit-scrollbar {
+  display: none;
+}
+
+/*设置的子盒子高度大于父盒子，产生溢出效果*/
+.child {
+  display: inline-block;
+  height: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  .recordItem {
+    margin-right: 14px;
+  }
+}
+
+.child > span {
+  height: 14px;
+  margin: 2px 0;
+  white-space: nowrap;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  // line-height: 15px;
+  /* identical to box height */
+  text-align: center;
+  color: #000000;
+}
+
+.mesage-text {
+  position: absolute;
+  margin-left: 10px;
+  height: 14px;
+  line-height: 14px;
+}

@@ -41,6 +41,7 @@ import { HelpIcon, menuIcon2 } from "../assets/image/homeBox";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { GameTooltip } from "./Home";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -324,9 +325,27 @@ export default function Rank() {
             {NodeBaseInfo?.price ?? 0} <span>USDT</span>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
-            <HelpIcon />
-            {t("12")}
+            <Tooltip
+              title={
+                <GameTooltip>
+                  <div>{t("386")}</div>
+                  <div>{t("415", { num1: "2-20", num2: 1000 })}</div>
+                  <div>{t("415", { num1: "21-40", num2: 800 })}</div>
+                  <div>{t("415", { num1: "41-60", num2: 600 })}</div>
+                  <div>{t("415", { num1: "61-80", num2: 400 })}</div>
+                  <div>{t("415", { num1: "81-100", num2: 200 })}</div>
+                </GameTooltip>
+              }
+              autoAdjustOverflow
+              showArrow={false}
+            >
+              <FlexCCBox>
+                <HelpIcon />
+                {t("12")}
+              </FlexCCBox>
+            </Tooltip>
           </NodeInfo_Mid_Rule>
+
           <NodeInfo_Mid_Conditions>
             {t("179")}
             <div>
@@ -341,7 +360,7 @@ export default function Rank() {
                 src={!!NodeBaseInfo?.isCommunityNftNum ? yesIcon : errorIcon}
                 alt=""
               />
-              {t("181")}
+              {t("181", { num: NodeBaseInfo?.nftCommunityNum ?? 0 })}
             </div>
           </NodeInfo_Mid_Conditions>
         </NodeInfo_Mid>

@@ -32,10 +32,10 @@ const projectId = "fe691b69eaaaa849adc2e81d65c4a9d1";
 
 // 3. Create a metadata object
 const metadata = {
-  name: "My Website",
+  name: "Vanta",
   description: "My Website description",
-  url: "http://yhhyn.com", // origin must match your domain & subdomain
-  icons: ["http://yhhyn.com/"],
+  url: "https://yhhyn.com", // origin must match your domain & subdomain
+  icons: ["http://yhhyn.com/vtb.png"],
 };
 
 // 4. Create Ethers config
@@ -53,6 +53,7 @@ const ethersConfig = defaultConfig({
 
 // 5. Create a Web3Modal instance
 createWeb3Modal({
+  allWallets: "SHOW",
   ethersConfig,
   chains: [mainnet[ChainId?.BSC]],
   projectId,

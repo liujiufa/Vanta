@@ -212,23 +212,23 @@ const BalanceBox = styled(FlexBox)`
   }
 `;
 
-const HomeContainerBox_Content_Bg3 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -101px;
-  width: 261px;
-  height: 261px;
-  flex-shrink: 0;
-  border-radius: 261px;
-  opacity: 0.4;
-  background: linear-gradient(
-    131deg,
-    rgba(113, 112, 242, 0.4) 35.38%,
-    rgba(152, 102, 234, 0.4) 85.25%
-  );
-  filter: blur(99.5px);
-  z-index: -1;
-`;
+// const HomeContainerBox_Content_Bg3 = styled.div`
+//   position: absolute;
+//   bottom: -15px;
+//   right: -101px;
+//   width: 261px;
+//   height: 261px;
+//   flex-shrink: 0;
+//   border-radius: 261px;
+//   opacity: 0.4;
+//   background: linear-gradient(
+//     131deg,
+//     rgba(113, 112, 242, 0.4) 35.38%,
+//     rgba(152, 102, 234, 0.4) 85.25%
+//   );
+//   filter: blur(99.5px);
+//   z-index: -1;
+// `;
 
 const NodeInfo_Top_Item = styled(FlexSBCBox)`
   width: 100%;
@@ -310,21 +310,26 @@ const InputContainer = styled.div`
 const InputBox = styled(FlexSBCBox)`
   width: 100%;
   border-radius: 8px;
-  background: #ffffff;
 
   box-sizing: content-box;
-  border: 1px solid rgba(213, 104, 25, 0.2);
+  /* border: 1px solid rgba(213, 104, 25, 0.2); */
   margin: 5px 0px;
   > div {
     height: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    &:first-child {
-      flex: 1;
-      box-sizing: content-box;
+    border-radius: 8px;
 
-      padding: 9px 13px;
+    &:first-child {
+      height: 100%;
+      width: 20%;
+
+      padding: 10px 9px;
+      background: rgba(213, 104, 25, 0.2);
+
+      box-sizing: border-box;
+      border: 1px solid rgba(213, 104, 25, 0.2);
       font-family: PingFang SC;
       font-size: 12px;
       font-weight: normal;
@@ -333,26 +338,22 @@ const InputBox = styled(FlexSBCBox)`
       letter-spacing: 0em;
 
       font-variation-settings: "opsz" auto;
-      color: #999999;
-      > input {
-        width: 100%;
-        border: none;
-        background: transparent;
-        font-family: PingFang SC;
-        font-size: 12px;
-        font-weight: normal;
-        line-height: normal;
-        text-transform: capitalize;
-        letter-spacing: 0em;
-
-        font-variation-settings: "opsz" auto;
-        color: rgba(51, 51, 51, 0.8);
-      }
+      color: #d56819;
     }
+    &:nth-child(2) {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      color: #d56819;
+      background: #fff;
+      padding: 10px 9px;
+      flex: 1;
+      margin: 0px 20px;
+    }
+
     &:last-child {
-      border-radius: 0px 8px 8px 0px;
       height: 100%;
-      width: fit-content;
+      width: 20%;
 
       padding: 10px 9px;
       background: rgba(213, 104, 25, 0.2);
@@ -484,6 +485,8 @@ const Goto = styled(FlexECBox)`
   color: #d56819;
 `;
 
+const InputContainer_Title = styled.div``;
+
 export default function Rank() {
   const { t, i18n } = useTranslation();
   const { account } = useWeb3React();
@@ -503,7 +506,8 @@ export default function Rank() {
   const { getReward } = useGetReward();
   const [Balance, setBalance] = useState<any>("");
   const [InputValueAmount, setInputValueAmount] = useState<any>(
-    GamePoolInfo?.gameJoinNum ?? 0
+    // GamePoolInfo?.gameJoinNum ?? 0
+    1
   );
   const [ActivationModal, setActivationModal] = useState(false);
   const {
@@ -525,7 +529,7 @@ export default function Rank() {
     getGamePoolInfo().then((res: any) => {
       if (res.code === 200) {
         setGamePoolInfo(res?.data);
-        setInputValueAmount(res?.data?.gameJoinNum);
+        // setInputValueAmount(res?.data?.gameJoinNum);
       }
     });
   };
@@ -533,7 +537,8 @@ export default function Rank() {
   const joinInGameFun = (value: string) => {
     if (!token) return;
     if (Number(value) <= 0) return;
-    handleTransaction(value, async (call: any) => {
+    if (Number(value) > 100) return addMessage(t("425"));
+    handleTransaction(Number(value) * 2 + "", async (call: any) => {
       let res: any;
       try {
         showLoding(true);
@@ -563,6 +568,12 @@ export default function Rank() {
   const InputValueFun = async (e: any) => {
     let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
     setInputValueAmount(value);
+  };
+  const manageFun = async (num: number) => {
+    let value = Number(InputValueAmount) + Number(num);
+    if (Number(value) > 0) {
+      setInputValueAmount(value);
+    }
   };
 
   // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
@@ -650,26 +661,47 @@ export default function Rank() {
           </ModalContainer_Title_Container_Participate>
           <NodeInfo_Top_LotteryGame_Info>
             <InputContainer>
-              {t("273")}
+              <InputContainer_Title>{t("416")}</InputContainer_Title>
+
               <InputBox>
+                <div
+                  onClick={() => {
+                    manageFun(-1);
+                  }}
+                >
+                  -
+                </div>
                 <div>
-                  <input
+                  {/* <input
                     type=""
                     value={InputValueAmount}
                     readOnly={true}
                     // onChange={InputValueFun}
-                  />{" "}
-                  VTB
+                  />{" "} */}
+                  <FlexCCBox style={{ width: "100%" }}>
+                    {InputValueAmount ?? 1}
+                  </FlexCCBox>
+                  {t("419")}
                 </div>{" "}
                 <div
                   onClick={() => {
-                    joinInGameFun(String(InputValueAmount));
+                    manageFun(+1);
                   }}
                 >
-                  {t("274")}
+                  +
                 </div>
               </InputBox>
-              <BalanceBox_InputContainer>
+              <InputContainer_Title style={{ margin: "12px 0px" }}>
+                {t("417", { num: Number(InputValueAmount) * 2 })}
+              </InputContainer_Title>
+              <Btn
+                onClick={() => {
+                  joinInGameFun(String(InputValueAmount));
+                }}
+              >
+                {t("418")}
+              </Btn>
+              <BalanceBox_InputContainer style={{ margin: "5px 0px" }}>
                 {t("50")}{" "}
                 <div>
                   {TOKENBalance} <span>VTB</span>
@@ -757,7 +789,7 @@ export default function Rank() {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}

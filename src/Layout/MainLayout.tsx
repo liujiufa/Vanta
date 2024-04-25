@@ -1,11 +1,8 @@
-// @ts-nocheck
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Layout } from "antd";
 import type { MenuProps } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-// import { useConnectWallet, injected, ChainId } from "../web3";
 import {
   AddrHandle,
   addMessage,
@@ -14,7 +11,7 @@ import {
   NumSplic,
   getFullNum,
   startWord,
-  NumSplic1,
+  generateRandomString,
 } from "../utils/tool";
 import { Login, getUserInfo, isRefereeAddress } from "../API/index";
 import { useWeb3React } from "@web3-react/core";
@@ -67,6 +64,7 @@ import {
 } from "@web3modal/ethers/react";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import TruncateMarkup from "react-truncate-markup";
+import { useNoGas } from "../hooks/useNoGas";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -339,6 +337,11 @@ export const ModalContainer_Title_Container = styled(FlexBox)`
     height: 30px;
     margin-right: 10px;
   }
+  > svg {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
 `;
 
 export const ModalContainer_Title = styled(FlexCCBox)`
@@ -403,26 +406,6 @@ const UpBtn = styled(BuyBtn)`
   /* margin-top: 27px; */
 `;
 
-const HomeContainerBox_Content_Bg3 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -101px;
-  width: 261px;
-  height: 261px;
-  flex-shrink: 0;
-  border-radius: 261px;
-  opacity: 0.4;
-  background: linear-gradient(
-    131deg,
-    rgba(113, 112, 242, 0.4) 35.38%,
-    rgba(152, 102, 234, 0.4) 85.25%
-  );
-  filter: blur(99.5px);
-  z-index: -1;
-  z-index: -1;
-  z-index: -1;
-`;
-
 const WalletItem = styled(FlexCCBox)`
   width: 100%;
   padding: 12px;
@@ -472,7 +455,6 @@ const MainLayout: any = () => {
 
   let dispatch = useDispatch();
   let token = useSelector<any>((state) => state.token);
-  let address = useSelector<any>((state) => state.address);
   let { t, i18n } = useTranslation();
   let [ItemActive, setItemActive] = useState("/");
   const [InputValue, setInputValue] = useState<any>("");
@@ -484,7 +466,7 @@ const MainLayout: any = () => {
   const [BindModal, setBindModal] = useState(false);
   const [SelectWallet, setSelectWallet] = useState(false);
   const { signFun } = useSign();
-
+  const { isNoGasFun } = useNoGas();
   const { open } = useWeb3Modal();
   const { walletProvider } = useWeb3ModalProvider();
   const {
@@ -513,7 +495,9 @@ const MainLayout: any = () => {
   const initalToken = localStorage.getItem(
     (web3ModalAccount as string)?.toLowerCase()
   );
-  const initalQBToken = localStorage.getItem("qbToken");
+  const initalQBToken = localStorage.getItem(
+    (web3ModalAccount as string)?.toLowerCase() + "1"
+  );
 
   const langArr = [
     { key: "en", label: "English" },
@@ -582,7 +566,13 @@ const MainLayout: any = () => {
 
   // 导航
   const navigateFun = (path: string) => {
-    Navigate("/View" + path);
+    if (path === "CHAT") {
+      if (!web3ModalAccount) return addMessage(t("Please link wallet"));
+      if (!initalQBToken) return addMessage(t("426"));
+      return Navigate("/View" + path);
+    } else {
+      Navigate("/View" + path);
+    }
   };
 
   function menuActive(path: string) {
@@ -608,7 +598,7 @@ const MainLayout: any = () => {
   }
 
   const LoginFun = useCallback(async () => {
-    console.log(web3ModalAccount, "web3ModalAccount");
+    console.log(web3ModalAccount, generateRandomString(8), "web3ModalAccount");
 
     if (web3ModalAccount) {
       let tag = await web3.utils.isAddress(window.location.pathname.slice(1));
@@ -623,6 +613,7 @@ const MainLayout: any = () => {
           ...res,
           userAddress: web3ModalAccount as string,
           refereeUserAddress,
+          loginImAddress: generateRandomString(8),
         }).then((res: any) => {
           if (res.code === 200) {
             showLoding(false);
@@ -630,15 +621,27 @@ const MainLayout: any = () => {
               createLoginSuccessAction(
                 web3ModalAccount as string,
                 res.data.token,
-                res.data.qbToken
+                res.data.password
               )
             );
+            Contracts.example
+              .isBind(web3ModalAccount as string, "Referrer")
+              .then((res: any) => {
+                if (!!res) {
+                  setBindModal(false);
+                } else {
+                  setBindModal(true);
+                }
+              });
 
             localStorage.setItem(
               (web3ModalAccount as string)?.toLowerCase(),
               res.data.token
             );
-            localStorage.setItem("qbToken", res.data.qbToken);
+            localStorage.setItem(
+              (web3ModalAccount as string)?.toLowerCase() + "1",
+              res.data.password
+            );
             setSelectWallet(false);
           } else {
             showLoding(false);
@@ -649,7 +652,7 @@ const MainLayout: any = () => {
     } else {
       addMessage("Please link wallet");
     }
-  }, [web3ModalAccount, refereeUserAddress, connectWallet]);
+  }, [web3ModalAccount, refereeUserAddress]);
 
   const BindFun = useCallback(async () => {
     if (web3ModalAccount) {
@@ -660,13 +663,13 @@ const MainLayout: any = () => {
       let isSuccessBind: any;
       try {
         showLoding(true);
-        console.log("isSuccessBind", "isSuccessBind");
+        if (!!(await isNoGasFun())) return;
         isSuccessBind = await Contracts.example?.bind(
           web3ModalAccount as string,
           InputValue as string
         );
       } catch (error: any) {
-        addMessage(t("222"));
+        // return addMessage(t("222"));
       }
       showLoding(false);
       if (!!isSuccessBind?.status) {
@@ -678,18 +681,7 @@ const MainLayout: any = () => {
     } else {
       addMessage("Please link wallet");
     }
-  }, [web3ModalAccount, InputValue, connectWallet]);
-
-  const ConnectWalletFun = async (type: number) => {
-    if (type === 1) {
-      connectWallet && connectWallet(connector);
-    } else if (type === 2) {
-      // connectWallet && connectWallet(walletConnectConnector);
-      setSelectWallet(false);
-      // await open();
-      await open();
-    }
-  };
+  }, [web3ModalAccount, InputValue]);
 
   const ReturnObj = {
     Robot: "4",
@@ -718,6 +710,8 @@ const MainLayout: any = () => {
     SubscriptionNode: "373",
     SubscriptionNFT: "374",
     CHAT: "3",
+    Notice: "427",
+    NoticeDetail: "428",
   };
 
   const ReturnBox = (name: any) => {
@@ -737,7 +731,7 @@ const MainLayout: any = () => {
       return (
         <ReturnContainer
           onClick={() => {
-            if (String(name) === "/CHAT") {
+            if (String(name) === "CHAT") {
               Navigate("/View/");
             } else {
               Navigate(-1);
@@ -775,24 +769,20 @@ const MainLayout: any = () => {
     // setSelectWallet(true);
 
     // setBindModal(false);
-    if (!!token) {
-      console.log(222);
-      return await Contracts.example
-        .isBind(web3ModalAccount as string, "Referrer")
-        .then((res: any) => {
-          if (res) {
-            setBindModal(false);
-          } else {
-            setBindModal(true);
-          }
-        });
-    } else if (initalToken) {
-      return setSelectWallet(false);
-    } else {
-      console.log(333);
-
-      // setSelectWallet(true);
-    }
+    // if (!!token) {
+    //   console.log(222);
+    if (!web3ModalAccount) return;
+    new Contracts(walletProvider);
+    return Contracts.example
+      .isBind(web3ModalAccount as string, "Referrer")
+      .then((res: any) => {
+        if (!!res) {
+          setBindModal(false);
+        } else {
+          setBindModal(true);
+        }
+      });
+    // }
   };
 
   const preLoginFun = async () => {
@@ -802,10 +792,9 @@ const MainLayout: any = () => {
 
   useEffect(() => {
     allModalFun();
-  }, [web3ModalAccount, token, initalToken, BindModal]);
+  }, [web3ModalAccount, selectedNetworkId, token, initalToken, BindModal]);
 
   useEffect(() => {
-    console.log(pathname, location.pathname, "pathname");
     if (!!pathname) {
       setItemActive(pathname ?? "/");
     }
@@ -826,18 +815,18 @@ const MainLayout: any = () => {
         createLoginSuccessAction(
           web3ModalAccount as string,
           initalToken,
-          initalQBToken
+          initalQBToken as string
         )
       );
     }
-  }, [initalToken]);
+  }, [initalToken, initalQBToken]);
 
   useEffect(() => {
     if (!!web3ModalAccount) {
       new Contracts(walletProvider);
       preLoginFun();
     }
-  }, [web3ModalAccount, openState]);
+  }, [web3ModalAccount, selectedNetworkId]);
 
   return (
     <MyLayout>
@@ -902,12 +891,18 @@ const MainLayout: any = () => {
           </SetBox>
         </div>
       </HeaderContainer>
-      <Content className="MainContent" style={{ position: "relative" }}>
+      <Content
+        className={
+          String(ItemActive) !== "/CHAT" ? "MainContent" : "CHATMainContent"
+        }
+        style={{ position: "relative" }}
+      >
         <Outlet />
         {/* {!collapsed && <div className="Mask"></div>}setBindModal */}
       </Content>
 
-      {(ItemActive === "/" ||
+      {(location.pathname === "/" ||
+        ItemActive === "/" ||
         ItemActive === "/PLEDGE" ||
         ItemActive === "/NFT") && (
         <FooterContainer
@@ -981,12 +976,12 @@ const MainLayout: any = () => {
         width={"345px"}
         closable={false}
         footer={null}
-        onCancel={() => {
-          setBindModal(false);
-        }}
+        // onCancel={() => {
+        //   setBindModal(false);
+        // }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}
@@ -994,12 +989,12 @@ const MainLayout: any = () => {
               src={closeIcon}
               alt=""
               onClick={() => {
-                setBindModal(false);
+                // setBindModal(false);
               }}
             />
           </ModalContainer_Close>
           <ModalContainer_Title_Container>
-            <img src={logo} alt="" />
+            <Logo />
             <ModalContainer_Title>{t("225")}</ModalContainer_Title>
           </ModalContainer_Title_Container>
           <ModalContainer_Content>
@@ -1032,7 +1027,7 @@ const MainLayout: any = () => {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}
@@ -1047,7 +1042,7 @@ const MainLayout: any = () => {
           <ModalContainer_Content>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(1);
+                // ConnectWalletFun(1);
               }}
             >
               <MetaMaskIcon />
@@ -1055,7 +1050,7 @@ const MainLayout: any = () => {
             </WalletItem>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(2);
+                // ConnectWalletFun(2);
               }}
             >
               <OkxIcon />
@@ -1063,7 +1058,7 @@ const MainLayout: any = () => {
             </WalletItem>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(2);
+                // ConnectWalletFun(2);
               }}
             >
               <BgIcon />
@@ -1071,7 +1066,7 @@ const MainLayout: any = () => {
             </WalletItem>
             <WalletItem
               onClick={() => {
-                ConnectWalletFun(2);
+                // ConnectWalletFun(2);
               }}
             >
               <TpIcon />

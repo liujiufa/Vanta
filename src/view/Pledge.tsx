@@ -775,9 +775,11 @@ export default function Rank() {
     if (Number(PledgeUserInfo?.lastPledgeNum) > Number(value))
       return addMessage(t("369", { num: PledgeUserInfo?.lastPledgeNum }));
     if (
-      Number(value) * Number(Price) +
-        Number(PledgeUserInfo?.totalPledgeAmount) >
-      Number(PledgeUserInfo?.robotAmount)
+      Number(value) * Number(Price) >
+      Number(PledgeUserInfo?.maxBuyRobotAmount)
+      // Number(value) * Number(Price) +
+      //   Number(PledgeUserInfo?.totalPledgeAmount) >
+      // Number(PledgeUserInfo?.robotAmount)
     )
       return addMessage(t("24"));
 
@@ -1012,8 +1014,16 @@ export default function Rank() {
                 </BalanceBox_InputContainer>
 
                 <NodeInfo_Mid_Rule_Robot>
-                  <HelpIcon />
-                  {t("51")}
+                  <Tooltip
+                    title={t("387")}
+                    autoAdjustOverflow
+                    showArrow={false}
+                  >
+                    <FlexCCBox>
+                      <HelpIcon />
+                      {t("51")}
+                    </FlexCCBox>
+                  </Tooltip>
                 </NodeInfo_Mid_Rule_Robot>
               </InputContainer_Bottom>
             </InputContainer>

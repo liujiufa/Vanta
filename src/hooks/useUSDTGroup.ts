@@ -5,6 +5,7 @@ import { addMessage, showLoding, decimalNum } from "../utils/tool";
 import { t } from "i18next";
 import { Contracts } from "../web3";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { useNoGas } from "./useNoGas";
 
 type AddressType = string;
 type CoinAddressType = string;
@@ -23,7 +24,7 @@ export default function useUSDTGroup(
   const [TOKENBalance, setTOKENBalance] = useState("0");
   const [TOKENAllowance, setTOKENAllowance] = useState("0");
   const [symbol, setSymbol] = useState("");
-
+  const { isNoGasFun } = useNoGas();
   /**
    *  TOKENBalance 余额
    */
@@ -46,6 +47,7 @@ export default function useUSDTGroup(
       if (web3ModalAccount) {
         showLoding(true);
         try {
+          if (!!(await isNoGasFun())) return;
           const res = await Contracts.example?.approve(
             web3ModalAccount,
             contractAddress,
@@ -117,7 +119,15 @@ export default function useUSDTGroup(
           await handleApprove(price, transactionCallBack);
         }
       } else {
-        addMessage(`${symbol} ${t("Insufficient balance")}`);
+        addMessage(
+          `${
+            String(symbol) === "MBK"
+              ? "VTB"
+              : String(symbol) === "MBK_USDT"
+              ? "VTB_USDT"
+              : symbol
+          } ${t("Insufficient balance")}`
+        );
       }
     },
     [

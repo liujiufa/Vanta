@@ -41,6 +41,8 @@ const InitialSubscriptionRewards = React.lazy(
   () => import("../view/InitialSubscriptionRewards")
 );
 const CHAT = React.lazy(() => import("../view/CHAT"));
+const Notice = React.lazy(() => import("../view/Notice"));
+const NoticeDetail = React.lazy(() => import("../view/NoticeDetail"));
 export default function Router() {
   return (
     <Suspense fallback={<DataPageLoding></DataPageLoding>}>
@@ -97,6 +99,8 @@ export default function Router() {
               element={<InitialSubscriptionRewards />}
             ></Route>
             <Route path="CHAT" element={<CHAT />}></Route>
+            <Route path="Notice" element={<Notice />}></Route>
+            <Route path="NoticeDetail" element={<NoticeDetail />}></Route>
           </Route>
           <Route path="" element={<Home />}></Route>
         </Route>

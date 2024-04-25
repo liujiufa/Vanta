@@ -497,8 +497,10 @@ export default function Rank() {
             </div>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
-            <img src={helpIcon} alt="" />
-            {t("12")}
+            <Tooltip title={t("382")} autoAdjustOverflow showArrow={false}>
+              <img src={helpIcon} alt="" />
+              {t("12")}
+            </Tooltip>
           </NodeInfo_Mid_Rule>
           <NodeInfo_Mid_Item_First>
             {t("91")}
@@ -556,7 +558,7 @@ export default function Rank() {
         }}
       >
         <ModalContainer>
-          <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3>
+          {/* <HomeContainerBox_Content_Bg3></HomeContainerBox_Content_Bg3> */}
 
           <ModalContainer_Close>
             {" "}
