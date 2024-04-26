@@ -478,3 +478,9 @@ export function getNoticeInfo(id: any) {
     method: "get",
   });
 }
+export function rule() {
+  return axois.request({
+    url: `/game/rule`,
+    method: "get",
+  });
+}

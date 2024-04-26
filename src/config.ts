@@ -17,7 +17,7 @@ export const isMain = false;
 // export let baseUrl: string = isMain ? 'http://120.79.67.226:16088/' : 'http://192.168.2.114:16088/';
 export let baseUrl: string = isMain
   ? "http://47.76.173.162:18888/"
-  : // : "http://192.168.1.37:18888/";
+  : // : "http://172.20.10.2:18888/";
     "https://yhhyn.com/" + "api";
 // export let baseUrl: string = isMain ? window.location.origin + '/user/' : 'http://120.79.67.226:13777/';
 export let ContractUrl: string = isMain

@@ -438,6 +438,7 @@ const BtnBox = styled(FlexSBCBox)`
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     flex: 1;
     font-family: PingFang SC;
     font-size: 14px;
@@ -1302,10 +1303,19 @@ export default function Rank() {
               <NodeInfo_Bottom_Item>
                 {t("127")}
                 <span>
-                  {dateFormat(
-                    "YYYY-mm-dd HH:MM:SS",
-                    new Date(FirstRoundAccountInfo?.unlockEndTime)
-                  )}
+                  {FirstRoundAccountInfo?.unlockEndTime
+                    ? dateFormat(
+                        "YYYY-mm-dd HH:MM:SS",
+                        new Date(FirstRoundAccountInfo?.unlockEndTime)
+                      )
+                    : "----/--/--"}
+                </span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("439")}
+                <span>
+                  {FirstRoundAccountInfo?.communityAddPerformanceForward ?? 0}{" "}
+                  VTB
                 </span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
@@ -1313,6 +1323,10 @@ export default function Rank() {
                 <span>
                   {FirstRoundAccountInfo?.communityAddPerformance ?? 0} VTB
                 </span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("440")}
+                <span>{FirstRoundAccountInfo?.multipleNum ?? 0}</span>
               </NodeInfo_Bottom_Item>
               <NodeInfo_Bottom_Item>
                 {t("129")}

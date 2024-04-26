@@ -431,6 +431,18 @@ export default function Rank() {
 
   const [ActivationModal, setActivationModal] = useState(false);
 
+  //   54-机器人-LP加权 55-机器人-平均分配 56-机器人-小区加权
+  // * 57-质押-LP加权 58-质押-平均分配 59-质押-小区加权
+  // * 60-swap-LP加权 61-swap-平均分配 62-swap-小区加权
+  // * 63-游戏-LP加权 64-游戏-平均分配 65-游戏-小区加权
+
+  // "432": "LP加权",
+  // "433": "平均分配",
+  // "434": "小区加权",
+  // "435": "机器人",
+  // "436": "质押",
+  // "437": "Swap",
+  // "438": "游戏",
   const subTabArr = {
     1: [
       { key: 0, name: "189" },
@@ -439,12 +451,28 @@ export default function Rank() {
       { key: 22, name: "192" },
       { key: 23, name: "314" },
     ],
-    // 2: [
-    //   { key: 0, name: "189" },
-    //   { key: 5, name: "Performance Star Award" },
-    //   { key: 6, name: "Directly promoted star award" },
-    //   { key: 7, name: "NFT team star" },
-    // ],
+  };
+
+  const typeObj = {
+    54: { 0: "432", 1: "435" },
+    55: { 0: "433", 1: "435" },
+    56: { 0: "434", 1: "435" },
+
+    57: { 0: "432", 1: "436" },
+    58: { 0: "433", 1: "436" },
+    59: { 0: "434", 1: "436" },
+
+    60: { 0: "432", 1: "437" },
+    61: { 0: "433", 1: "437" },
+    62: { 0: "434", 1: "437" },
+
+    63: { 0: "432", 1: "438" },
+    64: { 0: "433", 1: "438" },
+    65: { 0: "434", 1: "438" },
+
+    20: { 0: "-", 1: "-" },
+    21: { 0: "-", 1: "-" },
+    22: { 0: "-", 1: "-" },
   };
 
   const getInitData = (type: number) => {
@@ -561,13 +589,8 @@ export default function Rank() {
                         <div>
                           {t("193")}{" "}
                           <span>
-                            {t(
-                              subTabArr[ActiveTab]?.find(
-                                (item1: any) =>
-                                  Number(item1?.key) ===
-                                  Number(item?.businessType)
-                              )?.name
-                            )}
+                            {t(typeObj[item?.businessType]["0"] ?? "")}(
+                            {t(typeObj[item?.businessType]["1"] ?? "")})
                           </span>
                         </div>
                         <div>

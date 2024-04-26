@@ -40,6 +40,8 @@ export const FlexSBCBox = styled(FlexBox)`
 export const FlexCCBox = styled(FlexBox)`
   justify-content: center;
   align-items: center;
+  text-align: center;
+
 `;
 
 export const FlexSECBox = styled(FlexBox)`

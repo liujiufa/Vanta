@@ -6,6 +6,7 @@ import {
   getNoticeList,
   homePoolInfo,
   latestRecord,
+  rule,
   userInfo,
 } from "../API/index";
 import "../assets/style/Home.scss";
@@ -374,6 +375,7 @@ export default function Rank() {
   const [BannerList, setBannerList] = useState<any>([]);
   const [NoticeList, setNoticeList] = useState<any>([]);
   const [CoinPriceList, setCoinPriceList] = useState<any>([]);
+  const [Rule, setRule] = useState<any>([]);
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
@@ -428,6 +430,11 @@ export default function Rank() {
     latestRecord({}).then((res: any) => {
       if (res.code === 200) {
         setLatestRecord(res?.data);
+      }
+    });
+    rule().then((res: any) => {
+      if (res.code === 200) {
+        setRule(res?.data);
       }
     });
   };
@@ -582,7 +589,18 @@ export default function Rank() {
                 <div>{t("383")}</div>
                 <div>{t("380")}</div>
                 <div>{t("384")}</div>
-                <div>{t("385")}</div>
+                {Rule?.map((item: any, index: any) => (
+                  <div>
+                    {t("385", {
+                      num1: item?.minNum,
+                      num2: item?.maxNum,
+                      num3: item?.level1Count,
+                      num4: item?.level2Count,
+                      num5: item?.level3Count,
+                      num6: item?.level4Count,
+                    })}
+                  </div>
+                ))}
               </GameTooltip>
             }
             autoAdjustOverflow
@@ -637,7 +655,9 @@ export default function Rank() {
             {CoinPriceList?.map((item: any, index: any) => (
               <HotQuotes_Content_Item
                 onClick={() => {
-                  window.open(item?.quotesLink);
+                  if (!!item?.quotesLink) {
+                    window.open(item?.quotesLink);
+                  }
                 }}
               >
                 <img src={item?.icon} alt="" />
