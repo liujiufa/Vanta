@@ -635,7 +635,7 @@ export default function Rank() {
                           <span>
                             {dateFormat(
                               "YYYY-mm-dd HH:MM:SS",
-                              new Date(item?.createTime ?? 0)
+                              new Date(item?.sendTime ?? 0)
                             )}
                           </span>
                         </div>

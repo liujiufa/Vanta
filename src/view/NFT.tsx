@@ -1311,13 +1311,13 @@ export default function Rank() {
                     : "----/--/--"}
                 </span>
               </NodeInfo_Bottom_Item>
-              <NodeInfo_Bottom_Item>
+              {/* <NodeInfo_Bottom_Item>
                 {t("439")}
                 <span>
                   {FirstRoundAccountInfo?.communityAddPerformanceForward ?? 0}{" "}
                   VTB
                 </span>
-              </NodeInfo_Bottom_Item>
+              </NodeInfo_Bottom_Item> */}
               <NodeInfo_Bottom_Item>
                 {t("128")}
                 <span>

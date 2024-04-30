@@ -423,8 +423,10 @@ export default function Rank() {
   const activationFun = async (value: string) => {
     console.log("item");
     if (!token) return;
+    if (!CommunitySoldBase?.isSatisfy || !CommunitySoldBase?.CommunitySoldBase)
+      return;
     if (Number(value) <= 0) return;
-    handleTransaction(Number(value) + 50000 + "", async (call: any) => {
+    handleTransaction(Number(value) + "", async (call: any) => {
       let res: any;
       try {
         showLoding(true);
@@ -437,6 +439,9 @@ export default function Rank() {
             web3ModalAccount as string,
             item?.data
           );
+        } else {
+          showLoding(false);
+          return addMessage(item?.msg);
         }
       } catch (error: any) {
         showLoding(false);
@@ -532,14 +537,14 @@ export default function Rank() {
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            // if (
-            //   !!CommunitySoldBase?.isSatisfy &&
-            //   !!CommunitySoldBase?.CommunitySoldBase
-            // ) {
-            setActivationModal(true);
-            // } else {
-            //   return addMessage(t("220"));
-            // }
+            if (
+              !!CommunitySoldBase?.isSatisfy &&
+              !!CommunitySoldBase?.CommunitySoldBase
+            ) {
+              setActivationModal(true);
+            } else {
+              return addMessage(t("220"));
+            }
           }}
         >
           {t("152")}
@@ -586,10 +591,7 @@ export default function Rank() {
               onClick={() => {
                 // BindFun();
                 activationFun(
-                  decimalNum(
-                    Number(CommunitySoldBase?.currentPrice) / Number(Price),
-                    2
-                  ) + ""
+                  Number(CommunitySoldBase?.currentPrice) / Number(Price) + ""
                 );
               }}
             >

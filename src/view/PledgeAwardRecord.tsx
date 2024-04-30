@@ -533,7 +533,7 @@ export default function Rank() {
                           <span>
                             {dateFormat(
                               "YYYY-mm-dd HH:MM",
-                              new Date(item?.createTime)
+                              new Date(item?.pledgeTime)
                             )}
                           </span>
                         </div>
@@ -553,21 +553,21 @@ export default function Rank() {
                           {t("310")}
                           <span>{t("48", { num: item?.cycle ?? 0 })}</span>
                         </div>
-                        {!RecordList[0]?.isReinvest && Number(index) > 0 && (
-                          <div>
-                            {t("53")}
-                            <span>
-                              {" "}
-                              <MySwitch
-                                defaultChecked
-                                checked={!!item?.isReinvest}
-                                onChange={(item1: any) =>
-                                  onChange(item1, item?.id)
-                                }
-                              />
-                            </span>
-                          </div>
-                        )}
+                        {/* {Number(index) === 0 && ( */}
+                        <div>
+                          {t("53")}
+                          <span>
+                            {" "}
+                            <MySwitch
+                              defaultChecked
+                              checked={!!item?.isReinvest}
+                              onChange={(item1: any) =>
+                                onChange(item1, item?.id)
+                              }
+                            />
+                          </span>
+                        </div>
+                        {/* )} */}
                         <div>
                           {t("311")}
                           <span>

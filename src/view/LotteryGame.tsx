@@ -538,32 +538,35 @@ export default function Rank() {
     if (!token) return;
     if (Number(value) <= 0) return;
     if (Number(value) > 100) return addMessage(t("425"));
-    handleTransaction(Number(value) * 2 + "", async (call: any) => {
-      let res: any;
-      try {
-        showLoding(true);
+    handleTransaction(
+      Number(value) * Number(GamePoolInfo?.todayAddPoolAmount ?? 0) + "",
+      async (call: any) => {
+        let res: any;
+        try {
+          showLoding(true);
 
-        let item: any = await joinGame({ gameId: 0, num: value });
-        if (item?.code === 200 && item?.data) {
-          console.log(item?.data, "1212");
+          let item: any = await joinGame({ gameId: 0, num: value });
+          if (item?.code === 200 && item?.data) {
+            console.log(item?.data, "1212");
 
-          res = await Contracts.example?.participate(
-            web3ModalAccount as string,
-            item?.data
-          );
+            res = await Contracts.example?.participate(
+              web3ModalAccount as string,
+              item?.data
+            );
+          }
+        } catch (error: any) {
+          showLoding(false);
+          return addMessage(t("69"));
         }
-      } catch (error: any) {
         showLoding(false);
-        return addMessage(t("69"));
+        if (!!res?.status) {
+          call();
+          addMessage(t("70"));
+        } else {
+          addMessage(t("69"));
+        }
       }
-      showLoding(false);
-      if (!!res?.status) {
-        call();
-        addMessage(t("70"));
-      } else {
-        addMessage(t("69"));
-      }
-    });
+    );
   };
   const InputValueFun = async (e: any) => {
     let value = e.target.value.replace(/^[^1-9]+|[^0-9]/g, "");
@@ -597,16 +600,27 @@ export default function Rank() {
 
   useEffect(() => {
     if (token) {
-      // 获取当前日期和时间
       const now = new Date();
-      // 创建一个新的日期对象表示今天结束的时刻（即下一个午夜12点）
-      const endOfDay = new Date(
+      const targetHour = 20; // 设定为晚上8点
+
+      // 设定下一次开奖的日期和时间
+      let nextDraw = new Date(
         now.getFullYear(),
         now.getMonth(),
-        now.getDate() + 1
+        now.getDate(),
+        targetHour,
+        0,
+        0
       );
+
+      // 如果当前时间已经超过了今天的开奖时间，则目标时间设为明天的8点
+      if (now.getHours() >= targetHour) {
+        nextDraw.setDate(nextDraw.getDate() + 1);
+      }
       // 计算当前时间到今天结束的毫秒数
-      const millisecondsLeft = Number(endOfDay) - Number(now);
+      const millisecondsLeft = Number(nextDraw) - Number(now);
+      console.log();
+
       // 将毫秒数转换为秒数
       const secondsLeft = Math.floor(millisecondsLeft / 1000);
       setDiffTime(secondsLeft);
@@ -692,7 +706,20 @@ export default function Rank() {
                 </div>
               </InputBox>
               <InputContainer_Title style={{ margin: "12px 0px" }}>
-                {t("417", { num: Number(InputValueAmount) * 2 })}
+                {t("417", {
+                  num:
+                    Number(InputValueAmount) *
+                    Number(
+                      !!GamePoolInfo?.todayAddPoolAmount
+                        ? GamePoolInfo?.todayAddPoolAmount
+                        : 0
+                    ),
+                  num1: Number(
+                    !!GamePoolInfo?.todayAddPoolAmount
+                      ? GamePoolInfo?.todayAddPoolAmount
+                      : 0
+                  ),
+                })}
               </InputContainer_Title>
               <Btn
                 onClick={() => {

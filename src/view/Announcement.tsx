@@ -41,11 +41,34 @@ import { LodingMode } from "../components/loding";
 import { lodingModal } from "../assets/image/layoutBox";
 import { Button, DatePicker, Space, Toast } from "antd-mobile";
 import { useSelectDate } from "../hooks/useSelectDate";
-import {
-  Award_Record_Content_Record_Box,
-  Award_Record_Content_Title_Content,
-} from "./RankRecord";
+import { Award_Record_Content_Record_Box } from "./RankRecord";
 import PageLoding from "../components/PageLoding";
+const Award_Record_Content_Title_Content = styled(FlexSBCBox)`
+  padding: 10px 15px;
+  > div {
+    flex: 1;
+    text-align: center;
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    text-transform: capitalize;
+    letter-spacing: 0em;
+
+    font-variation-settings: "opsz" auto;
+    color: #ffffff;
+    &:first-child {
+      flex: auto;
+      width: 100%;
+      max-width: 25%;
+    }
+    &:last-child {
+      flex: auto;
+      width: 100%;
+      max-width: 20%;
+    }
+  }
+`;
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -139,22 +162,28 @@ const ModalContainer_Content = styled.div`
   }
 `;
 
-const HomeContainerBox_Content_Bg3 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -101px;
-  width: 261px;
-  height: 261px;
-  flex-shrink: 0;
-  border-radius: 261px;
-  opacity: 0.4;
-  background: linear-gradient(
-    131deg,
-    rgba(113, 112, 242, 0.4) 35.38%,
-    rgba(152, 102, 234, 0.4) 85.25%
-  );
-  filter: blur(99.5px);
-  z-index: -1;
+const Ann_Award_Record_Content_Title_Content = styled(
+  Award_Record_Content_Title_Content
+)`
+  > div {
+    flex: 1;
+    text-align: center;
+    &:first-child {
+      flex: auto;
+      width: 100%;
+      max-width: 30%;
+    }
+    &:nth-child(2) {
+      flex: auto;
+      width: 100%;
+      max-width: 30%;
+    }
+    &:last-child {
+      flex: auto;
+      width: 100%;
+      max-width: 15%;
+    }
+  }
 `;
 
 const Award_Record_Content = styled.div`
@@ -267,6 +296,30 @@ const Award_Record_Content_Record_Content_Item = styled.div`
     }
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+`;
+
+const Ann_Award_Record_Content_Record_Content_Item = styled(
+  Award_Record_Content_Record_Content_Item
+)`
+  > div {
+    flex: 1;
+    text-align: center;
+    &:first-child {
+      flex: auto;
+      width: 100%;
+      max-width: 30%;
+    }
+    &:nth-child(2) {
+      flex: auto;
+      width: 100%;
+      max-width: 30%;
+    }
+    &:last-child {
+      flex: auto;
+      width: 100%;
+      max-width: 12%;
     }
   }
 `;
@@ -428,24 +481,35 @@ export default function Rank() {
                 >
                   {t("288")}
                 </Award_Record_Content_Tab_Item>
+                <Award_Record_Content_Tab_Item
+                  className={Number(SubTab) === 4 ? "activeSubTab" : ""}
+                  onClick={() => {
+                    setSubTab(4);
+                  }}
+                >
+                  {t("289")}
+                </Award_Record_Content_Tab_Item>
               </Award_Record_Content_Tab_Content>
               <Award_Record_Content>
-                <Award_Record_Content_Title_Content>
+                <Ann_Award_Record_Content_Title_Content>
                   <div>{t("290")}</div>
                   <div>{t("291")}</div>
                   <div>{t("292")}</div>
-                </Award_Record_Content_Title_Content>
+                  <div>{t("441")}</div>
+                </Ann_Award_Record_Content_Title_Content>
                 <Award_Record_Content_Record_Content>
                   <Award_Record_Content_Record_Box>
                     {!dataLoding ? (
                       RecordList?.length > 0 ? (
                         RecordList?.map((item: any, index: any) => (
-                          <Award_Record_Content_Record_Content_Item key={index}>
+                          <Ann_Award_Record_Content_Record_Content_Item
+                            key={index}
+                          >
                             <div>{AddrHandle(item?.userAddress, 6, 6)}</div>
                             <div>{NumSplic(item?.hitAmount, 2)}VTB</div>
                             <div>{t("293", { num: item?.level })}</div>
-                            {/* <div>{item?.level}等</div> */}
-                          </Award_Record_Content_Record_Content_Item>
+                            <div>{item?.orderNo}</div>
+                          </Ann_Award_Record_Content_Record_Content_Item>
                         ))
                       ) : (
                         <NoData></NoData>

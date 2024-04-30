@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import {
   ContainerBox,
   FlexBox,
+  FlexCCBox,
   FlexECBox,
   FlexSACBox,
   FlexSBCBox,
@@ -113,7 +114,7 @@ const Announcement_Mid = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Announcement_Right = styled.div`
+const Announcement_Right = styled(FlexCCBox)`
   width: 20px;
 `;
 
@@ -633,15 +634,14 @@ export default function Rank() {
             <RewardItem_Info_Item>
               {t("18")}
               <RewardItem_Info_Item_Value>
-                {decimalNum(MyFreeInfo?.yesterdayLotteryAmount, 2) ?? 0}{" "}
+                {decimalNum(PoolInfo?.yesterdayLotteryAmount, 6) ?? 0}{" "}
                 <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
             <RewardItem_Info_Item>
               {t("19")}
               <RewardItem_Info_Item_Value>
-                {decimalNum(MyFreeInfo?.todayPoolAmount, 2) ?? 0}{" "}
-                <span>VTB</span>
+                {decimalNum(PoolInfo?.todayPoolAmount, 6) ?? 0} <span>VTB</span>
               </RewardItem_Info_Item_Value>
             </RewardItem_Info_Item>
           </RewardItem_Info>

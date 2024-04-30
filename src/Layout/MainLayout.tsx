@@ -501,10 +501,10 @@ const MainLayout: any = () => {
 
   const langArr = [
     { key: "en", label: "English" },
-    { key: "zh", label: "ZH 中文" },
-    { key: "ja", label: "JA 日本語" },
-    { key: "ko", label: "KO 한국어" },
-    { key: "ar", label: "AR عربي" },
+    { key: "zh", label: "中文繁体" },
+    { key: "ja", label: "日本語" },
+    { key: "ko", label: "한국어" },
+    { key: "ar", label: "عربي" },
     // { key: "th", label: "TH ภาษาไทย" },
   ];
 
@@ -822,7 +822,7 @@ const MainLayout: any = () => {
   }, [initalToken, initalQBToken]);
 
   useEffect(() => {
-    if (!!web3ModalAccount) {
+    if (!!web3ModalAccount && selectedNetworkId) {
       new Contracts(walletProvider);
       preLoginFun();
     }

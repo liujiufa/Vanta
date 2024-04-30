@@ -387,7 +387,7 @@
   "384": "Draw Results: ",
   "385": "Orders {{num1}}-{{num2}}, 1st Prize: {{num3}}, 2nd Prize: {{num4}}, 3rd Prize: {{num5}}, 4th Prize: {{num6}}. ",
   "386": "There are a total of 100 nodes, and each account can only subscribe to one.Subscription requires owning NFTs, with more than 30 NFTs required for neighborhood subscription.Nodes require destruction of 100 VTB to activate after subscription.Subscription prices start at 10000 USDT. Prices increase by:",
-  "387": "Pledge starts from 20 VTB to become a valid user.Subsequent pledges must be ≥ the previous pledge quantity.Each pledge quantity must be a multiple of 20.Each pledge amount must be less than or equal to the value of the largest order in the subscription robot.",
+  "387": "Pledge starts from 20 VTB to become a valid user.Subsequent pledges must be ≥ the previous pledge quantity.Each pledge quantity must be a multiple of 20.Each pledge amount must be less than or equal to the value of the largest order in the subscription robot.Sufficient robot funds are required to obtain profits.",
   "388": "Total issuance of 8000 NFTs, with each account limited to purchasing 1. After subscription, 10 VTB needs to be destroyed to activate the NFT.",
   "389": "Issuance: ",
   "390": "1st round: 500 NFTs issued, each priced at 500 USDT equivalent in VTB, subscribers in this round receive a reward of 2000 VTB.",
@@ -418,11 +418,11 @@
   "412": "Every three days, based on the proportion of LP staking in the account, the bonus pool will be distributed.",
 
   "413": "The rewarded VTB needs to be pledged once before it can be withdrawn.",
-  "414": "If the new robot performance in the community is completed 10 times within 3 months from the activation, if it does not reach 10 times, it will be calculated as 50% of the completion of the robots in the community. Example: Only completing 9 times the performance, that is, unlocking 50% of 0.9 times, the formula is 2000 tokens * 0.9 times performance * 50% ratio, = 900 tokens are actually unlocked, and unlocking is 900 tokens. If you complete 8 times, you can only Unlocking 50% of 8x is 800 tokens, and so on. The portion that has not been unlocked upon expiration will be directly destroyed.",
+  "414": "Within 3 months from the start, 5% of the tokens will be unlocked for every 2 times of the new robot performance in the community. The entire 2000VTB reward cannot be unlocked until 20 times of the new robot performance in the community is completed. The un-unlocked part will be directly destroyed upon expiration.",
   "415": "{{num1}} USDT per node for {{num2}} nodes;",
 
   "416": "Number of Participation Units",
-  "417": "2 VTB per unit, total participation amount {{num}} VTB",
+  "417": "{{num1}} VTB per unit, total participation amount {{num}} VTB",
   "418": "Fixed Purchase",
   "419": "Unit",
   "420": "Participate in Lottery",
@@ -461,7 +461,7 @@
   "439": "Robot Performance at Subscription Time",
 
   "440": "Community New Performance Multiplier",
-
+  "441": "Winning number",
   "Not yet": "Not yet",
   "Open soon": "Open soon~",
   "failed": "failed",

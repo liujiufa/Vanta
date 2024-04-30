@@ -458,7 +458,10 @@ export default function Rank() {
       getPledgeManageAwardRecord(type).then((res: any) => {
         if (res.code === 200) {
           setDataLoding(false);
-
+          // if (Number(type) === 13) {
+          //   setRecordList(res?.data);
+          // } else {
+          // }
           setRecordList(res?.data);
         }
       });
@@ -592,14 +595,18 @@ export default function Rank() {
                         <div>
                           {t("193")}{" "}
                           <span>
-                            {t(
-                              TypeObj[item?.businessType] ??
-                                subTabArr[recordType]?.find(
-                                  (item1: any) =>
-                                    Number(item1?.key) ===
-                                    Number(item?.businessType)
-                                )?.name
-                            )}
+                            {Number(item?.businessType) === 53
+                              ? t("362")
+                              : Number(item?.businessType) === 13
+                              ? t("363")
+                              : t(
+                                  TypeObj[item?.businessType] ??
+                                    subTabArr[recordType]?.find(
+                                      (item1: any) =>
+                                        Number(item1?.key) ===
+                                        Number(item?.businessType)
+                                    )?.name
+                                )}
                           </span>
                         </div>
                         <div>
