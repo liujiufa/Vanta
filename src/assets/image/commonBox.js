@@ -1,1 +1,1 @@
-export {ReactComponent as DropDownIcon} from './dropdownIcon.svg'
+export { ReactComponent as DropDownIcon } from "./dropdownIcon.svg";

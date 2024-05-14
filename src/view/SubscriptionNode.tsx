@@ -13,6 +13,7 @@ import {
   EthertoWei,
   NumSplic,
   addMessage,
+  decimalNum,
   showLoding,
 } from "../utils/tool";
 import { useTranslation } from "react-i18next";
@@ -42,6 +43,11 @@ import useUSDTGroup from "../hooks/useUSDTGroup";
 import { contractAddress } from "../config";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { GameTooltip } from "./Home";
+import { useInputValue } from "../hooks/useInputValue";
+import {
+  NodeInfo_Mid_Item_First,
+  NodeInfo_Mid_Price,
+} from "./SubscriptionCommunity";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -144,32 +150,7 @@ const NodeInfo_Mid_Title = styled(FlexCCBox)`
   font-variation-settings: "opsz" auto;
   color: #ffffff;
 `;
-const NodeInfo_Mid_Price = styled(FlexCCBox)`
-  width: 100%;
-  font-family: PingFang SC;
-  font-size: 18px;
-  font-weight: normal;
-  line-height: normal;
-  text-transform: capitalize;
-  letter-spacing: 0em;
 
-  font-variation-settings: "opsz" auto;
-  color: #d56819;
-
-  z-index: 0;
-  > span {
-    font-family: PingFang SC;
-    font-size: 12px;
-    font-weight: normal;
-    line-height: normal;
-    text-transform: uppercase;
-    letter-spacing: 0em;
-
-    font-variation-settings: "opsz" auto;
-    color: rgba(255, 255, 255, 0.8);
-    margin-left: 5px;
-  }
-`;
 export const NodeInfo_Mid_Rule = styled(FlexECBox)`
   width: 100%;
   font-family: PingFang SC;
@@ -181,7 +162,7 @@ export const NodeInfo_Mid_Rule = styled(FlexECBox)`
 
   font-variation-settings: "opsz" auto;
   color: #666666;
-  margin-bottom: 0px !important;
+
   > svg {
     margin-right: 5px;
   }
@@ -235,23 +216,27 @@ export default function Rank() {
   const { width } = useViewport();
   const Navigate = useNavigate();
   const { getReward } = useGetReward();
-  const [Balance, setBalance] = useState<any>("");
-  const [InputValueAmount, setInputValueAmount] = useState<any>("0");
-  const {
-    TOKENBalance,
-    TOKENAllowance,
-    handleApprove,
-    handleTransaction,
-    handleUSDTRefresh,
-  } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
-
   // const {
   //   TOKENBalance,
   //   TOKENAllowance,
   //   handleApprove,
   //   handleTransaction,
   //   handleUSDTRefresh,
-  // } = useUSDTGroup(contractAddress?.nftContract, "MBK");
+  // } = useUSDTGroup(contractAddress?.nodeContract, "USDT");
+  const {
+    Price,
+    InputValueAmountValue,
+    InputValueAmount,
+    MaxFun,
+    InputValueFun,
+  } = useInputValue();
+  const {
+    TOKENBalance,
+    TOKENAllowance,
+    handleApprove,
+    handleTransaction,
+    handleUSDTRefresh,
+  } = useUSDTGroup(contractAddress?.nftContract, "MBK");
 
   const getInitData = () => {
     getNodeBaseInfo().then((res: any) => {
@@ -322,7 +307,16 @@ export default function Rank() {
         <NodeInfo_Mid>
           <NodeInfo_Mid_Title>{t("178")}</NodeInfo_Mid_Title>
           <NodeInfo_Mid_Price>
-            {NodeBaseInfo?.price ?? 0} <span>USDT</span>
+            {/* {NodeBaseInfo?.price ?? 0} <span>USDT</span> */}
+
+            <div>
+              {decimalNum(Number(NodeBaseInfo?.price) / Number(Price), 2) ?? 0}{" "}
+              <span>VTB</span>
+            </div>
+            <div>
+              {" "}
+              <span> = {NodeBaseInfo?.price ?? 0}USDT</span>
+            </div>
           </NodeInfo_Mid_Price>
           <NodeInfo_Mid_Rule>
             <Tooltip
@@ -345,7 +339,10 @@ export default function Rank() {
               </FlexCCBox>
             </Tooltip>
           </NodeInfo_Mid_Rule>
-
+          <NodeInfo_Mid_Item_First>
+            {t("91")}
+            <span>1VTB={Price ?? "--"}USDT</span>
+          </NodeInfo_Mid_Item_First>
           <NodeInfo_Mid_Conditions>
             {t("179")}
             <div>
@@ -366,7 +363,7 @@ export default function Rank() {
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            buyNodeFun(NodeBaseInfo?.price + "");
+            buyNodeFun(Number(NodeBaseInfo?.price) / Number(Price) + "");
           }}
         >
           {t("152")}

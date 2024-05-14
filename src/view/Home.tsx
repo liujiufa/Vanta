@@ -458,7 +458,7 @@ export default function Rank() {
     if (state.token) {
       getInitTokenData();
     }
-  }, [state.token]);
+  }, [state.token,i18n.language]);
 
   return (
     <HomeContainerBox>

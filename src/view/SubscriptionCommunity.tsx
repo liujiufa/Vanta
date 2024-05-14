@@ -125,7 +125,7 @@ const NodeInfo_Bottom_Item = styled(FlexSBCBox)`
 const NodeInfo_Bottom_Item_First = styled(NodeInfo_Bottom_Item)`
   margin-top: 18px;
 `;
-const NodeInfo_Mid_Item_First = styled(NodeInfo_Bottom_Item_First)`
+export const NodeInfo_Mid_Item_First = styled(NodeInfo_Bottom_Item_First)`
   margin: 0px 0px 5px 0px !important;
 `;
 
@@ -179,7 +179,7 @@ const NodeInfo_Mid_Title = styled(FlexCCBox)`
 //     margin-left: 5px;
 //   }
 // `;
-const NodeInfo_Mid_Price = styled(FlexBox)`
+export const NodeInfo_Mid_Price = styled(FlexBox)`
   flex-direction: column;
   align-items: center;
   > div {

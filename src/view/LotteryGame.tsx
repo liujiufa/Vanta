@@ -539,7 +539,7 @@ export default function Rank() {
     if (Number(value) <= 0) return;
     if (Number(value) > 100) return addMessage(t("425"));
     handleTransaction(
-      Number(value) * Number(GamePoolInfo?.todayAddPoolAmount ?? 0) + "",
+      Number(value) * Number(GamePoolInfo?.gameJoinNum ?? 0) + "",
       async (call: any) => {
         let res: any;
         try {
@@ -710,14 +710,12 @@ export default function Rank() {
                   num:
                     Number(InputValueAmount) *
                     Number(
-                      !!GamePoolInfo?.todayAddPoolAmount
-                        ? GamePoolInfo?.todayAddPoolAmount
+                      !!GamePoolInfo?.gameJoinNum
+                        ? GamePoolInfo?.gameJoinNum
                         : 0
                     ),
                   num1: Number(
-                    !!GamePoolInfo?.todayAddPoolAmount
-                      ? GamePoolInfo?.todayAddPoolAmount
-                      : 0
+                    !!GamePoolInfo?.gameJoinNum ? GamePoolInfo?.gameJoinNum : 0
                   ),
                 })}
               </InputContainer_Title>
