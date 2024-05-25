@@ -376,11 +376,11 @@ export default function Rank() {
                   <div style={{ fontWeight: 500, marginTop: "8px" }}>
                     {t("389")}
                   </div>
-                  <div>{t("390")}</div>
-                  <div>{t("391")}</div>
+                  <div>{t("442")}</div>
+                  {/* <div>{t("391")}</div>
                   <div>{t("392")}</div>
                   <div>{t("393")}</div>
-                  <div>{t("394")}</div>
+                  <div>{t("394")}</div> */}
                   <div style={{ marginTop: "8px" }}>{t("395")}</div>
                 </GameTooltip>
               }
@@ -392,13 +392,13 @@ export default function Rank() {
             </Tooltip>
           </NodeInfo_Mid_Rule>
 
-          {Number(CardBase?.roundNum) === 1 && (
+          {/* {Number(CardBase?.roundNum) === 1 && (
             <NodeInfo_Mid_Conditions>
               {t("93")}
               <div>{t("94")}</div>
               <div>{t("95")}</div>
             </NodeInfo_Mid_Conditions>
-          )}
+          )} */}
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {

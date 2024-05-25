@@ -180,10 +180,11 @@ const DropdownContainer = styled(Dropdown)`
       font-style: normal;
       font-weight: 400;
       letter-spacing: 0.112px;
+      white-space: nowrap !important;
     }
 
     .LangItem {
-      white-space: nowrap;
+      white-space: nowrap !important;
 
       display: flex;
       align-items: center;
@@ -505,6 +506,8 @@ const MainLayout: any = () => {
     { key: "ja", label: "日本語" },
     { key: "ko", label: "한국어" },
     { key: "ar", label: "عربي" },
+    { key: "vi", label: "Tiếng Việt" },
+    { key: "tr", label: "Türkçe" },
     // { key: "th", label: "TH ภาษาไทย" },
   ];
 
@@ -512,6 +515,7 @@ const MainLayout: any = () => {
     return {
       label: (
         <div
+          style={{ whiteSpace: "nowrap" }}
           className={
             String(i18n.language) === String(item?.key)
               ? "activeLangItem"

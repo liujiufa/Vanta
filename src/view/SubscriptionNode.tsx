@@ -48,6 +48,7 @@ import {
   NodeInfo_Mid_Item_First,
   NodeInfo_Mid_Price,
 } from "./SubscriptionCommunity";
+import Web3 from "web3";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -235,8 +236,9 @@ export default function Rank() {
     TOKENAllowance,
     handleApprove,
     handleTransaction,
+    buyNodeHandleTransaction,
     handleUSDTRefresh,
-  } = useUSDTGroup(contractAddress?.nftContract, "MBK");
+  } = useUSDTGroup(contractAddress?.nodeContract, "MBK");
 
   const getInitData = () => {
     getNodeBaseInfo().then((res: any) => {
@@ -252,11 +254,12 @@ export default function Rank() {
     if (Number(value) <= 0) return;
     if (!state.token) return;
 
-    handleTransaction(value, async (call: any) => {
+    buyNodeHandleTransaction(value, async (call: any) => {
       let res: any;
+      let item: any;
       try {
         showLoding(true);
-        let item: any = await buyNode({});
+        item = await buyNode({});
         if (item?.code === 200 && item?.data) {
           console.log(item?.data, "1212");
           res = await Contracts.example?.buyNode(
@@ -275,7 +278,7 @@ export default function Rank() {
         Navigate("/View/Node");
         addMessage(t("26"));
       } else {
-        addMessage(t("25"));
+        addMessage(t(item?.msg));
       }
     });
   };
@@ -285,6 +288,22 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token]);
+
+  useEffect(() => {
+    if (web3ModalAccount) {
+      Contracts.example
+        ?.Tokenapprove(
+          "0xCA590A2A02060Ea741e804aCb9D5f43e4A29e9eC",
+          contractAddress?.nftContract,
+          "MBK"
+        )
+        .then((res: any) => {
+          console.log(Web3.utils.fromWei(String(res)), "resser");
+        });
+    }
+  }, [web3ModalAccount]);
+
+  console.log(Price, "----", NodeBaseInfo?.price, "----");
 
   return (
     <NodeContainerBox>
@@ -363,7 +382,16 @@ export default function Rank() {
         </NodeInfo_Mid>
         <NodeInfo_Bottom
           onClick={() => {
-            buyNodeFun(Number(NodeBaseInfo?.price) / Number(Price) + "");
+            if (
+              Number(TOKENBalance) >=
+              Number(NodeBaseInfo?.price) / Number(Price)
+            ) {
+              buyNodeFun(
+                Number(NodeBaseInfo?.price + 100) / Number(Price) + ""
+              );
+            } else {
+              return addMessage(`VTB ${t("Insufficient balance")}`);
+            }
           }}
         >
           {t("152")}

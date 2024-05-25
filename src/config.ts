@@ -12,11 +12,11 @@ import awardPoolContract from "./ABI/RewardDistribute.json";
 
 // 正式
 export const LOCAL_KEY = "MBAS_LANG";
-export const isMain = false;
+export const isMain = true;
 // 自己
 // export let baseUrl: string = isMain ? 'http://120.79.67.226:16088/' : 'http://192.168.2.114:16088/';
 export let baseUrl: string = isMain
-  ? "http://47.76.173.162:18888/"
+  ? "https://yhhyn.com/" + "api"
   : // : "http://172.20.10.2:18888/";
     "https://yhhyn.com/" + "api";
 // export let baseUrl: string = isMain ? window.location.origin + '/user/' : 'http://120.79.67.226:13777/';
@@ -38,11 +38,11 @@ export const mainnet = {
     rpcUrl: "https://cloudflare-eth.com",
   },
   "0x38": {
-    chainId: 1,
-    name: "Ethereum",
-    currency: "ETH",
-    explorerUrl: "https://etherscan.io",
-    rpcUrl: "https://cloudflare-eth.com",
+    chainId: 56,
+    name: "BSC",
+    currency: "BNB",
+    explorerUrl: "https://bscscan.com",
+    rpcUrl: "https://bsc-dataseed.binance.org",
   },
   "0x61": {
     chainId: 97,
@@ -78,8 +78,19 @@ export const abiObj: abiObjType = {
 };
 
 export const Main: contractAddressType = {
-  USDT: "0x0546FA2C783811c971076B9B9036847Bf56ceE9A",
-  MBK: "0xC47352beadC8E354877AD6FAe5a84e924d68A7dE",
+  USDT: "0x55d398326f99059fF775485246999027B3197955",
+  MBK: "0xac4f7a9C9D68472A70e29Da1fbEEB3e7835b0E70",
+  MBK_USDT: "：0x897BA3EdC1cc42544994d4A6631e60E4744bd653",
+  Referrer: "0x13aFF424B1269bBE2B5A1282C3bB2502322B48f0",
+  Bot: "0xD724046aD703FF97b4Fe2ABe34F90bFEEde2e420",
+  pledgeContract: "0x09D4F573B90Ea70524B4821d5A9081cD4d55126c",
+  nftContract: "0x2Eb8770152a584772b7A700DE26e49634b2a54C0",
+  lpContract: "0x87aa05bB464FCE5a65E75134e7397b43787c242a",
+  nodeContract: "0xa94ee86f5491855fC6faCEAC427bE3EEA8Fa3d59",
+  communityContract: "0x9319A6D58B574Aea99a2ce1d7196Bb40D272fa8C",
+  gameContract: "0xd7bf479fcE88f4f665445c62FA3C8a25D3A79922",
+  IPancakeRouter02: "0x10ED43C718714eb63d5aA57B78B54704E256024E",
+  awardPoolContract: "0x706625638fc248C2BE3e1D1a7E83FCD75946B16F",
 };
 
 const Test = {

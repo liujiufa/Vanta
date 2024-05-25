@@ -19,7 +19,7 @@ export const useInputValue = () => {
 
   const getVilifyState = throttle(async (value: string) => {
     if (!web3ModalAccount) return;
-    return Contracts.example.queryUsdtByMbk(web3ModalAccount as string, value);
+    return Contracts.example?.queryUsdtByMbk(web3ModalAccount as string, value);
   }, 2000);
 
   const InputValueFun = async (e: any) => {
@@ -46,9 +46,15 @@ export const useInputValue = () => {
 
   useEffect(() => {
     if (web3ModalAccount) {
-      getVilifyState("1")?.then((res: any) => {
-        setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
-      });
+      console.log("ethi1");
+
+      Contracts.example
+        ?.queryUsdtByMbk(web3ModalAccount as string, 1 + "")
+        ?.then((res: any) => {
+          console.log(res, "ethi2");
+
+          setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
+        });
     }
   }, [web3ModalAccount]);
   return {

@@ -460,7 +460,7 @@ export default function Rank() {
     } else if (recordType === 3) {
       setDataLoding(true);
 
-      getCardPioneerRecord(1).then((res: any) => {
+      getCardPioneerRecord(26).then((res: any) => {
         if (res.code === 200) {
           setDataLoding(false);
 
@@ -495,7 +495,7 @@ export default function Rank() {
     } else if (recordType === 3) {
       setDataLoding(true);
 
-      getCardPioneerRecord(2).then((res: any) => {
+      getCardPioneerRecord(27).then((res: any) => {
         if (res.code === 200) {
           setDataLoding(false);
 

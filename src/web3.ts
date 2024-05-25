@@ -177,11 +177,19 @@ export class Contracts {
   }
   queryUsdtByMbk(addr: string, value: string) {
     this.verification("Bot");
-    let amount = Web3.utils.toWei(value);
+    let amount = Web3.utils.toWei(value + "", "ether");
     return this.contract.Bot?.methods
       .queryUsdtByMbk(amount)
       .call({ from: addr });
   }
+
+  // queryWethByUsdt(addr: string, amount: string) {
+  //   this.verification("Inscription");
+  //   var amounted = Web3.utils.toWei(amount + "", "ether");
+  //   return this.contract?.Inscription.methods
+  //     ?.queryWethByUsdt(amounted)
+  //     .call({ from: addr });
+  // }
   queryMbkByUsdt(addr: string, value: string) {
     this.verification("Bot");
     let amount = Web3.utils.toWei(value);
@@ -297,6 +305,8 @@ export class Contracts {
 
   queryUserBuyBotInfo(addr: string) {
     this.verification("Bot");
+    console.log(this.contract.Bot, "this.contract.Bot");
+
     return this.contract.Bot?.methods
       .queryUserBuyBotInfo(addr)
       .call({ from: addr });

@@ -688,11 +688,11 @@ export default function Rank() {
 
   const getVilifyState = throttle(async (value: string) => {
     if (!web3ModalAccount) return;
-    return Contracts.example.queryUsdtByMbk(web3ModalAccount as string, value);
+    return Contracts.example?.queryUsdtByMbk(web3ModalAccount as string, value);
   }, 2000);
   const getVilifyStateUSDTToMBK = throttle(async (value: string) => {
     if (!web3ModalAccount) return;
-    return Contracts.example.queryMbkByUsdt(web3ModalAccount as string, value);
+    return Contracts.example?.queryMbkByUsdt(web3ModalAccount as string, value);
   }, 2000);
 
   const InputValueFun = async (e: any) => {
@@ -748,9 +748,13 @@ export default function Rank() {
       getVilifyState("1")?.then((res: any) => {
         setPrice(decimalNum(EthertoWei(res ?? "0"), 2));
       });
+      console.log("rse1");
+
       Contracts.example
         ?.queryUserBuyBotInfo(web3ModalAccount as string)
         .then((res: any) => {
+          console.log(res, "rse2");
+
           if (Number(EthertoWei(res[res?.length - 1] ?? "0")) > 0) {
             Contracts.example
               ?.queryMbkByUsdt1(

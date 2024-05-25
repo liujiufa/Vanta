@@ -34,8 +34,11 @@ export default function useUSDTGroup(
         web3ModalAccount,
         coinName
       );
+      console.log(balance, "balance");
 
-      setTOKENBalance(decimalNum(Web3.utils.fromWei(balance.toString()), 2));
+      setTOKENBalance(
+        decimalNum(Web3.utils.fromWei(!!balance ? balance.toString() : "0"), 2)
+      );
     }
   }, [web3ModalAccount, coinName]);
 
@@ -77,7 +80,9 @@ export default function useUSDTGroup(
         contractAddress,
         coinName
       );
-      setTOKENAllowance(Web3.utils.fromWei(allowance.toString(), "ether"));
+      setTOKENAllowance(
+        Web3.utils.fromWei(!!allowance ? allowance.toString() : "0", "ether")
+      );
     }
   }, [web3ModalAccount, contractAddress, coinName]);
 
@@ -101,6 +106,46 @@ export default function useUSDTGroup(
     setHash(+new Date());
   }, [coinName]);
 
+  /**
+   *  buyNodeTOKENBalance 授权额度
+   */
+  const buyNodeHandleTransaction = useCallback(
+    async (
+      price: string,
+      transactionCallBack: (refreshCall: () => void) => void
+    ) => {
+      // if (Number(TOKENBalance) >= Number(price)) {
+      if (Number(TOKENAllowance) >= Number(price)) {
+        await transactionCallBack(handleUSDTRefresh);
+      } else {
+        console.log(price, transactionCallBack, "1212");
+
+        // await handleApprove(price);
+        await handleApprove(price, transactionCallBack);
+      }
+      // } else {
+      //   addMessage(
+      //     `${
+      //       String(symbol) === "MBK"
+      //         ? "VTB"
+      //         : String(symbol) === "MBK_USDT"
+      //         ? "VTB_USDT"
+      //         : symbol
+      //     } ${t("Insufficient balance")}`
+      //   );
+      // }
+    },
+    [
+      web3ModalAccount,
+      handleApprove,
+      symbol,
+      handleUSDTRefresh,
+      coinName,
+      TOKENBalance,
+      TOKENAllowance,
+      addMessage,
+    ]
+  );
   /**
    *  TOKENBalance 授权额度
    */
@@ -155,6 +200,7 @@ export default function useUSDTGroup(
     TOKENAllowance,
     handleApprove,
     handleTransaction,
+    buyNodeHandleTransaction,
     handleUSDTRefresh,
   };
 }

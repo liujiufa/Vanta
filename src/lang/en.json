@@ -178,7 +178,7 @@
   "178": "Current Node Subscription Price",
   "179": "Subscription Conditions",
   "180": "Own NFTs",
-  "181": "Community Subscription of at least 30 NFTs(وصل{{num}})",
+  "181": "Community Subscription of at least 30 NFTs(Reached{{num}})",
   "182": "Prize Pool Funds",
   "183": "You have subscribed to a node, awaiting activation",
   "184": "My LP Quantity",
@@ -380,7 +380,7 @@
   "378": "Cannot withdraw",
 
   "379": "Account in inactive status. Directly refer 1-10 active accounts, reward 6VTB each; 11-30 active accounts, reward 8VTB each; 31-60 active accounts, reward 10VTB each; 61-100 active accounts, reward 12VTB each; maximum reward 1000VTB.",
-  "380": "Each order receives 2VTB, of which 40% participate in the current draw, 12% roll over to the next draw, 18% roll over to the draw after next, 10% are destroyed, 8% go to the platform, 5% to the insurance pool, and 7% to NFT and node dividends. Draws occur daily at midnight.",
+  "380": "Each order receives 2VTB, of which 40% participate in the current draw, 12% roll over to the next draw, 18% roll over to the draw after next, 10% are destroyed, 8% go to the platform, 5% to the insurance pool, and 7% to NFT and node dividends.",
   "381": "Calculate subscription amount based on the VTB price at the time of subscription.The robot's subscription amount must be ≥ the previous subscription amount each time.The subscription quantity must be a multiple of 20 each time.93.5% of VTB in the subscription quantity is destroyed, and 6.5% is allocated as rewards.",
   "382": "There are a total of 36 communities, and each account can only purchase one;One must be a node, the community must have at least two nodes, and the team performance must reach 300,000 US dollars to be eligible for subscription;Subscription price starts at 100,000 US dollars equivalent in VTB, and increases by 1000 US dollars equivalent in VTB thereafter.",
   "383": "Distribution: ",
@@ -395,7 +395,7 @@
   "392": "3rd round: 1500 NFTs issued, each priced at 2000 USDT equivalent in VTB.",
   "393": "4th round: 2000 NFTs issued, each priced at 4000 USDT equivalent in VTB.",
   "394": "5th round: 3000 NFTs issued, each priced at 6000 USDT equivalent in VTB.",
-  "395": "Extra: Subscribers 1-100 receive a reward of 2000 VTB; 101-200 receive a reward of 1500 VTB; 201-300 receive a reward of 1000 VTB; 301-400 receive a reward of 500 VTB.",
+  "395": "Extra: Subscribers 1-100 receive a reward of 1200 VTB; 101-200 receive a reward of 1000 VTB; 201-300 receive a reward of 800 VTB; 301-400 receive a reward of 600 VTB.",
 
   "396": "Trigger Condition 1: ",
   "397": "If there are no pledge orders across the entire network for 144 hours, the system will trigger the insurance mechanism:",
@@ -462,11 +462,15 @@
 
   "440": "Community New Performance Multiplier",
   "441": "Winning number",
+
+  "442": "The price starts from 500 USDT equivalent to VTB, and will increase by 1 USDT each time. The first 500 buyers will receive 2000 VTB rewards;",
+  "443": "Lottery draw at 12:00 UTC",
+
   "Not yet": "Not yet",
   "Open soon": "Open soon~",
   "failed": "failed",
   "Copied successfully": "Copied successfully",
-  "info": "info",
+  "info": "Info",
   "Approve": "Approve",
   "Please link wallet": "Please connect wallet",
   "Received successfully": "Received successfully",

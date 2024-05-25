@@ -357,7 +357,7 @@ export function getSubscriptionAccountInfo() {
   });
 }
 // NFT先锋奖励记录
-export function getCardPioneerRecord(type: 1 | 2) {
+export function getCardPioneerRecord(type: 26 | 27) {
   return axois.request({
     url: `/card/getCardPioneerRecord/${type}`,
     method: "get",

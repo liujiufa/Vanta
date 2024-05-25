@@ -458,7 +458,7 @@ export default function Rank() {
     if (state.token) {
       getInitTokenData();
     }
-  }, [state.token,i18n.language]);
+  }, [state.token, i18n.language]);
 
   return (
     <HomeContainerBox>
@@ -590,8 +590,10 @@ export default function Rank() {
                 <div>{t("383")}</div>
                 <div>{t("380")}</div>
                 <div>{t("384")}</div>
+
                 {Rule?.map((item: any, index: any) => (
                   <div>
+                    {index === 0 && <span>{t("443")}, </span>}
                     {t("385", {
                       num1: item?.minNum,
                       num2: item?.maxNum,

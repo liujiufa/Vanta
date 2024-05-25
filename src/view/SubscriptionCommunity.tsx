@@ -423,7 +423,7 @@ export default function Rank() {
   const activationFun = async (value: string) => {
     console.log("item");
     if (!token) return;
-    if (!CommunitySoldBase?.isSatisfy || !CommunitySoldBase?.CommunitySoldBase)
+    if (!CommunitySoldBase?.isSatisfy || !CommunitySoldBase?.isNode)
       return;
     if (Number(value) <= 0) return;
     handleTransaction(Number(value) + "", async (call: any) => {
@@ -520,7 +520,7 @@ export default function Rank() {
             <div>
               <img
                 src={
-                  !!CommunitySoldBase?.CommunitySoldBase ? yesIcon : errorIcon
+                  !!CommunitySoldBase?.isNode ? yesIcon : errorIcon
                 }
                 alt=""
               />
@@ -539,7 +539,7 @@ export default function Rank() {
           onClick={() => {
             if (
               !!CommunitySoldBase?.isSatisfy &&
-              !!CommunitySoldBase?.CommunitySoldBase
+              !!CommunitySoldBase?.isNode
             ) {
               setActivationModal(true);
             } else {
