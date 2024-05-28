@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { stateType } from "../store/reducer";
 import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
-import { AddrHandle } from "../utils/tool";
+import { AddrHandle, dateFormat } from "../utils/tool";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import returnIcon from "../assets/image/returnIcon.svg";
@@ -52,7 +52,9 @@ export default function NoticeDetail() {
 
       <div className="contentBox">
         {/* <TruncateMarkup lines={2}> */}
-        <div className="textDetailContentTime">{"2023-12-23 12:23"}</div>
+        <div className="textDetailContentTime">
+          {dateFormat("YYYY-mm-dd HH:MM", new Date(NoticeInfo?.createTime))}
+        </div>
         <div
           className="textDetailContent"
           dangerouslySetInnerHTML={{ __html: NoticeInfo?.content }}

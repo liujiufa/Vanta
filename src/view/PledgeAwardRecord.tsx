@@ -609,7 +609,12 @@ export default function Rank() {
                       >
                         <div>
                           {t("324")}
-                          <span>2023-12-23 12:23</span>
+                          <span>
+                            {dateFormat(
+                              "YYYY-mm-dd HH:MM",
+                              new Date(item?.updateTime)
+                            )}
+                          </span>
                         </div>
                         <div>
                           {t("325")}
