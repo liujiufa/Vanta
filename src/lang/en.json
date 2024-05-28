@@ -387,7 +387,7 @@
   "384": "Draw Results: ",
   "385": "Orders {{num1}}-{{num2}}, 1st Prize: {{num3}}, 2nd Prize: {{num4}}, 3rd Prize: {{num5}}, 4th Prize: {{num6}}. ",
   "386": "There are a total of 100 nodes, and each account can only subscribe to one.Subscription requires owning NFTs, with more than 30 NFTs required for neighborhood subscription.Nodes require destruction of 100 VTB to activate after subscription.Subscription prices start at 10000 USDT. Prices increase by:",
-  "387": "Pledge starts from 20 VTB to become a valid user.Subsequent pledges must be ≥ the previous pledge quantity.Each pledge quantity must be a multiple of 20.Each pledge amount must be less than or equal to the value of the largest order in the subscription robot.Sufficient robot funds are required to obtain profits.",
+  "387": "Start staking at 20 VTB and become a valid user; each subsequent pledge must be ≥ the last pledge number; the amount of each pledge must be a multiple of 20; the value of each pledge must be less than or equal to the order with the largest value in the subscription robot; the pledge period starts from 7 From the beginning of the day, each staking cycle will increase by 1 day, up to 28 days; after the staking expires, 100% of the principal will be returned; sufficient robot quota is required to obtain income.",
   "388": "Total issuance of 8000 NFTs, with each account limited to purchasing 1. After subscription, 10 VTB needs to be destroyed to activate the NFT.",
   "389": "Issuance: ",
   "390": "1st round: 500 NFTs issued, each priced at 500 USDT equivalent in VTB, subscribers in this round receive a reward of 2000 VTB.",
