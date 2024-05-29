@@ -48,6 +48,7 @@ import { contractAddress } from "../config";
 import useUSDTGroup from "../hooks/useUSDTGroup";
 import { menuIcon3 } from "../assets/image/homeBox";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import Web3 from "web3";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
@@ -409,6 +410,7 @@ export default function Rank() {
     TOKENAllowance,
     handleApprove,
     handleTransaction,
+    buyNodeHandleTransaction,
     handleUSDTRefresh,
   } = useUSDTGroup(contractAddress?.communityContract, "MBK");
 
@@ -420,17 +422,17 @@ export default function Rank() {
     });
   };
 
+  console.log(TOKENAllowance, TOKENBalance, "TOKENAllowance12");
+
   const activationFun = async (value: string) => {
-    console.log("item");
+    console.log("itemvalue", value);
     if (!token) return;
-    if (!CommunitySoldBase?.isSatisfy || !CommunitySoldBase?.isNode)
-      return;
+    if (!CommunitySoldBase?.isSatisfy || !CommunitySoldBase?.userIsNode) return;
     if (Number(value) <= 0) return;
-    handleTransaction(Number(value) + "", async (call: any) => {
+    buyNodeHandleTransaction(Number(value) + "", async (call: any) => {
       let res: any;
       try {
         showLoding(true);
-
         let item: any = await activationCommunity({});
         if (item?.code === 200 && item?.data) {
           console.log(item?.data, "1212");
@@ -464,6 +466,20 @@ export default function Rank() {
       getInitData();
     }
   }, [token]);
+
+  // useEffect(() => {
+  //   if (!!web3ModalAccount) {
+  //     Contracts.example
+  //       ?.Tokenapprove(
+  //         "0xf95F6190Cf75FBF2953e4036Bceff5fc1087F3B6",
+  //         contractAddress?.communityContract,
+  //         "MBK"
+  //       )
+  //       .then((res: any) => {
+  //         console.log(Web3.utils.fromWei(res, "ether"));
+  //       });
+  //   }
+  // }, [web3ModalAccount]);
 
   return (
     <NodeContainerBox>
@@ -519,9 +535,7 @@ export default function Rank() {
             {t("216")}
             <div>
               <img
-                src={
-                  !!CommunitySoldBase?.isNode ? yesIcon : errorIcon
-                }
+                src={!!CommunitySoldBase?.userIsNode ? yesIcon : errorIcon}
                 alt=""
               />
               {t("217")}
@@ -539,7 +553,7 @@ export default function Rank() {
           onClick={() => {
             if (
               !!CommunitySoldBase?.isSatisfy &&
-              !!CommunitySoldBase?.isNode
+              !!CommunitySoldBase?.userIsNode
             ) {
               setActivationModal(true);
             } else {
@@ -590,9 +604,22 @@ export default function Rank() {
             <UpBtn
               onClick={() => {
                 // BindFun();
-                activationFun(
-                  Number(CommunitySoldBase?.currentPrice) / Number(Price) + ""
-                );
+                if (
+                  Number(TOKENBalance) >=
+                  Number(CommunitySoldBase?.currentPrice) / Number(Price)
+                ) {
+                  activationFun(
+                    Math.ceil(
+                      (Number(CommunitySoldBase?.currentPrice + 1000) /
+                        Number(Price)) *
+                        100
+                    ) /
+                      100 +
+                      ""
+                  );
+                } else {
+                  return addMessage(`VTB ${t("Insufficient balance")}`);
+                }
               }}
             >
               {t("97")}

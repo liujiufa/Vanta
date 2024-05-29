@@ -982,6 +982,8 @@ export default function Rank() {
     }
   }, [state.token]);
 
+  
+
   const NFTBox = (isHoldNft: boolean, isLockNft: boolean) => {
     if (!!isLockNft) {
       return (
@@ -1043,7 +1045,8 @@ export default function Rank() {
               </NodeInfo_Bottom_Item>
             </NodeInfo_Bottom_NFT>
           </NodeInfo>
-          {!!PioneerInfo?.isHoldNft && !!PioneerInfo?.isSatisfyNftCommunity ? (
+          {!!PioneerInfo?.isPioneer ? (
+            // {!!PioneerInfo?.isHoldNft && !!PioneerInfo?.isSatisfyNftCommunity ? (
             <NodeInfo>
               <NodeInfo_Top_LotteryGame>
                 <ModalContainer_Title_Container_Participate>

@@ -6,7 +6,7 @@ interface LoginData {
   userPower: number;
 }
 
-export function Login(data: LoginData) {
+export function Login(data: any) {
   return axois.request({
     url: "/user/login",
     method: "post",

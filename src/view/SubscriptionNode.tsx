@@ -387,7 +387,11 @@ export default function Rank() {
               Number(NodeBaseInfo?.price) / Number(Price)
             ) {
               buyNodeFun(
-                Number(NodeBaseInfo?.price + 100) / Number(Price) + ""
+                Math.ceil(
+                  (Number(NodeBaseInfo?.price + 1000) / Number(Price)) * 100
+                ) /
+                  100 +
+                  ""
               );
             } else {
               return addMessage(`VTB ${t("Insufficient balance")}`);
