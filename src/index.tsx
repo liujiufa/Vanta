@@ -1,5 +1,4 @@
 import React from "react";
-// import { Web3Provider } from "@ethersproject/providers";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
@@ -33,9 +32,11 @@ const projectId = "fe691b69eaaaa849adc2e81d65c4a9d1";
 // 3. Create a metadata object
 const metadata = {
   name: "Vanta",
-  description: "My Website description",
-  url: "https://yhhyn.com", // origin must match your domain & subdomain
-  icons: ["http://yhhyn.com/vtb.png"],
+  description: "Vanta",
+  url: "https://www.vanta1.com",
+  // url: "https://yhhyn.com",
+  icons: ["https://www.vanta1.com/vtb.png"],
+  // icons: ["http://yhhyn.com/vtb.png"],
 };
 
 // 4. Create Ethers config
@@ -46,7 +47,7 @@ const ethersConfig = defaultConfig({
   /*Optional*/
   enableEIP6963: true, // true by default
   enableInjected: true, // true by default
-  enableCoinbase: true, // true by default
+  enableCoinbase: false, // true by default
   rpcUrl: "...", // used for the Coinbase SDK
   defaultChainId: 1, // used for the Coinbase SDK
 });
@@ -66,6 +67,7 @@ createWeb3Modal({
     "20459438007b75f4f4acb98bf29aa3b800550309646d375da5fd4aac6c2a2c66",
   ],
 });
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
