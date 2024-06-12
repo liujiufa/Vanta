@@ -827,7 +827,8 @@ export default function Rank() {
 
   const stakeLPFun = (value: string, period: number) => {
     if (Number(value) <= 0) return;
-    if (!UserInfo?.isNft && UserInfo?.teamLevel <= 5)
+    if (!UserInfo?.isPledgeLp)
+      // if (!UserInfo?.isNft && UserInfo?.teamLevel <= 5)
       return addMessage(t("365"));
     MBK_USDT_handleTransaction(value, async (call: any) => {
       let res: any;
@@ -981,8 +982,6 @@ export default function Rank() {
       getInitData();
     }
   }, [state.token]);
-
-  
 
   const NFTBox = (isHoldNft: boolean, isLockNft: boolean) => {
     if (!!isLockNft) {

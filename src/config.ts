@@ -12,7 +12,7 @@ import awardPoolContract from "./ABI/RewardDistribute.json";
 
 // 正式
 export const LOCAL_KEY = "MBAS_LANG";
-export const isMain = true;
+export const isMain = false;
 // 自己
 // export let baseUrl: string = isMain ? 'http://120.79.67.226:16088/' : 'http://192.168.2.114:16088/';
 export let baseUrl: string = isMain
