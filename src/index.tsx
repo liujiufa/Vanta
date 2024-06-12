@@ -14,9 +14,6 @@ import "animate.css";
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
 import { mainnet } from "./config";
 
-// import Vconsole from "vconsole";
-
-// new Vconsole({ maxLogNumber: 5000 });
 function getLibrary(provider: any): Web3 {
   const library = new Web3(provider);
   new Contracts(provider);
