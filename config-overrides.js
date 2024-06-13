@@ -15,7 +15,7 @@ module.exports = function override(config) {
     url: require.resolve("url"),
   });
   config.resolve.fallback = fallback;
-    config.devtool = false; // 关掉 sourceMap js.map
+  config.devtool = false; // 关掉 sourceMap js.map
 
   config.plugins = (config.plugins || []).concat([
     new webpack.ProvidePlugin({
@@ -23,5 +23,10 @@ module.exports = function override(config) {
       Buffer: ["buffer", "Buffer"],
     }),
   ]);
+
+  config.module.rules.push({
+    test: /\.mjs$/i,
+    resolve: { byDependency: { esm: { fullySpecified: false } } },
+  });
   return config;
 };
