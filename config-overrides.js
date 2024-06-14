@@ -24,9 +24,11 @@ module.exports = function override(config) {
     }),
   ]);
 
-  config.module.rules.push({
-    test: /\.mjs$/i,
-    resolve: { byDependency: { esm: { fullySpecified: false } } },
+  config.module.rules.unshift({
+    test: /\.m?js$/,
+    resolve: {
+      fullySpecified: false, // disable the behavior
+    },
   });
   return config;
 };

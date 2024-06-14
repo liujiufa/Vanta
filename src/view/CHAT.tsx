@@ -18,11 +18,19 @@ import { addMessage, startWord } from "../utils/tool";
 import PageLoding from "../components/PageLoding";
 import UserPageLoding from "../components/UserPageLoding";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
-// import { UIKitProvider } from "easemob-chat-uikit";
-// import "easemob-chat-uikit/style.css";
+import {
+  UIKitProvider,
+  Chat,
+  ConversationList,
+  MessageList,
+  TextMessage,
+  ContactList,
+} from "easemob-chat-uikit";
+import "easemob-chat-uikit/style.css";
 
 const NodeContainerBox = styled(ContainerBox)`
   width: 100%;
+  height: calc(100vh - 56px);
   padding: 0px;
 `;
 export default function Rank() {
@@ -52,8 +60,89 @@ export default function Rank() {
   }, [state.token]);
 
   return (
-    <NodeContainerBox>
-      {/* <UserPageLoding></UserPageLoding> */}
-    </NodeContainerBox>
+    <UIKitProvider
+      initConfig={{
+        appKey: "1132240613150068#demo",
+        userId: "goushi",
+        token:
+          "YWMt-M8lIClaEe-YEmOwbTTunidGqCjdM0V-q1peHyTokvLpQUjgKVoR77LXv4KHm9OGAwMAAAGQEJyaXTeeSAAH-97QrxAUpwZ_o6MR2jDGjQq5vDSNno4rbsR-Jb6heQ",
+        translationTargetLanguage: "zh-Hans", // 翻译功能的目标语言
+        useUserInfo: true, // 是否使用用户属性功能展示头像昵称（UIKit 内部会获取用户属性，需要用户自己设置）
+      }}
+      // 查看所有 UI 文本: https://github.com/easemob/Easemob-UIKit-web/tree/dev/local
+      local={{
+        fallbackLng: "en",
+        lng: "en",
+        resources: {
+          en: {
+            translation: {
+              conversationTitle: "Conversation List",
+              deleteCvs: "Delete Conversation",
+              // ...
+            },
+          },
+        },
+      }}
+      theme={{
+        primaryColor: "#33ffaa",
+        mode: "light",
+        componentsShape: "square",
+      }}
+      reactionConfig={{
+        map: {
+          emoji_1: <img src={"customIcon"} alt={"emoji_1"} />,
+          emoji_2: <img src={"customIcon"} alt={"emoji_2"} />,
+        },
+      }}
+      features={{
+        conversationList: {
+          // search: false,
+          item: {
+            moreAction: false,
+            deleteConversation: false,
+          },
+        },
+        chat: {
+          header: {
+            threadList: true,
+            moreAction: true,
+            clearMessage: true,
+            deleteConversation: false,
+            audioCall: false,
+          },
+          message: {
+            status: false,
+            reaction: true,
+            thread: true,
+            recall: true,
+            translate: false,
+            edit: false,
+          },
+          messageEditor: {
+            mention: false,
+            typing: false,
+            record: true,
+            emoji: false,
+            moreAction: true,
+            picture: true,
+          },
+        },
+      }}
+    >
+      <NodeContainerBox>
+        <div style={{ width: "100%", height: "100%" }}>
+          <ContactList
+            onItemClick={(data) => {
+              rootStore.conversationStore.addConversation({
+                chatType: "singleChat",
+                conversationId: data.id,
+                lastMessage: {},
+                unreadCount: "",
+              });
+            }}
+          />
+        </div>
+      </NodeContainerBox>
+    </UIKitProvider>
   );
 }
