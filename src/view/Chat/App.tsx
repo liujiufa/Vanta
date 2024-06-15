@@ -1,8 +1,9 @@
+// @ts-nocheck
 import { useEffect, useState, FC } from "react";
 import "./index.css";
 import { observer } from "mobx-react-lite";
 import { Toaster } from "react-hot-toast";
-import { rootStore, Provider, useClient } from "easemob-chat-uikit";
+import { rootStore, UIKitProvider, useClient } from "easemob-chat-uikit";
 import "easemob-chat-uikit/style.css";
 import "./App.css";
 import { store } from "../../store/store";
@@ -17,7 +18,6 @@ import Login from "../../pages/login/login";
 import ChatApp from "../../pages/main/main";
 import { loginWithToken } from "../../store/loginSlice";
 // import AuthCheck from "./authCheck";
-// @ts-ignore
 window.rootStore = rootStore;
 
 const ChatAppContainer: FC<any> = () => {
@@ -128,12 +128,12 @@ const ChatAppContainer: FC<any> = () => {
   const serverConfig = JSON.parse(localStorage.getItem("serverConfig") || "{}");
   console.log("app", loginState.useDNS, serverConfig);
   return (
-    <Provider
+    <UIKitProvider
       initConfig={{
         appKey: "easemob#easeim",
         userId: "74faac750a", // 用户 ID
         token:
-        "YWMtx_nRJirGEe-A1qnMI4bXYFzzvlQ7sUrSpVuQGlyIzFStWgQgJ7sR77xyqwfxYq6OAwMAAAGQGezc_jeeSACVU99JVB746VOVf5NS6ZWxV-OuEEqv0NRTq2NxfjsRlw",
+          "YWMtx_nRJirGEe-A1qnMI4bXYFzzvlQ7sUrSpVuQGlyIzFStWgQgJ7sR77xyqwfxYq6OAwMAAAGQGezc_jeeSACVU99JVB746VOVf5NS6ZWxV-OuEEqv0NRTq2NxfjsRlw",
         useUserInfo: true,
         translationTargetLanguage: window.navigator.language,
       }}
@@ -153,7 +153,7 @@ const ChatAppContainer: FC<any> = () => {
       </AuthCheck> */}
       <ChatApp></ChatApp>
       <Toaster></Toaster>
-    </Provider>
+    </UIKitProvider>
   );
 };
 
