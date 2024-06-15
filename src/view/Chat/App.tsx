@@ -26,15 +26,15 @@ const ChatAppContainer: FC<any> = () => {
   const state = useAppSelector((state) => state.appConfig);
   const loginState = useAppSelector((state) => state.login);
 
-  useEffect(() => {
-    dispatch(
-      loginWithToken({
-        userId: "YXA681QzsHqOTy2D8oNTfzc3CA",
-        chatToken:
-          "YWMtkdRc7CruEe-KxAdk3aAXKvNUM7B6jk8tg_KDU383NwilnqywKu0R77cPk_UZPaKEAwMAAAGQGvGfAQAAAABlVo4F4Zma8vInuYH25maPZZFGawlbcGy1xkR_ZoI6bw",
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     loginWithToken({
+  //       userId: "YXA681QzsHqOTy2D8oNTfzc3CA",
+  //       chatToken:
+  //         "YWMtkdRc7CruEe-KxAdk3aAXKvNUM7B6jk8tg_KDU383NwilnqywKu0R77cPk_UZPaKEAwMAAAGQGvGfAQAAAABlVo4F4Zma8vInuYH25maPZZFGawlbcGy1xkR_ZoI6bw",
+  //     })
+  //   );
+  // }, []);
 
   useEffect(() => {
     console.log(store, "store");

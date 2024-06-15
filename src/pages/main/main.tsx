@@ -36,9 +36,22 @@ import Settings from "../settings/settings";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import i18n from "../../lang/i18n";
+import { loginWithToken } from "../../store/loginSlice";
 // @ts-ignore
 window.rootStore = rootStore;
 const ChatApp: FC<any> = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(
+      loginWithToken({
+        userId: "YXA681QzsHqOTy2D8oNTfzc3CA",
+        chatToken:
+          "YWMtkdRc7CruEe-KxAdk3aAXKvNUM7B6jk8tg_KDU383NwilnqywKu0R77cPk_UZPaKEAwMAAAGQGvGfAQAAAABlVo4F4Zma8vInuYH25maPZZFGawlbcGy1xkR_ZoI6bw",
+      })
+    );
+  }, []);
+
   const client = useClient();
   useEffect(() => {
     const webImAuth = sessionStorage.getItem("webImAuth");
