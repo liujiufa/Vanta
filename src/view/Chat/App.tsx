@@ -130,10 +130,10 @@ const ChatAppContainer: FC<any> = () => {
   return (
     <Provider
       initConfig={{
-        appKey: loginState.appKey,
-        isHttpDNS: loginState.useDNS,
-        restUrl: serverConfig.rest,
-        msyncUrl: serverConfig.msync,
+        appKey: "easemob#easeim",
+        userId: "74faac750a", // 用户 ID
+        token:
+        "YWMtx_nRJirGEe-A1qnMI4bXYFzzvlQ7sUrSpVuQGlyIzFStWgQgJ7sR77xyqwfxYq6OAwMAAAGQGezc_jeeSACVU99JVB746VOVf5NS6ZWxV-OuEEqv0NRTq2NxfjsRlw",
         useUserInfo: true,
         translationTargetLanguage: window.navigator.language,
       }}

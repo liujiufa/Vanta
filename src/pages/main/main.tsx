@@ -42,15 +42,15 @@ window.rootStore = rootStore;
 const ChatApp: FC<any> = () => {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(
-      loginWithToken({
-        userId: "YXA681QzsHqOTy2D8oNTfzc3CA",
-        chatToken:
-          "YWMtkdRc7CruEe-KxAdk3aAXKvNUM7B6jk8tg_KDU383NwilnqywKu0R77cPk_UZPaKEAwMAAAGQGvGfAQAAAABlVo4F4Zma8vInuYH25maPZZFGawlbcGy1xkR_ZoI6bw",
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     loginWithToken({
+  //       userId: "YXA681QzsHqOTy2D8oNTfzc3CA",
+  //       chatToken:
+  //         "YWMtkdRc7CruEe-KxAdk3aAXKvNUM7B6jk8tg_KDU383NwilnqywKu0R77cPk_UZPaKEAwMAAAGQGvGfAQAAAABlVo4F4Zma8vInuYH25maPZZFGawlbcGy1xkR_ZoI6bw",
+  //     })
+  //   );
+  // }, []);
 
   const client = useClient();
   useEffect(() => {
