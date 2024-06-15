@@ -7,6 +7,8 @@ import arCnTrans from "./ar.json";
 import viCnTrans from "./vi.json";
 import trCnTrans from "./tr.json";
 import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+
 import { LOCAL_KEY } from "../config";
 // en = 英文，zh=中，ja=日，ko=韩，ar=阿拉伯
 export const zh = "zh";
@@ -16,10 +18,18 @@ export const ja = "ja";
 export const ar = "ar";
 export const vi = "vi";
 export const tr = "tr";
+
+declare module "i18next" {
+  interface CustomTypeOptions {
+    returnNull: false;
+  }
+}
 i18n
   .use(initReactI18next) //init i18next
+  .use(LanguageDetector)
   .init({
     //引入资源文件
+    returnNull: false,
     resources: {
       zh: {
         translation: zhCnTrans,

@@ -1,8 +1,10 @@
 import React, { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import DataPageLoding from "../components/DataPageLoding";
 import MainLayout from "../Layout/MainLayout";
 import DeputyLayout from "../Layout/DeputyLayout";
+
+
 const Home = React.lazy(() => import("../view/Home"));
 const Node = React.lazy(() => import("../view/Node"));
 const ZeroStroke = React.lazy(() => import("../view/ZeroStroke"));
@@ -43,6 +45,7 @@ const InitialSubscriptionRewards = React.lazy(
 const CHAT = React.lazy(() => import("../view/CHAT"));
 const Notice = React.lazy(() => import("../view/Notice"));
 const NoticeDetail = React.lazy(() => import("../view/NoticeDetail"));
+
 export default function Router() {
   return (
     <Suspense fallback={<DataPageLoding></DataPageLoding>}>
@@ -99,6 +102,7 @@ export default function Router() {
               element={<InitialSubscriptionRewards />}
             ></Route>
             <Route path="CHAT" element={<CHAT />}></Route>
+
             <Route path="Notice" element={<Notice />}></Route>
             <Route path="NoticeDetail" element={<NoticeDetail />}></Route>
           </Route>

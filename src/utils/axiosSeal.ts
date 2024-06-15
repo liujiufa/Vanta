@@ -1,4 +1,4 @@
-import axios, {
+import axios2, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosPromise,
@@ -16,7 +16,7 @@ class HttpRequest {
   }
   public request(options: AxiosRequestConfig): AxiosPromise {
     // 我们实际调用接口的时候调用实例的这个方法，他返回一个AxiosPromise
-    const instance: AxiosInstance = axios.create(); // 这里使用axios.create方法创建一个axios实例，他是一个函数，同时这个函数包含多个属性
+    const instance: AxiosInstance = axios2.create(); // 这里使用axios.create方法创建一个axios实例，他是一个函数，同时这个函数包含多个属性
     options = this.mergeConfig(options); // 合并基础路径和每个接口单独传入的配置，比如url、参数等
     this.interceptors(instance, options.url); // 调用interceptors方法使拦截器生效
     return instance(options); // 最后返回AxiosPromise
@@ -25,7 +25,7 @@ class HttpRequest {
     // 定义这个函数用于添加全局请求和响应拦截逻辑
     // 在这里添加请求和响应拦截
     instance.interceptors.request.use(
-      (config: AxiosRequestConfig) => {
+      (config: any) => {
         // config.headers.lang = 'en'
         if (
           (config.method === "POST" || config.method === "post") &&

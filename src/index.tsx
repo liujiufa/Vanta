@@ -2,8 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
+import { Provider as ReduxProvider } from "react-redux";
+
 import { Web3ReactProvider } from "@web3-react/core";
 import store from "./store";
+import { store as ReduxStore } from "./store/store";
+
 import Web3 from "web3";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
