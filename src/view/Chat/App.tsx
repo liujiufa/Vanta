@@ -29,9 +29,9 @@ const ChatAppContainer: FC<any> = () => {
   useEffect(() => {
     dispatch(
       loginWithToken({
-        userId: "74faac750a",
+        userId: "YXA681QzsHqOTy2D8oNTfzc3CA",
         chatToken:
-          "YWMtx_nRJirGEe-A1qnMI4bXYFzzvlQ7sUrSpVuQGlyIzFStWgQgJ7sR77xyqwfxYq6OAwMAAAGQGezc_jeeSACVU99JVB746VOVf5NS6ZWxV-OuEEqv0NRTq2NxfjsRlw",
+          "YWMtkdRc7CruEe-KxAdk3aAXKvNUM7B6jk8tg_KDU383NwilnqywKu0R77cPk_UZPaKEAwMAAAGQGvGfAQAAAABlVo4F4Zma8vInuYH25maPZZFGawlbcGy1xkR_ZoI6bw",
       })
     );
   }, []);
