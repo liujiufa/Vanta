@@ -7934,6 +7934,11 @@
     "lodash" "~4.17.10"
     "minimatch" "~3.0.2"
 
+"goober@^2.1.10":
+  "integrity" "sha512-4UpC0NdGyAFqLNPnhCT2iHpza2q+RAY3GV85a/mRPdzyPQMsj0KmMMuetdIkzWRbJ+Hgau1EZztq8ImmiMGhsg=="
+  "resolved" "https://registry.npmmirror.com/goober/-/goober-2.1.14.tgz"
+  "version" "2.1.14"
+
 "got@^7.1.0":
   "integrity" "sha512-Y5WMo7xKKq1muPsxD+KmrR8DH5auG7fBdDVueZwETwV6VytKyU9OX/ddpq2/1hp1vIPvVb4T81dKQz3BivkNLw=="
   "resolved" "https://registry.npmmirror.com/got/-/got-7.1.0.tgz"
@@ -10263,6 +10268,18 @@
     "pathe" "^1.1.2"
     "pkg-types" "^1.0.3"
     "ufo" "^1.3.2"
+
+"mobx-react-lite@^4.0.5":
+  "integrity" "sha512-StfB2wxE8imKj1f6T8WWPf4lVMx3cYH9Iy60bbKXEs21+HQ4tvvfIBZfSmMXgQAefi8xYEwQIz4GN9s0d2h7dg=="
+  "resolved" "https://registry.npmmirror.com/mobx-react-lite/-/mobx-react-lite-4.0.5.tgz"
+  "version" "4.0.5"
+  dependencies:
+    "use-sync-external-store" "^1.2.0"
+
+"mobx@^6.12.0":
+  "integrity" "sha512-Mn6CN6meXEnMa0a5u6a5+RKrqRedHBhZGd15AWLk9O6uFY4KYHzImdt8JI8WODo1bjTSRnwXhJox+FCUZhCKCQ=="
+  "resolved" "https://registry.npmmirror.com/mobx/-/mobx-6.12.0.tgz"
+  "version" "6.12.0"
 
 "mock-fs@^4.1.0":
   "integrity" "sha512-qYvlv/exQ4+svI3UOvPUpLDF0OMX5euvUH0Ny4N5QyRyhNdgAgUrVH3iUINSzEPLvx0kbo/Bp28GJKIqvE7URw=="
@@ -12657,6 +12674,13 @@
   "integrity" "sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg=="
   "resolved" "https://registry.npmmirror.com/react-error-overlay/-/react-error-overlay-6.0.11.tgz"
   "version" "6.0.11"
+
+"react-hot-toast@^2.4.1":
+  "integrity" "sha512-j8z+cQbWIM5LY37pR6uZR6D4LfseplqnuAO4co4u8917hBUvXlEqyP1ZzqVLcqoyUesZZv/ImreoCeHVDpE5pQ=="
+  "resolved" "https://registry.npmmirror.com/react-hot-toast/-/react-hot-toast-2.4.1.tgz"
+  "version" "2.4.1"
+  dependencies:
+    "goober" "^2.1.10"
 
 "react-i18next@^11.16.9":
   "integrity" "sha512-euXxWvcEAvsY7ZVkwx9ztCq4butqtsGHEkpkuo0RMj8Ru09IF9o2KxCyN+zyv51Nr0aBh/elaTIiR6fMb8YfVg=="

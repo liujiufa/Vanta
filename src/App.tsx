@@ -33,14 +33,6 @@ import Web3 from "web3";
 import { useSign } from "./hooks/useSign";
 
 import * as QB from "quickblox/quickblox";
-import {
-  QuickBloxUIKitProvider,
-  qbDataContext,
-  QuickBloxUIKitDesktopLayout,
-  LoginData,
-  AuthorizationData,
-  QBDataContextType,
-} from "quickblox-react-ui-kit";
 
 import { QBConfig } from "./QBconfig";
 
@@ -67,37 +59,31 @@ function App() {
 
   return (
     <ViewportProvider>
-      <QuickBloxUIKitProvider
-        maxFileSize={100 * 1000000}
-        accountData={{ ...QBConfig.credentials }}
-        qbConfig={{ ...QBConfig }} // NEW !!!
-      >
-        <div className="App">
-          <MessageBox>
-            {state.message.map((item, index) => (
-              <div className="messageItem" key={index}>
-                <div className="messageLebel">
-                  <img src={prohibit} alt="" />
-                </div>
-                <div className="messageConter">
-                  <div className="title">{t("info")}</div>
-                  <div className="content">{item.message}</div>
-                  <img
-                    className="clone"
-                    onClick={() => {
-                      dispatch(createDelMessageAction(item.index));
-                    }}
-                    src={cloneIcon}
-                    alt=""
-                  />
-                </div>
+      <div className="App">
+        <MessageBox>
+          {state.message.map((item, index) => (
+            <div className="messageItem" key={index}>
+              <div className="messageLebel">
+                <img src={prohibit} alt="" />
               </div>
-            ))}
-          </MessageBox>
-          <Routers></Routers>
-          {state.showLoding && <Loding></Loding>}
-        </div>
-      </QuickBloxUIKitProvider>
+              <div className="messageConter">
+                <div className="title">{t("info")}</div>
+                <div className="content">{item.message}</div>
+                <img
+                  className="clone"
+                  onClick={() => {
+                    dispatch(createDelMessageAction(item.index));
+                  }}
+                  src={cloneIcon}
+                  alt=""
+                />
+              </div>
+            </div>
+          ))}
+        </MessageBox>
+        <Routers></Routers>
+        {state.showLoding && <Loding></Loding>}
+      </div>
     </ViewportProvider>
   );
 }

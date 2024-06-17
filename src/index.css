@@ -304,6 +304,7 @@ body {
   scrollbar-width: none;
   /* firefox */
   -ms-overflow-style: none;
+  text-align: left !important;
 }
 
 body::-webkit-scrollbar {

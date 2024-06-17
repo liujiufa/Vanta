@@ -570,7 +570,7 @@ const MainLayout: any = () => {
 
   // 导航
   const navigateFun = (path: string) => {
-    if (path === "CHAT") {
+    if (path === "/CHAT") {
       if (!web3ModalAccount) return addMessage(t("Please link wallet"));
       if (!initalQBToken) return addMessage(t("426"));
       return Navigate("/View" + path);
@@ -626,7 +626,7 @@ const MainLayout: any = () => {
               createLoginSuccessAction(
                 web3ModalAccount as string,
                 res.data.token,
-                res.data.password
+                res.data.qbToken
               )
             );
             Contracts.example
@@ -645,7 +645,7 @@ const MainLayout: any = () => {
             );
             localStorage.setItem(
               (web3ModalAccount as string)?.toLowerCase() + "1",
-              res.data.password
+              res.data.qbToken
             );
             setSelectWallet(false);
           } else {
@@ -815,7 +815,7 @@ const MainLayout: any = () => {
   }, [refereeUserAddress]);
 
   useEffect(() => {
-    if (!!initalToken) {
+    if (!!initalToken && !!initalQBToken) {
       dispatch(
         createLoginSuccessAction(
           web3ModalAccount as string,

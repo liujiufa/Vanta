@@ -10,8 +10,8 @@ import styled, { keyframes } from "styled-components";
 import { useViewport } from "../components/viewportContext";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ContainerBox } from "../components/FlexBox";
-import { contractAddress } from "../config";
+import { ContainerBox, FlexCCBox, FlexSBCBox } from "../components/FlexBox";
+import { contractAddress, isMain } from "../config";
 import { throttle } from "lodash";
 
 import { addMessage, startWord } from "../utils/tool";
@@ -25,13 +25,35 @@ import {
   MessageList,
   TextMessage,
   ContactList,
+  ContactDetail,
+  Header,
+  Icon,
+  Modal,
+  Input,
+  rootStore,
 } from "easemob-chat-uikit";
 import "easemob-chat-uikit/style.css";
+import ConversationListBox from "../components/ConversationListBox";
+import ContactListBox from "../components/ContactListBox";
 
-const NodeContainerBox = styled(ContainerBox)`
+const ChatContainerBox = styled(ContainerBox)`
   width: 100%;
   height: calc(100vh - 56px);
   padding: 0px;
+`;
+
+const TabBox = styled(FlexSBCBox)`
+  width: 100%;
+  > div {
+    flex: 1;
+  }
+`;
+const TabItem = styled(FlexCCBox)`
+  width: 100%;
+  padding: 12px;
+  .active {
+    fill: #d56819;
+  }
 `;
 export default function Rank() {
   const { t, i18n } = useTranslation();
@@ -40,10 +62,40 @@ export default function Rank() {
     chainId,
     isConnected,
   } = useWeb3ModalAccount();
+  const [addContactVisible, setAddContactVisible] = useState(false);
+  const [contactData, setContactData] = useState({
+    id: "",
+    name: "",
+    type: "contact",
+  });
+  const [userId, setUserId] = useState("");
+  const [Timeout, setTimeout] = useState(0);
+  const [TabActive, setTabActive] = useState(0);
+  const [ConversationTabActive, setConversationTabActive] = useState(0);
+
   const state = useSelector<stateType, stateType>((state) => state);
   const qbToken = useSelector<stateType, stateType>(
     (state: any) => state?.qbToken
   );
+  console.log(qbToken);
+
+  const chatConfig = isMain
+    ? {
+        appKey: "1100240607161186#vanta",
+        userId: web3ModalAccount,
+        token: qbToken,
+        translationTargetLanguage: "zh-Hans", // 翻译功能的目标语言
+        useUserInfo: true, // 是否使用用户属性功能展示头像昵称（UIKit 内部会获取用户属性，需要用户自己设置）
+      }
+    : {
+        appKey: "easemob#easeim",
+        userId: "74faac750a",
+        token:
+          "YWMtI4pLkCtLEe-sE2dbiVewYFzzvlQ7sUrSpVuQGlyIzFStWgQgJ7sR77xyqwfxYq6OAwMAAAGQHVBIUjeeSAAkY_-bvzajmfPFMhdgvpAnfwYm42e8mN3KcG6zFiKabg",
+        translationTargetLanguage: "zh-Hans", // 翻译功能的目标语言
+        useUserInfo: true, // 是否使用用户属性功能展示头像昵称（UIKit 内部会获取用户属性，需要用户自己设置）
+      };
+
   const Navigate = useNavigate();
   const getInitData = () => {
     // getExchangeRecord().then((res: any) => {
@@ -53,38 +105,46 @@ export default function Rank() {
     // });
   };
 
+  const handleUserIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    setUserId(e.target.value);
+  };
+  // 联系人跳转到聊天界面
+  const ContactToConversation = () => {
+    setTabActive(0);
+    setConversationTabActive(1);
+  };
+
   useEffect(() => {
     if (state.token) {
       getInitData();
     }
   }, [state.token]);
 
+  useEffect(() => {
+    console.log(Timeout, "Timeout");
+    setTimeout(new Date().valueOf());
+  }, [i18n.language]);
+
+  useEffect(() => {
+    console.log(web3ModalAccount, qbToken, "------");
+
+    if (!web3ModalAccount && !qbToken) {
+      Navigate("/View/");
+      return addMessage(t("please login in again"));
+    }
+  }, [qbToken]);
+
   return (
     <UIKitProvider
-      initConfig={{
-        appKey: "1132240613150068#demo",
-        userId: "goushi",
-        token:
-          "YWMt-M8lIClaEe-YEmOwbTTunidGqCjdM0V-q1peHyTokvLpQUjgKVoR77LXv4KHm9OGAwMAAAGQEJyaXTeeSAAH-97QrxAUpwZ_o6MR2jDGjQq5vDSNno4rbsR-Jb6heQ",
-        translationTargetLanguage: "zh-Hans", // 翻译功能的目标语言
-        useUserInfo: true, // 是否使用用户属性功能展示头像昵称（UIKit 内部会获取用户属性，需要用户自己设置）
-      }}
+      initConfig={chatConfig}
       // 查看所有 UI 文本: https://github.com/easemob/Easemob-UIKit-web/tree/dev/local
       local={{
-        fallbackLng: "en",
-        lng: "en",
-        resources: {
-          en: {
-            translation: {
-              conversationTitle: "Conversation List",
-              deleteCvs: "Delete Conversation",
-              // ...
-            },
-          },
-        },
+        lng: i18n.language === "zh" ? "zh" : "en",
       }}
+      key={Timeout}
       theme={{
-        primaryColor: "#33ffaa",
+        primaryColor: "#d56819",
         mode: "light",
         componentsShape: "square",
       }}
@@ -129,20 +189,71 @@ export default function Rank() {
         },
       }}
     >
-      <NodeContainerBox>
-        <div style={{ width: "100%", height: "100%" }}>
-          <ContactList
-            onItemClick={(data) => {
-              rootStore.conversationStore.addConversation({
-                chatType: "singleChat",
-                conversationId: data.id,
-                lastMessage: {},
-                unreadCount: "",
-              });
+      <ChatContainerBox>
+        <TabBox>
+          <TabItem
+            onClick={() => {
+              setTabActive(0);
+              setConversationTabActive(0);
             }}
-          />
-        </div>
-      </NodeContainerBox>
+          >
+            <Icon
+              type="BUBBLE_FILL"
+              width={28}
+              height={28}
+              className={Number(TabActive) === 0 ? "active" : ""}
+            ></Icon>
+          </TabItem>
+          <TabItem
+            onClick={() => {
+              setTabActive(1);
+            }}
+          >
+            <Icon
+              type="PERSON_DOUBLE_FILL"
+              width={28}
+              height={28}
+              className={Number(TabActive) === 1 ? "active" : ""}
+            ></Icon>
+          </TabItem>
+        </TabBox>
+
+        {Number(TabActive) === 0 && (
+          <ConversationListBox
+            index={ConversationTabActive}
+          ></ConversationListBox>
+        )}
+
+        {Number(TabActive) === 1 && (
+          <ContactListBox fun={ContactToConversation}></ContactListBox>
+        )}
+
+        <Modal
+          width={430}
+          open={addContactVisible}
+          onCancel={() => {
+            setAddContactVisible(false);
+          }}
+          onOk={() => {
+            rootStore.addressStore.addContact(userId);
+            setAddContactVisible(false);
+            return addMessage("Friend request sent");
+          }}
+          okText={t("add")}
+          closable={false}
+          title={t("addContact")}
+        >
+          <>
+            <div className="add-contact">
+              <Input
+                placeholder={t("enterUserID")}
+                className="add-contact-input"
+                onChange={handleUserIdChange}
+              ></Input>
+            </div>
+          </>
+        </Modal>
+      </ChatContainerBox>
     </UIKitProvider>
   );
 }
