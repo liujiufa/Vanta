@@ -68,14 +68,32 @@ const Chat_container_chat_right = styled.div`
       fill: #d56819;
     }
   }
+  .GroupDetail_myself {
+    .cui-userItem-info {
+      display: none;
+    }
+  }
 `;
+
+const Btn = styled(FlexCCBox)<{ active: boolean }>`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #fff;
+  margin-bottom: 9px;
+  padding: 5px 12px;
+  border-radius: 12px;
+  background: ${({ active }) => (active ? "#d56819" : "rgb(117 130 138)")};
+`;
+
+const ConversationItemBox = styled.div``;
 
 export default function ConversationListBox(props: any) {
   const { t, i18n } = useTranslation();
   const [addContactVisible, setAddContactVisible] = useState(false);
 
   // --- 创建会话 ---
-  const [createChatVisible, setCreateChatVisible] = useState(false);
+  const [IsAddGroup, setIsAddGroup] = useState(false);
   const [userSelectVisible, setUserSelectVisible] = useState(false); // 是否显示创建群组弹窗
   const [conversationDetailVisible, setConversationDetailVisible] =
     useState(false); //是否显示群组设置/联系人详情弹窗
@@ -121,81 +139,201 @@ export default function ConversationListBox(props: any) {
 
   return (
     <ConversationBox style={{ width: "100%", height: "100%" }}>
-      {Number(ActiveBox) === 0 && (
-        <ConversationList
-          renderHeader={() => (
-            <Header
-              moreAction={{
-                visible: true,
-                icon: (
-                  <Icon
-                    type="PLUS_IN_CIRCLE"
-                    width={24}
-                    height={24}
-                    color={"#464E53"}
-                  />
-                ),
-                actions: [
-                  //   {
-                  //     icon: (
-                  //       <Icon
-                  //         type="BUBBLE_FILL"
-                  //         width={24}
-                  //         height={24}
-                  //         color={"#464E53"}
-                  //       />
-                  //     ),
-                  //     content: t("newConversation"),
-                  //     onClick: () => {
-                  //       setCreateChatVisible(true);
-                  //     },
-                  //   },
-                  {
-                    icon: (
-                      <Icon
-                        type="PERSON_ADD_FILL"
-                        width={24}
-                        height={24}
-                        color={"#464E53"}
-                      />
-                    ),
-                    content: t("addContact"),
-                    onClick: () => {
-                      setAddContactVisible(true);
-                      // setUserSelectVisible(true);
+      {Number(ActiveBox) === 0 &&
+        (!IsAddGroup ? (
+          <ConversationList
+            renderHeader={() => (
+              <Header
+                moreAction={{
+                  visible: true,
+                  icon: (
+                    <Icon
+                      type="PLUS_IN_CIRCLE"
+                      width={24}
+                      height={24}
+                      color={"#464E53"}
+                    />
+                  ),
+                  actions: [
+                    {
+                      icon: (
+                        <Icon
+                          type="PERSON_ADD_FILL"
+                          width={24}
+                          height={24}
+                          color={"#464E53"}
+                        />
+                      ),
+                      content: t("addContact"),
+                      onClick: () => {
+                        setAddContactVisible(true);
+                      },
                     },
-                  },
-                  {
-                    icon: (
-                      <Icon
-                        type="PERSON_DOUBLE_FILL"
-                        width={24}
-                        height={24}
-                        color={"#464E53"}
-                      />
-                    ),
-                    content: t("createGroup"),
-                    onClick: () => {
-                      setUserSelectVisible(true);
+                    {
+                      icon: (
+                        <Icon
+                          type="PERSON_ADD"
+                          width={24}
+                          height={24}
+                          color={"#464E53"}
+                        />
+                      ),
+                      content: t("Add group"),
+                      onClick: () => {
+                        setIsAddGroup(true);
+                      },
                     },
+                    {
+                      icon: (
+                        <Icon
+                          type="PERSON_DOUBLE_FILL"
+                          width={24}
+                          height={24}
+                          color={"#464E53"}
+                        />
+                      ),
+                      content: t("createGroup"),
+                      onClick: () => {
+                        setUserSelectVisible(true);
+                      },
+                    },
+                    {
+                      icon: (
+                        <Icon
+                          type="GO_TO_CHAT"
+                          width={24}
+                          height={24}
+                          color={"#464E53"}
+                        />
+                      ),
+                      content: t("Contact Customer Service"),
+                      onClick: () => {
+                        rootStore.conversationStore.addConversation({
+                          chatType: "singleChat",
+                          conversationId: "d451c95cb9",
+                          name: "kkkkkk",
+                          lastMessage: {} as never,
+                          unreadCount: 0,
+                        });
+                        rootStore.conversationStore.setCurrentCvs({
+                          chatType: "singleChat",
+                          name: "kkkkkk",
+                          conversationId: "d451c95cb9",
+                          unreadCount: 0,
+                        });
+                        setActiveBox(1);
+                      },
+                    },
+                  ],
+                  tooltipProps: {
+                    placement: "bottomRight",
                   },
-                ],
-                tooltipProps: {
-                  placement: "bottomRight",
-                },
-              }}
-              content={t("Chats")}
-              avatar={<></>}
-            ></Header>
-          )}
-          onItemClick={(item) => {
-            setConversationDetailVisible(false);
-            setCvsItem(item);
-            setActiveBox(1);
-          }}
-          className="conversation-list"
-        ></ConversationList>
-      )}
+                }}
+                content={t("Chats")}
+                avatar={<></>}
+              ></Header>
+            )}
+            onItemClick={(item) => {
+              setConversationDetailVisible(false);
+              setCvsItem(item);
+              setActiveBox(1);
+            }}
+            className="conversation-list"
+            // renderItem={(cvs: any, index: any) => {
+            //   console.log(cvs, "cvs");
+
+            //   return (
+            //     <div className="cui-conversationItem cui-conversationItem-light">
+            //       <div
+            //         className="cui-avatar cui-avatar-circle cui-avatar-light"
+            //         style={{
+            //           width: "50px",
+            //           height: "50px",
+            //           lineHeight: "50px",
+            //           fontSize: "21px",
+            //         }}
+            //       >
+            //         <span className="cui-avatar-string">四海</span>
+            //       </div>
+            //       <div className="cui-conversationItem-content">
+            //         <span className="cui-conversationItem-nickname ">
+            //           四海之内皆兄弟
+            //         </span>
+            //         <span className="cui-conversationItem-message">
+            //           74faac750a: ggg
+            //         </span>
+            //       </div>
+            //       <div className="cui-conversationItem-info">
+            //         <span className="cui-conversationItem-time">Sun</span>
+            //         <div style={{ height: "20px", position: "relative" }}>
+            //           <span className="cui-badge cui-badge-not-a-wrapper"></span>
+            //         </div>
+            //       </div>
+            //     </div>
+            //   );
+            // }}
+          ></ConversationList>
+        ) : (
+          <ConversationList
+            renderHeader={() => (
+              <ReturnBox style={{ marginBottom: "5px" }}>
+                <ChatReturnIcon
+                  onClick={() => {
+                    setIsAddGroup(false);
+                  }}
+                  style={{
+                    cursor: "pointer",
+                    fontSize: 20,
+                    verticalAlign: "middle",
+                    marginRight: 10,
+                    float: "left",
+                    lineHeight: "50px",
+                  }}
+                />
+              </ReturnBox>
+            )}
+            // onItemClick={(item) => {
+            //   setConversationDetailVisible(false);
+            //   setCvsItem(item);
+            //   setActiveBox(1);
+            // }}
+            className="conversation-list"
+            renderItem={(cvs: any, index: any) => {
+              console.log(cvs, "cvs");
+
+              return (
+                <div className="cui-conversationItem cui-conversationItem-light">
+                  <div
+                    className="cui-avatar cui-avatar-circle cui-avatar-light"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      lineHeight: "50px",
+                      fontSize: "21px",
+                    }}
+                  >
+                    <span className="cui-avatar-string">四海</span>
+                  </div>
+                  <div className="cui-conversationItem-content">
+                    <span className="cui-conversationItem-nickname ">
+                      四海之内皆兄弟
+                    </span>
+                    <span className="cui-conversationItem-message">
+                      2000/2000
+                    </span>
+                  </div>
+                  <div className="cui-conversationItem-info">
+                    {true ? (
+                      <Btn active={true}>{t("Join the group")}</Btn>
+                    ) : (
+                      <Btn active={false}>{t("Joined the group")}</Btn>
+                    )}
+                  </div>
+                </div>
+              );
+            }}
+          ></ConversationList>
+        ))}
 
       <ChatBox>
         {Number(ActiveBox) === 1 && (
@@ -220,11 +358,6 @@ export default function ConversationListBox(props: any) {
               key={"false" + "false" + "false"}
               ref={chatRef}
               className="Conversation_Self"
-              //   onOpenThread={() => {
-              //     if (conversationDetailVisible) {
-              //       setConversationDetailVisible(false);
-              //     }
-              //   }}
               messageListProps={{
                 renderUserProfile: () => {
                   return null;
@@ -308,6 +441,7 @@ export default function ConversationListBox(props: any) {
             {cvsItem.chatType == "groupChat" ? (
               <GroupDetail
                 className="GroupDetailBox"
+                // @ts-ignore
                 width={430}
                 conversation={{
                   chatType: "groupChat",
@@ -321,13 +455,16 @@ export default function ConversationListBox(props: any) {
                 }}
                 // @ts-ignore
                 groupMemberProps={{
-                  onPrivateChat: () => {
-                    setConversationDetailVisible(false);
-                    setActiveBox(1);
-                  },
-                  onAddContact: () => {
-                    return addMessage(t("Friend request sent"));
-                  },
+                  onPrivateChat: () => false,
+                  // {
+                  //   setConversationDetailVisible(false);
+                  //   setActiveBox(1);
+                  // }
+                  onAddContact: () => false,
+                  // {
+                  //   return addMessage(t("Friend request sent"));
+                  // }
+                  className: "GroupDetail_myself",
                 }}
                 onUserIdCopied={() => {
                   return addMessage(t("copied"));
