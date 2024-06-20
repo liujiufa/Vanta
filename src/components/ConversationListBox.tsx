@@ -575,6 +575,7 @@ function ConversationListBox(props: any) {
                 }}
                 onDestroyGroup={() => {
                   setConversationDetailVisible(false);
+                  setActiveBox(0);
                 }}
                 // @ts-ignore
                 groupMemberProps={{
