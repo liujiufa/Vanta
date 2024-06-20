@@ -782,7 +782,6 @@ export default function Rank() {
       // Number(PledgeUserInfo?.robotAmount)
     )
       return addMessage(t("24"));
-
     handleTransaction(value, async (call: any) => {
       let res: any;
       try {

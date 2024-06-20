@@ -1,6 +1,9 @@
+// @ts-nocheck
 import styled, { keyframes } from "styled-components";
 import {
+  Avatar,
   Chat,
+  ConversationItem,
   ConversationList,
   GroupDetail,
   Header,
@@ -16,8 +19,25 @@ import { addMessage } from "../utils/tool";
 import UserInfo from "./userInfo/userInfo";
 import { FlexBox, FlexCCBox } from "./FlexBox";
 import { ChatReturnIcon } from "../assets/image/homeBox";
+import { addGroup, customer_service, getGroupList } from "../API";
+import { stateType } from "../store/reducer";
+import { useSelector } from "react-redux";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { observer } from "mobx-react-lite";
+
+// import Search from "antd/lib/input/Search";
 
 const ConversationBox = styled.div`
+  .conversation-list-self {
+    .cui-conversationItem-info {
+      svg {
+        width: 20px;
+        height: 20px;
+        font-size: 700;
+        fill: #d56819;
+      }
+    }
+  }
   .cui-user-select-footer {
     padding: 24px 5px;
     button {
@@ -86,12 +106,25 @@ const Btn = styled(FlexCCBox)<{ active: boolean }>`
   background: ${({ active }) => (active ? "#d56819" : "rgb(117 130 138)")};
 `;
 
-const ConversationItemBox = styled.div``;
+const ConversationList_Auto = styled.div`
+  background: #f9fafa;
+`;
+const ConversationList_Auto_Item = styled.div`
+  height: calc(100vh - 153px);
+`;
 
-export default function ConversationListBox(props: any) {
+function ConversationListBox(props: any) {
   const { t, i18n } = useTranslation();
   const [addContactVisible, setAddContactVisible] = useState(false);
-
+  const token = useSelector<stateType, stateType>((state: any) => state.token);
+  const qbToken = useSelector<stateType, stateType>(
+    (state: any) => state?.qbToken
+  );
+  const {
+    address: web3ModalAccount,
+    chainId,
+    isConnected,
+  } = useWeb3ModalAccount();
   // --- 创建会话 ---
   const [IsAddGroup, setIsAddGroup] = useState(false);
   const [userSelectVisible, setUserSelectVisible] = useState(false); // 是否显示创建群组弹窗
@@ -103,18 +136,22 @@ export default function ConversationListBox(props: any) {
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
 
   let [groupAvatar, setGroupAvatar] = useState("");
+  let [Time, setTime] = useState(0);
+  let [GroupList, setGroupList] = useState<any>([]);
+  let [CustomerService, setCustomerService] = useState<any>([]);
   let [ActiveBox, setActiveBox] = useState(props?.index);
-  const thread = rootStore.threadStore;
   const isInGroup = rootStore.addressStore.groups.some((item) => {
     // @ts-ignore
     return item.groupid == cvsItem.conversationId;
   });
-  const handleEllipsisClick = () => {
+  const handleEllipsisClick = (e: any) => {
     if (cvsItem.chatType == "groupChat") {
-      if (thread.showThreadPanel) {
-        rootStore.threadStore.setThreadVisible(false);
-      }
       isInGroup && setConversationDetailVisible((value) => !value);
+      if (!!isInGroup) {
+        return setActiveBox(2);
+      } else {
+        return addMessage("error");
+      }
     } else {
       setConversationDetailVisible((value) => !value);
     }
@@ -124,10 +161,44 @@ export default function ConversationListBox(props: any) {
   const handleUserIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserId(e.target.value);
   };
+
+  const getInitData = () => {
+    if (!!token && !!web3ModalAccount) {
+      getGroupList(web3ModalAccount + "").then((res: any) => {
+        if (res?.code === 200) {
+          console.log(res.data, "GroupList");
+
+          setGroupList(res?.data || []);
+        }
+      });
+    }
+  };
+
+  const topConversation = () => {
+    rootStore.conversationStore.topConversation(cvsItem);
+  };
+
+  useEffect(() => {
+    // 获取群组头像
+    if (rootStore.loginState) {
+      const groupIds =
+        rootStore.addressStore.groups
+          .filter((item) => !item.avatarUrl)
+          .map((item) => {
+            //@ts-ignore
+            return item.groupid;
+          }) || [];
+      // getGroupAvatar(groupIds).then((res: any) => {
+      //   for (let groupId in res) {
+      //     rootStore.addressStore.updateGroupAvatar(groupId, res[groupId]);
+      //   }
+      // });
+    }
+  }, [rootStore.loginState, rootStore.addressStore.groups.length]);
+
   useEffect(() => {
     setConversationDetailVisible(false);
     setCvsItem(rootStore.conversationStore.currentCvs);
-
     if (rootStore.conversationStore.currentCvs.chatType === "groupChat") {
       let groupAvatarUrl = rootStore.addressStore.groups.find(
         (item: any) =>
@@ -137,8 +208,22 @@ export default function ConversationListBox(props: any) {
     }
   }, [rootStore.conversationStore.currentCvs]);
 
+  useEffect(() => {
+    customer_service().then((res: any) => {
+      if (res?.code === 200) {
+        setCustomerService(res?.data || []);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    getInitData();
+  }, [token]);
+
   return (
-    <ConversationBox style={{ width: "100%", height: "100%" }}>
+    <ConversationBox
+      style={{ width: "100%", height: "100%" }}
+      className="chat-container-conversation"
+    >
       {Number(ActiveBox) === 0 &&
         (!IsAddGroup ? (
           <ConversationList
@@ -178,7 +263,7 @@ export default function ConversationListBox(props: any) {
                           color={"#464E53"}
                         />
                       ),
-                      content: t("Add group"),
+                      content: t("Add Group"),
                       onClick: () => {
                         setIsAddGroup(true);
                       },
@@ -208,17 +293,22 @@ export default function ConversationListBox(props: any) {
                       ),
                       content: t("Contact Customer Service"),
                       onClick: () => {
+                        console.log(CustomerService, "CustomerService");
+
+                        rootStore.addressStore.addContact(
+                          CustomerService[0]?.userId
+                        );
                         rootStore.conversationStore.addConversation({
                           chatType: "singleChat",
-                          conversationId: "d451c95cb9",
-                          name: "kkkkkk",
+                          conversationId: CustomerService[0]?.userId,
+                          name: CustomerService[0]?.nickname,
                           lastMessage: {} as never,
                           unreadCount: 0,
                         });
                         rootStore.conversationStore.setCurrentCvs({
                           chatType: "singleChat",
-                          name: "kkkkkk",
-                          conversationId: "d451c95cb9",
+                          name: CustomerService[0]?.nickname,
+                          conversationId: CustomerService[0]?.userId,
                           unreadCount: 0,
                         });
                         setActiveBox(1);
@@ -233,76 +323,78 @@ export default function ConversationListBox(props: any) {
                 avatar={<></>}
               ></Header>
             )}
-            onItemClick={(item) => {
-              setConversationDetailVisible(false);
-              setCvsItem(item);
-              setActiveBox(1);
-            }}
-            className="conversation-list"
-            // renderItem={(cvs: any, index: any) => {
-            //   console.log(cvs, "cvs");
-
-            //   return (
-            //     <div className="cui-conversationItem cui-conversationItem-light">
-            //       <div
-            //         className="cui-avatar cui-avatar-circle cui-avatar-light"
-            //         style={{
-            //           width: "50px",
-            //           height: "50px",
-            //           lineHeight: "50px",
-            //           fontSize: "21px",
-            //         }}
-            //       >
-            //         <span className="cui-avatar-string">四海</span>
-            //       </div>
-            //       <div className="cui-conversationItem-content">
-            //         <span className="cui-conversationItem-nickname ">
-            //           四海之内皆兄弟
-            //         </span>
-            //         <span className="cui-conversationItem-message">
-            //           74faac750a: ggg
-            //         </span>
-            //       </div>
-            //       <div className="cui-conversationItem-info">
-            //         <span className="cui-conversationItem-time">Sun</span>
-            //         <div style={{ height: "20px", position: "relative" }}>
-            //           <span className="cui-badge cui-badge-not-a-wrapper"></span>
-            //         </div>
-            //       </div>
-            //     </div>
-            //   );
-            // }}
-          ></ConversationList>
-        ) : (
-          <ConversationList
-            renderHeader={() => (
-              <ReturnBox style={{ marginBottom: "5px" }}>
-                <ChatReturnIcon
-                  onClick={() => {
-                    setIsAddGroup(false);
-                  }}
-                  style={{
-                    cursor: "pointer",
-                    fontSize: 20,
-                    verticalAlign: "middle",
-                    marginRight: 10,
-                    float: "left",
-                    lineHeight: "50px",
-                  }}
-                />
-              </ReturnBox>
-            )}
             // onItemClick={(item) => {
             //   setConversationDetailVisible(false);
             //   setCvsItem(item);
+            //   setTime(new Date().valueOf());
             //   setActiveBox(1);
             // }}
-            className="conversation-list"
-            renderItem={(cvs: any, index: any) => {
-              console.log(cvs, "cvs");
+            className="conversation-list conversation-list-self"
+            renderItem={(cvs) => {
+              console.log(
+                cvs?.lastMessage,
+
+                "cvs"
+              );
 
               return (
-                <div className="cui-conversationItem cui-conversationItem-light">
+                <ConversationItem
+                  data={{
+                    ...cvs,
+                    lastMessage: {
+                      ...cvs?.lastMessage,
+                      from: cvs?.lastMessage?.from?.slice(2, 10),
+                    },
+                  }}
+                  onClick={() => {
+                    rootStore.conversationStore.addConversation(cvs);
+                    rootStore.conversationStore.setCurrentCvs(cvs);
+                    setConversationDetailVisible(false);
+                    setCvsItem(cvs);
+                    setActiveBox(1);
+                  }}
+                  moreAction={{
+                    visible: true,
+                    actions: [
+                      {
+                        // UIKit 默认提供会话删除事件。
+                        content: "DELETE",
+                      },
+                      {
+                        content: "Top Conversation",
+                        onClick: topConversation,
+                      },
+                    ],
+                  }}
+                />
+              );
+            }}
+          ></ConversationList>
+        ) : (
+          <ConversationList_Auto className="conversation-list">
+            <ReturnBox style={{ marginBottom: "5px" }}>
+              <ChatReturnIcon
+                onClick={() => {
+                  // getInitData();
+                  setIsAddGroup(false);
+                }}
+                style={{
+                  cursor: "pointer",
+                  fontSize: 20,
+                  verticalAlign: "middle",
+                  marginRight: 10,
+                  float: "left",
+                  lineHeight: "50px",
+                }}
+              />
+            </ReturnBox>
+            {/* <Search></Search> */}
+            <ConversationList_Auto_Item>
+              {GroupList?.map((item: any, index: any) => (
+                <div
+                  className="cui-conversationItem cui-conversationItem-light"
+                  key={index}
+                >
                   <div
                     className="cui-avatar cui-avatar-circle cui-avatar-light"
                     style={{
@@ -312,27 +404,55 @@ export default function ConversationListBox(props: any) {
                       fontSize: "21px",
                     }}
                   >
-                    <span className="cui-avatar-string">四海</span>
+                    <span className="cui-avatar-string">
+                      {String(item?.name)?.length > 2
+                        ? String(item?.name)?.slice(0, 2)
+                        : item?.name}
+                    </span>
                   </div>
                   <div className="cui-conversationItem-content">
                     <span className="cui-conversationItem-nickname ">
-                      四海之内皆兄弟
+                      {item?.name}
                     </span>
                     <span className="cui-conversationItem-message">
-                      2000/2000
+                      {item?.affiliations_count}/{item?.maxusers}
                     </span>
                   </div>
                   <div className="cui-conversationItem-info">
-                    {true ? (
-                      <Btn active={true}>{t("Join the group")}</Btn>
+                    {!item?.isJoin ? (
+                      <Btn
+                        active={true}
+                        onClick={async () => {
+                          if (!!token && !!item?.id) {
+                            let res = await addGroup(item?.id);
+                          }
+                          rootStore.conversationStore.addConversation({
+                            chatType: "groupChat",
+                            conversationId: item?.id,
+                            name: item?.name,
+                            lastMessage: {} as never,
+                            unreadCount: 0,
+                          });
+                          rootStore.conversationStore.setCurrentCvs({
+                            chatType: "groupChat",
+                            name: item?.name,
+                            conversationId: item?.id,
+                            unreadCount: 0,
+                          });
+                          // setConversationDetailVisible(false);
+                          setActiveBox(1);
+                        }}
+                      >
+                        {t("Join the group")}
+                      </Btn>
                     ) : (
                       <Btn active={false}>{t("Joined the group")}</Btn>
                     )}
                   </div>
                 </div>
-              );
-            }}
-          ></ConversationList>
+              ))}
+            </ConversationList_Auto_Item>
+          </ConversationList_Auto>
         ))}
 
       <ChatBox>
@@ -342,6 +462,7 @@ export default function ConversationListBox(props: any) {
               <ChatReturnIcon
                 onClick={() => {
                   setActiveBox(0);
+                  getInitData();
                 }}
                 style={{
                   cursor: "pointer",
@@ -354,9 +475,9 @@ export default function ConversationListBox(props: any) {
               />
             </ReturnBox>
             <Chat
+              key={Time}
               // MessageList 使用mome缓存了消息组件，修改这些控制显示开关时需要重新渲染组件
-              key={"false" + "false" + "false"}
-              ref={chatRef}
+              // key={"false" + "false" + "false"}
               className="Conversation_Self"
               messageListProps={{
                 renderUserProfile: () => {
@@ -427,6 +548,7 @@ export default function ConversationListBox(props: any) {
               <ChatReturnIcon
                 onClick={() => {
                   setActiveBox(1);
+                  setConversationDetailVisible(false);
                 }}
                 style={{
                   cursor: "pointer",
@@ -449,6 +571,7 @@ export default function ConversationListBox(props: any) {
                 }}
                 onLeaveGroup={() => {
                   setConversationDetailVisible(false);
+                  setActiveBox(0);
                 }}
                 onDestroyGroup={() => {
                   setConversationDetailVisible(false);
@@ -471,7 +594,12 @@ export default function ConversationListBox(props: any) {
                 }}
               ></GroupDetail>
             ) : (
-              <UserInfo conversation={cvsItem}></UserInfo>
+              <UserInfo
+                conversation={cvsItem}
+                fun={() => {
+                  setActiveBox(0);
+                }}
+              ></UserInfo>
             )}
           </Chat_container_chat_right>
         )}
@@ -525,3 +653,5 @@ export default function ConversationListBox(props: any) {
     </ConversationBox>
   );
 }
+
+export default observer(ConversationListBox);

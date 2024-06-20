@@ -763,9 +763,10 @@
   "pinned": "固定了",
   "Friend request sent": "好友请求已发送",
   "Chats": "会话列表",
-  "Add group": "添加群组",
+  "Add Group": "添加群组",
   "Contact Customer Service": "联系客服",
   "Joined the group": "已入群",
   "Join the group": "加入群",
+  "You are not in this group": "您不在此群组",
   "please login in again": "请重新登录"
 }

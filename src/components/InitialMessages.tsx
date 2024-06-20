@@ -23,7 +23,7 @@ function App(props: any) {
   // 开始滚动
   useEffect(() => {
     let timer: any;
-    if (isScrolle) {
+    if (isScrolle && !!warper.current) {
       timer = setInterval(() => {
         /**
          *让消息持续的向左滚动

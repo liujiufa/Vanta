@@ -15,6 +15,7 @@ import toast from "./toast/toast";
 import { addMessage } from "../utils/tool";
 import { ReturnBox } from "./ConversationListBox";
 import { ChatReturnIcon } from "../assets/image/homeBox";
+import { observer } from "mobx-react-lite";
 
 const ContactDetailBox = styled.div`
   .ContactDetail_Self {
@@ -30,7 +31,7 @@ const ContactDetailBox = styled.div`
   }
 `;
 
-export default function ConversationListBox(props: any) {
+function ConversationListBox(props: any) {
   const { t, i18n } = useTranslation();
   const [addContactVisible, setAddContactVisible] = useState(false);
 
@@ -156,3 +157,5 @@ export default function ConversationListBox(props: any) {
     </div>
   );
 }
+
+export default observer(ConversationListBox);

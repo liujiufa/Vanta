@@ -484,3 +484,21 @@ export function rule() {
     method: "get",
   });
 }
+export function customer_service() {
+  return axois.request({
+    url: `/user/customer_service`,
+    method: "get",
+  });
+}
+export function getGroupList(userId: string) {
+  return axois.request({
+    url: `/user/getGroupList/${userId}`,
+    method: "get",
+  });
+}
+export function addGroup(groupId: string) {
+  return axois.request({
+    url: `/user/addGroup/${groupId}`,
+    method: "get",
+  });
+}

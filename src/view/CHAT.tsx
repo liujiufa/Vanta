@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ContainerBox, FlexCCBox, FlexSBCBox } from "../components/FlexBox";
 import { contractAddress, isMain } from "../config";
 import { throttle } from "lodash";
+import { observer } from "mobx-react-lite";
 
 import { addMessage, startWord } from "../utils/tool";
 import PageLoding from "../components/PageLoding";
@@ -55,7 +56,7 @@ const TabItem = styled(FlexCCBox)`
     fill: #d56819;
   }
 `;
-export default function Rank() {
+function CHAT() {
   const { t, i18n } = useTranslation();
   const {
     address: web3ModalAccount,
@@ -73,11 +74,9 @@ export default function Rank() {
   const [TabActive, setTabActive] = useState(0);
   const [ConversationTabActive, setConversationTabActive] = useState(0);
 
-  const state = useSelector<stateType, stateType>((state) => state);
   const qbToken = useSelector<stateType, stateType>(
     (state: any) => state?.qbToken
   );
-  console.log(qbToken);
 
   const chatConfig = isMain
     ? {
@@ -88,22 +87,14 @@ export default function Rank() {
         useUserInfo: true, // 是否使用用户属性功能展示头像昵称（UIKit 内部会获取用户属性，需要用户自己设置）
       }
     : {
-        appKey: "easemob#easeim",
-        userId: "74faac750a",
-        token:
-          "YWMtI4pLkCtLEe-sE2dbiVewYFzzvlQ7sUrSpVuQGlyIzFStWgQgJ7sR77xyqwfxYq6OAwMAAAGQHVBIUjeeSAAkY_-bvzajmfPFMhdgvpAnfwYm42e8mN3KcG6zFiKabg",
+        appKey: "1100240607161186#demo",
+        userId: web3ModalAccount,
+        token: qbToken,
         translationTargetLanguage: "zh-Hans", // 翻译功能的目标语言
         useUserInfo: true, // 是否使用用户属性功能展示头像昵称（UIKit 内部会获取用户属性，需要用户自己设置）
       };
 
   const Navigate = useNavigate();
-  const getInitData = () => {
-    // getExchangeRecord().then((res: any) => {
-    //   if (res.code === 200) {
-    //     setRecordList(res?.data);
-    //   }
-    // });
-  };
 
   const handleUserIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value);
@@ -116,22 +107,16 @@ export default function Rank() {
   };
 
   useEffect(() => {
-    if (state.token) {
-      getInitData();
-    }
-  }, [state.token]);
-
-  useEffect(() => {
     console.log(Timeout, "Timeout");
     setTimeout(new Date().valueOf());
   }, [i18n.language]);
 
   useEffect(() => {
-    console.log(web3ModalAccount, qbToken, "------");
-
     if (!web3ModalAccount && !qbToken) {
       Navigate("/View/");
       return addMessage(t("please login in again"));
+    } else {
+      // window.onload();
     }
   }, [qbToken]);
 
@@ -156,10 +141,11 @@ export default function Rank() {
       }}
       features={{
         conversationList: {
-          // search: false,
+          search: true,
           item: {
-            moreAction: false,
-            deleteConversation: false,
+            moreAction: true,
+            deleteConversation: true,
+            presence: true,
           },
         },
         chat: {
@@ -167,11 +153,11 @@ export default function Rank() {
             threadList: true,
             moreAction: true,
             clearMessage: true,
-            deleteConversation: false,
+            deleteConversation: true,
             audioCall: false,
           },
           message: {
-            status: false,
+            status: true,
             reaction: true,
             thread: true,
             recall: true,
@@ -189,71 +175,77 @@ export default function Rank() {
         },
       }}
     >
-      <ChatContainerBox>
-        <TabBox>
-          <TabItem
-            onClick={() => {
-              setTabActive(0);
-              setConversationTabActive(0);
+      {!!qbToken && !!web3ModalAccount ? (
+        <ChatContainerBox>
+          <TabBox>
+            <TabItem
+              onClick={() => {
+                setTabActive(0);
+                setConversationTabActive(0);
+              }}
+            >
+              <Icon
+                type="BUBBLE_FILL"
+                width={28}
+                height={28}
+                className={Number(TabActive) === 0 ? "active" : ""}
+              ></Icon>
+            </TabItem>
+            <TabItem
+              onClick={() => {
+                setTabActive(1);
+              }}
+            >
+              <Icon
+                type="PERSON_DOUBLE_FILL"
+                width={28}
+                height={28}
+                className={Number(TabActive) === 1 ? "active" : ""}
+              ></Icon>
+            </TabItem>
+          </TabBox>
+
+          {Number(TabActive) === 0 && (
+            <ConversationListBox
+              index={ConversationTabActive}
+            ></ConversationListBox>
+          )}
+
+          {Number(TabActive) === 1 && (
+            <ContactListBox fun={ContactToConversation}></ContactListBox>
+          )}
+
+          <Modal
+            width={430}
+            open={addContactVisible}
+            onCancel={() => {
+              setAddContactVisible(false);
             }}
-          >
-            <Icon
-              type="BUBBLE_FILL"
-              width={28}
-              height={28}
-              className={Number(TabActive) === 0 ? "active" : ""}
-            ></Icon>
-          </TabItem>
-          <TabItem
-            onClick={() => {
-              setTabActive(1);
+            onOk={() => {
+              rootStore.addressStore.addContact(userId);
+              setAddContactVisible(false);
+              return addMessage("Friend request sent");
             }}
+            okText={t("add")}
+            closable={false}
+            title={t("addContact")}
           >
-            <Icon
-              type="PERSON_DOUBLE_FILL"
-              width={28}
-              height={28}
-              className={Number(TabActive) === 1 ? "active" : ""}
-            ></Icon>
-          </TabItem>
-        </TabBox>
-
-        {Number(TabActive) === 0 && (
-          <ConversationListBox
-            index={ConversationTabActive}
-          ></ConversationListBox>
-        )}
-
-        {Number(TabActive) === 1 && (
-          <ContactListBox fun={ContactToConversation}></ContactListBox>
-        )}
-
-        <Modal
-          width={430}
-          open={addContactVisible}
-          onCancel={() => {
-            setAddContactVisible(false);
-          }}
-          onOk={() => {
-            rootStore.addressStore.addContact(userId);
-            setAddContactVisible(false);
-            return addMessage("Friend request sent");
-          }}
-          okText={t("add")}
-          closable={false}
-          title={t("addContact")}
-        >
-          <>
-            <div className="add-contact">
-              <Input
-                placeholder={t("enterUserID")}
-                className="add-contact-input"
-                onChange={handleUserIdChange}
-              ></Input>
-            </div>
-          </>
-        </Modal>
-      </ChatContainerBox>
+            <>
+              <div className="add-contact">
+                <Input
+                  placeholder={t("enterUserID")}
+                  className="add-contact-input"
+                  onChange={handleUserIdChange}
+                ></Input>
+              </div>
+            </>
+          </Modal>
+        </ChatContainerBox>
+      ) : (
+        <PageLoding></PageLoding>
+      )}
     </UIKitProvider>
   );
 }
+
+export default observer(CHAT);

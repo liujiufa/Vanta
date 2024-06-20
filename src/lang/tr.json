@@ -762,5 +762,13 @@
   "removed a pin message": "removed a pin message",
   "'s message": "'s message",
   "pinned": "pinned",
+  "Friend request sent": "Friend request sent",
+  "Chats": "Chats",
+  "Add Group": "Add Group",
+  "Contact Customer Service": "Contact Customer Service",
+  "Joined the group": "Joined the group",
+  "Join the group": "Join the group",
+  "You are not in this group": "You are not in this group",
+
   "Please login in again": "Please login in again"
 }

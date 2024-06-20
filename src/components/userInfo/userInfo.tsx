@@ -24,7 +24,7 @@ interface UserInfoProps {
   };
   // themeMode?: string;
 }
-const UserInfo = (props: UserInfoProps) => {
+const UserInfo = (props: any) => {
   const { className, conversation } = props;
   const context = useContext(RootContext);
   console.log("context", context);
@@ -112,6 +112,7 @@ const UserInfo = (props: UserInfoProps) => {
     rootStore.conversationStore.deleteConversation(conversation);
     rootStore.messageStore.clearMessage(conversation);
     setDeleteContactModalVisible(false);
+    props.fun();
   };
 
   return (

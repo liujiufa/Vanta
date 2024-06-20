@@ -412,7 +412,6 @@ module.exports = function (webpackEnv) {
                 customize: require.resolve(
                   "babel-preset-react-app/webpack-overrides"
                 ),
-                sourceType: "unambiguous",
                 presets: [
                   [
                     require.resolve("babel-preset-react-app"),

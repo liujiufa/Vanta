@@ -12,20 +12,19 @@ import awardPoolContract from "./ABI/RewardDistribute.json";
 
 // 正式
 export const LOCAL_KEY = "MBAS_LANG";
-export const isMain = false;
+export const isMain = true;
 // 自己
 // export let baseUrl: string = isMain ? 'http://120.79.67.226:16088/' : 'http://192.168.2.114:16088/';
 export let baseUrl: string = isMain
   ? "https://www.vanta1.com/" + "api"
   : // ? "https://yhhyn.com/" + "api"
-    "http://120.79.67.226:19888";
+    "http://47.76.173.162:19888";
 // "http://192.168.1.37:18888/";
 // export let baseUrl: string = isMain ? window.location.origin + '/user/' : 'http://120.79.67.226:13777/';
 export let ContractUrl: string = isMain
   ? "https://bscscan.com/address/"
   : "https://testnet.bscscan.com/address/";
-export let SwapUrl: string =
-  "https://pancakeswap.finance/swap?chain=bscTestnet&inputCurrency=0x2b11640f31b84dc727841FE6B5a905D366A00e78&outputCurrency=0xdA99fA57019FB1DFC1AAea892e5190a91236A840";
+
 export let SuShiSwapUrl: string = "https://www.sushi.com/swap";
 export let RewardType: any = { "1": "16", "2": "17" };
 export const BitNumber = 8;
@@ -80,18 +79,31 @@ export const abiObj: abiObjType = {
 
 export const Main: contractAddressType = {
   USDT: "0x55d398326f99059fF775485246999027B3197955",
-  MBK: "0xac4f7a9C9D68472A70e29Da1fbEEB3e7835b0E70",
-  MBK_USDT: "0x897BA3EdC1cc42544994d4A6631e60E4744bd653",
-  Referrer: "0x13aFF424B1269bBE2B5A1282C3bB2502322B48f0",
-  Bot: "0xD724046aD703FF97b4Fe2ABe34F90bFEEde2e420",
-  pledgeContract: "0x09D4F573B90Ea70524B4821d5A9081cD4d55126c",
-  nftContract: "0x2Eb8770152a584772b7A700DE26e49634b2a54C0",
-  lpContract: "0x87aa05bB464FCE5a65E75134e7397b43787c242a",
-  nodeContract: "0xa94ee86f5491855fC6faCEAC427bE3EEA8Fa3d59",
-  communityContract: "0x9319A6D58B574Aea99a2ce1d7196Bb40D272fa8C",
-  gameContract: "0xd7bf479fcE88f4f665445c62FA3C8a25D3A79922",
+  MBK: "0xe43f6e972a8C9831674c91C31A2Fa16AE55E2AC8",
+  MBK_USDT: "0x8f0B84aA8927DA6bc404ec903dB669bc39171e47",
+  Referrer: "0x56e6F4D9B033EEb8D5D6A8E2554E77fc6635Bf91",
+  Bot: "0x0252B7f81Ef7aD5304BB684D0E62FD3088e74066",
+  pledgeContract: "0xa566954fC72031c456Dd21490FE54598D13774E0",
+  nftContract: "0x60094547683A0aFAAb60CF5318C068C165622039",
+  lpContract: "0x7E716d18Db84788432c0c9Bf4B08BaC4974a3e70",
+  nodeContract: "0x02E043f52a584a1E84e88c7eF0193D55ac7daF23",
+  communityContract: "0xEf2e3C088450eF8Ee5fdE1FFcC734284e6ABBd34",
+  gameContract: "0xf6bB1EB9955543735f842F68E1eaeE6e17d7C20F",
   IPancakeRouter02: "0x10ED43C718714eb63d5aA57B78B54704E256024E",
-  awardPoolContract: "0x706625638fc248C2BE3e1D1a7E83FCD75946B16F",
+  awardPoolContract: "0xed418F9107130642654198483A20E545fED0b5C1",
+  // USDT: "0x55d398326f99059fF775485246999027B3197955",
+  // MBK: "0xac4f7a9C9D68472A70e29Da1fbEEB3e7835b0E70",
+  // MBK_USDT: "0x897BA3EdC1cc42544994d4A6631e60E4744bd653",
+  // Referrer: "0x13aFF424B1269bBE2B5A1282C3bB2502322B48f0",
+  // Bot: "0xD724046aD703FF97b4Fe2ABe34F90bFEEde2e420",
+  // pledgeContract: "0x09D4F573B90Ea70524B4821d5A9081cD4d55126c",
+  // nftContract: "0x2Eb8770152a584772b7A700DE26e49634b2a54C0",
+  // lpContract: "0x87aa05bB464FCE5a65E75134e7397b43787c242a",
+  // nodeContract: "0xa94ee86f5491855fC6faCEAC427bE3EEA8Fa3d59",
+  // communityContract: "0x9319A6D58B574Aea99a2ce1d7196Bb40D272fa8C",
+  // gameContract: "0xd7bf479fcE88f4f665445c62FA3C8a25D3A79922",
+  // IPancakeRouter02: "0x10ED43C718714eb63d5aA57B78B54704E256024E",
+  // awardPoolContract: "0x706625638fc248C2BE3e1D1a7E83FCD75946B16F",
 };
 
 const Test = {
@@ -109,6 +121,8 @@ const Test = {
   IPancakeRouter02: "0xD99D1c33F9fC3444f8101754aBC46c52416550D1",
   awardPoolContract: "0x136Bd3d3bcc52eA3B4F7fFA7EB9f0f6a55e82AA4",
 };
-
+export let SwapUrl: string = isMain
+  ? `https://pancakeswap.finance/swap?chain=bsc&inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=${Main?.MBK}`
+  : "https://pancakeswap.finance/swap?chain=bscTestnet&inputCurrency=0x2b11640f31b84dc727841FE6B5a905D366A00e78&outputCurrency=0xdA99fA57019FB1DFC1AAea892e5190a91236A840";
 export const contractAddress: contractAddressType = isMain ? Main : Test;
 // Test

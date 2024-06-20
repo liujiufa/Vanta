@@ -529,6 +529,7 @@ export default function Rank() {
     getGamePoolInfo().then((res: any) => {
       if (res.code === 200) {
         setGamePoolInfo(res?.data);
+        setDiffTime(Number(res?.data?.intervalMin ?? 0));
         // setInputValueAmount(res?.data?.gameJoinNum);
       }
     });
@@ -600,6 +601,8 @@ export default function Rank() {
 
   useEffect(() => {
     if (token) {
+      getInitData();
+
       const now = new Date();
       const targetHour = 20; // 设定为晚上8点
 
@@ -623,8 +626,7 @@ export default function Rank() {
 
       // 将毫秒数转换为秒数
       const secondsLeft = Math.floor(millisecondsLeft / 1000);
-      setDiffTime(secondsLeft);
-      getInitData();
+      // setDiffTime(Number(GamePoolInfo?.intervalMin));
     }
   }, [token]);
 
