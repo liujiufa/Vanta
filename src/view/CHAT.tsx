@@ -63,12 +63,6 @@ function CHAT() {
     chainId,
     isConnected,
   } = useWeb3ModalAccount();
-  const [addContactVisible, setAddContactVisible] = useState(false);
-  const [contactData, setContactData] = useState({
-    id: "",
-    name: "",
-    type: "contact",
-  });
   const [userId, setUserId] = useState("");
   const [Timeout, setTimeout] = useState(0);
   const [TabActive, setTabActive] = useState(0);
@@ -118,7 +112,9 @@ function CHAT() {
     } else {
       // window.onload();
     }
-  }, [qbToken]);
+  }, [web3ModalAccount, qbToken]);
+
+  console.log(chatConfig, "chatConfig");
 
   return (
     <UIKitProvider
@@ -212,34 +208,12 @@ function CHAT() {
           )}
 
           {Number(TabActive) === 1 && (
-            <ContactListBox fun={ContactToConversation}></ContactListBox>
+            <ContactListBox
+              fun={() => {
+                ContactToConversation();
+              }}
+            ></ContactListBox>
           )}
-
-          <Modal
-            width={430}
-            open={addContactVisible}
-            onCancel={() => {
-              setAddContactVisible(false);
-            }}
-            onOk={() => {
-              rootStore.addressStore.addContact(userId);
-              setAddContactVisible(false);
-              return addMessage("Friend request sent");
-            }}
-            okText={t("add")}
-            closable={false}
-            title={t("addContact")}
-          >
-            <>
-              <div className="add-contact">
-                <Input
-                  placeholder={t("enterUserID")}
-                  className="add-contact-input"
-                  onChange={handleUserIdChange}
-                ></Input>
-              </div>
-            </>
-          </Modal>
         </ChatContainerBox>
       ) : (
         <PageLoding></PageLoding>
