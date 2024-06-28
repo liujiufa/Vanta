@@ -295,9 +295,9 @@ function ConversationListBox(props: any) {
                       onClick: () => {
                         console.log(CustomerService, "CustomerService");
 
-                        rootStore.addressStore.addContact(
-                          CustomerService[0]?.userId
-                        );
+                        // rootStore.addressStore.addContact(
+                        //   CustomerService[0]?.userId
+                        // );
                         rootStore.conversationStore.addConversation({
                           chatType: "singleChat",
                           conversationId: CustomerService[0]?.userId,
@@ -354,7 +354,7 @@ function ConversationListBox(props: any) {
                     setActiveBox(1);
                   }}
                   moreAction={{
-                    visible: true,
+                    visible: false,
                     actions: [
                       {
                         // UIKit 默认提供会话删除事件。

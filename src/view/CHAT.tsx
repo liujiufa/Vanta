@@ -123,7 +123,7 @@ function CHAT() {
       local={{
         lng: i18n.language === "zh" ? "zh" : "en",
       }}
-      key={Timeout}
+      // key={Timeout}
       theme={{
         primaryColor: "#d56819",
         mode: "light",
