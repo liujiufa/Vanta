@@ -22,7 +22,7 @@ export const useGetReward = () => {
     }).then(async (res: any) => {
       showLoding(true);
       if (res?.code === 200) {
-        let value: any;
+        let value: any = null;
         try {
           value = await Contracts.example.withdrawReward(
             web3ModalAccount as string,
@@ -31,28 +31,18 @@ export const useGetReward = () => {
           );
         } catch (error: any) {
           showLoding(false);
+          if (error?.code === 4001) {
+            return addMessage(t("failed"));
+          }
         }
         showLoding(false);
-        if (value?.status) {
-          addMessage(t("Received successfully"));
-          callbackFun();
-        } else {
-          showLoding(false);
-          addMessage(t("failed"));
-        }
-        //   .then((res: string) => {
-        //     showLoding(false);
-        //     addMessage(t("Received successfully"));
-        //     callbackFun();
-        // setTimeout(() =>
-        //     , 5000)
-        //   })
-        //   .catch((res: any) => {
-        // if (res.code === 4001) {
-        // addMessage(t("failed"));
-        // showLoding(false);
+        // if (!!value?.status) {
+        addMessage(t("Received successfully"));
+        await callbackFun();
+        // } else {
+        //   showLoding(false);
+        //   addMessage(t("failed"));
         // }
-        //   });
       } else {
         showLoding(false);
         addMessage(res.msg);

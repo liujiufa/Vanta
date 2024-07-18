@@ -665,7 +665,7 @@ const MainLayout: any = () => {
       if (!tag) return addMessage(t("221"));
       let res: any = await isRefereeAddress({ userAddress: InputValue });
       if (!(res?.code === 200)) return addMessage(res.msg);
-      let isSuccessBind: any;
+      let isSuccessBind: any = null;
       try {
         showLoding(true);
         if (!!(await isNoGasFun())) return;
@@ -674,15 +674,17 @@ const MainLayout: any = () => {
           InputValue as string
         );
       } catch (error: any) {
-        // return addMessage(t("222"));
+        if (error?.code === 4001) {
+          return addMessage(t("222"));
+        }
       }
       showLoding(false);
-      if (!!isSuccessBind?.status) {
-        setBindModal(false);
-        return addMessage(t("223"));
-      } else {
-        addMessage(t("222"));
-      }
+      // if (!!isSuccessBind?.status) {
+      setBindModal(false);
+      return addMessage(t("223"));
+      // } else {
+      //   addMessage(t("222"));
+      // }
     } else {
       addMessage("Please link wallet");
     }

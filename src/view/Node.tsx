@@ -577,7 +577,7 @@ export default function Rank() {
     if (!token) return;
     if (Number(value) <= 0) return;
     handleTransaction(value, async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
 
@@ -592,18 +592,20 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("69"));
+        if (error?.code === 4001) {
+          return addMessage(t("69"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        getInitData();
-        setActivationModal(false);
+      // if (!!res?.status) {
+      await call();
+      await getInitData();
+      setActivationModal(false);
 
-        addMessage(t("70"));
-      } else {
-        addMessage(t("69"));
-      }
+      addMessage(t("70"));
+      // } else {
+      //   addMessage(t("69"));
+      // }
     });
   };
 

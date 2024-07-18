@@ -542,7 +542,7 @@ export default function Rank() {
     handleTransaction(
       Number(value) * Number(GamePoolInfo?.gameJoinNum ?? 0) + "",
       async (call: any) => {
-        let res: any;
+        let res: any = null;
         try {
           showLoding(true);
 
@@ -557,15 +557,17 @@ export default function Rank() {
           }
         } catch (error: any) {
           showLoding(false);
-          return addMessage(t("69"));
+          if (error?.code === 4001) {
+            return addMessage(t("69"));
+          }
         }
         showLoding(false);
-        if (!!res?.status) {
-          call();
-          addMessage(t("70"));
-        } else {
-          addMessage(t("69"));
-        }
+        // if (!!res?.status) {
+        await call();
+        addMessage(t("70"));
+        // } else {
+        //   addMessage(t("69"));
+        // }
       }
     );
   };

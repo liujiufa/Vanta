@@ -776,38 +776,40 @@ export default function Rank() {
       return addMessage(t("367", { num: UserBuyBotInfo }));
 
     handleTransaction(value, async (call: any) => {
-      let res: any;
+      let resData: any = null;
       try {
         showLoding(true);
-        res = await Contracts.example?.buyBot(
+        resData = await Contracts.example?.buyBot(
           web3ModalAccount as string,
           value
         );
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("164"));
+        if (error?.code === 4001) {
+          return addMessage(t("164"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        Contracts.example
-          ?.queryUserBuyBotInfo(web3ModalAccount as string)
-          .then((res: any) => {
-            if (Number(EthertoWei(res[res?.length - 1] ?? "0")) > 0) {
-              Contracts.example
-                ?.queryMbkByUsdt1(
-                  web3ModalAccount as string,
-                  res[res?.length - 1] + ""
-                )
-                ?.then((res1: any) => {
-                  setUserBuyBotInfo(decimalNum(EthertoWei(res1 ?? "0"), 2));
-                });
-            }
-          });
-        addMessage(t("165"));
-      } else {
-        addMessage(t("164"));
-      }
+      // if (!!resData?.status) {
+      await call();
+      await Contracts.example
+        ?.queryUserBuyBotInfo(web3ModalAccount as string)
+        .then((res: any) => {
+          if (Number(EthertoWei(res[res?.length - 1] ?? "0")) > 0) {
+            Contracts.example
+              ?.queryMbkByUsdt1(
+                web3ModalAccount as string,
+                res[res?.length - 1] + ""
+              )
+              ?.then((res1: any) => {
+                setUserBuyBotInfo(decimalNum(EthertoWei(res1 ?? "0"), 2));
+              });
+          }
+        });
+      addMessage(t("165"));
+      // } else {
+      //   addMessage(t("164"));
+      // }
     });
   };
 
