@@ -502,3 +502,9 @@ export function addGroup(groupId: string) {
     method: "get",
   });
 }
+export function getTokenStatus() {
+  return axois.request({
+    url: `/user/getTokenStatus`,
+    method: "get",
+  });
+}

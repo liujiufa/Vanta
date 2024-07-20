@@ -13,7 +13,12 @@ import {
   startWord,
   generateRandomString,
 } from "../utils/tool";
-import { Login, getUserInfo, isRefereeAddress } from "../API/index";
+import {
+  Login,
+  getTokenStatus,
+  getUserInfo,
+  isRefereeAddress,
+} from "../API/index";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { stateType } from "../store/reducer";
@@ -793,8 +798,18 @@ const MainLayout: any = () => {
   };
 
   const preLoginFun = async () => {
-    if (!!initalToken) return;
-    await LoginFun();
+    let item: any = null;
+    if (!!initalToken) {
+      item = await getTokenStatus();
+      if (item?.data === 1) {
+        localStorage.clear();
+        window.location.reload();
+      } else if (item?.data === 0) {
+        return;
+      }
+    } else {
+      await LoginFun();
+    }
   };
 
   useEffect(() => {
