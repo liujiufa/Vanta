@@ -13,7 +13,12 @@ import {
   startWord,
   generateRandomString,
 } from "../utils/tool";
-import { Login, getUserInfo, isRefereeAddress } from "../API/index";
+import {
+  Login,
+  getTokenStatus,
+  getUserInfo,
+  isRefereeAddress,
+} from "../API/index";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { stateType } from "../store/reducer";
@@ -570,7 +575,7 @@ const MainLayout: any = () => {
 
   // 导航
   const navigateFun = (path: string) => {
-    if (path === "CHAT") {
+    if (path === "/CHAT") {
       if (!web3ModalAccount) return addMessage(t("Please link wallet"));
       if (!initalQBToken) return addMessage(t("426"));
       return Navigate("/View" + path);
@@ -626,7 +631,7 @@ const MainLayout: any = () => {
               createLoginSuccessAction(
                 web3ModalAccount as string,
                 res.data.token,
-                res.data.password
+                res.data.qbToken
               )
             );
             Contracts.example
@@ -645,7 +650,7 @@ const MainLayout: any = () => {
             );
             localStorage.setItem(
               (web3ModalAccount as string)?.toLowerCase() + "1",
-              res.data.password
+              res.data.qbToken
             );
             setSelectWallet(false);
           } else {
@@ -665,7 +670,7 @@ const MainLayout: any = () => {
       if (!tag) return addMessage(t("221"));
       let res: any = await isRefereeAddress({ userAddress: InputValue });
       if (!(res?.code === 200)) return addMessage(res.msg);
-      let isSuccessBind: any;
+      let isSuccessBind: any = null;
       try {
         showLoding(true);
         if (!!(await isNoGasFun())) return;
@@ -674,15 +679,17 @@ const MainLayout: any = () => {
           InputValue as string
         );
       } catch (error: any) {
-        // return addMessage(t("222"));
+        if (error?.code === 4001) {
+          return addMessage(t("222"));
+        }
       }
       showLoding(false);
-      if (!!isSuccessBind?.status) {
-        setBindModal(false);
-        return addMessage(t("223"));
-      } else {
-        addMessage(t("222"));
-      }
+      // if (!!isSuccessBind?.status) {
+      setBindModal(false);
+      return addMessage(t("223"));
+      // } else {
+      //   addMessage(t("222"));
+      // }
     } else {
       addMessage("Please link wallet");
     }
@@ -791,8 +798,18 @@ const MainLayout: any = () => {
   };
 
   const preLoginFun = async () => {
-    if (!!initalToken) return;
-    await LoginFun();
+    let item: any = null;
+    if (!!initalToken) {
+      item = await getTokenStatus();
+      if (item?.data === 1) {
+        localStorage.clear();
+        window.location.reload();
+      } else if (item?.data === 0) {
+        return;
+      }
+    } else {
+      await LoginFun();
+    }
   };
 
   useEffect(() => {
@@ -815,7 +832,7 @@ const MainLayout: any = () => {
   }, [refereeUserAddress]);
 
   useEffect(() => {
-    if (!!initalToken) {
+    if (!!initalToken && !!initalQBToken) {
       dispatch(
         createLoginSuccessAction(
           web3ModalAccount as string,

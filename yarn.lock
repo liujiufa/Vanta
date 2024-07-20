@@ -12730,6 +12730,16 @@
   "integrity" "sha512-j8z+cQbWIM5LY37pR6uZR6D4LfseplqnuAO4co4u8917hBUvXlEqyP1ZzqVLcqoyUesZZv/ImreoCeHVDpE5pQ=="
   "resolved" "https://registry.npmmirror.com/react-hot-toast/-/react-hot-toast-2.4.1.tgz"
   "version" "2.4.1"
+<<<<<<< HEAD
+=======
+  dependencies:
+    "goober" "^2.1.10"
+
+"react-i18next@^11.16.9":
+  "integrity" "sha512-euXxWvcEAvsY7ZVkwx9ztCq4butqtsGHEkpkuo0RMj8Ru09IF9o2KxCyN+zyv51Nr0aBh/elaTIiR6fMb8YfVg=="
+  "resolved" "https://registry.npmmirror.com/react-i18next/-/react-i18next-11.16.9.tgz"
+  "version" "11.16.9"
+>>>>>>> v1-branch
   dependencies:
     "goober" "^2.1.10"
 

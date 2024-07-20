@@ -255,8 +255,8 @@ export default function Rank() {
     if (!state.token) return;
 
     buyNodeHandleTransaction(value, async (call: any) => {
-      let res: any;
-      let item: any;
+      let res: any = null;
+      let item: any = null;
       try {
         showLoding(true);
         item = await buyNode({});
@@ -269,17 +269,19 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("25"));
+        if (error?.code === 4001) {
+          return addMessage(t("25"));
+        }
       }
 
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        Navigate("/View/Node");
-        addMessage(t("26"));
-      } else {
-        addMessage(t(item?.msg));
-      }
+      // if (!!res?.status) {
+      await call();
+      Navigate("/View/Node");
+      addMessage(t("26"));
+      // } else {
+      //   addMessage(t(item?.msg));
+      // }
     });
   };
 

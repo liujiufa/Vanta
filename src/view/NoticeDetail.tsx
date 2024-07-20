@@ -52,9 +52,13 @@ export default function NoticeDetail() {
 
       <div className="contentBox">
         {/* <TruncateMarkup lines={2}> */}
-        <div className="textDetailContentTime">
-          {dateFormat("YYYY-mm-dd HH:MM", new Date(NoticeInfo?.createTime))}
-        </div>
+        {NoticeInfo?.createTime ? (
+          <div className="textDetailContentTime">
+            {dateFormat("YYYY-mm-dd HH:MM", new Date(NoticeInfo?.createTime))}
+          </div>
+        ) : (
+          "-"
+        )}
         <div
           className="textDetailContent"
           dangerouslySetInnerHTML={{ __html: NoticeInfo?.content }}

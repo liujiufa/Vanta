@@ -159,7 +159,6 @@ export default function useUSDTGroup(
           await transactionCallBack(handleUSDTRefresh);
         } else {
           console.log(price, transactionCallBack, "1212");
-
           // await handleApprove(price);
           await handleApprove(price, transactionCallBack);
         }

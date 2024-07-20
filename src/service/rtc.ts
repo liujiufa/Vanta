@@ -1,4 +1,4 @@
-import axios1 from "axios";
+import axios from "axios";
 import { rootStore } from "easemob-chat-uikit";
 
 // username -> chat user id
@@ -8,10 +8,10 @@ export const getRtcToken = (params: {
   channelName: string | number;
   username: string;
 }) => {
-  axios1.defaults.headers.common["Authorization"] =
+  axios.defaults.headers.common["Authorization"] =
     "Bearer " + rootStore.client.context.accessToken;
   let { username, channelName, appKey } = params;
-  return axios1
+  return axios
     .get(
       `${
         rootStore.client.apiUrl
@@ -29,10 +29,10 @@ export const getRtcChannelMembers = (params: {
   channelName: string;
   appKey: string;
 }) => {
-  axios1.defaults.headers.common["Authorization"] =
+  axios.defaults.headers.common["Authorization"] =
     "Bearer " + rootStore.client.context.accessToken;
   let { username, channelName, appKey } = params;
-  return axios1
+  return axios
     .get(
       `${
         rootStore.client.apiUrl

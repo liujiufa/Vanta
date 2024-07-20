@@ -227,7 +227,7 @@ export default function Rank() {
     if (!web3ModalAccount) return;
     if (Number(value) <= 0) return;
     handleTransaction(value, async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
         res =
@@ -240,15 +240,17 @@ export default function Rank() {
           );
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("238"));
+        if (error?.code === 4001) {
+          return addMessage(t("238"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        addMessage(t("239"));
-      } else {
-        addMessage(t("238"));
-      }
+      // if (!!res?.status) {
+      await call();
+      addMessage(t("239"));
+      // } else {
+      //   addMessage(t("238"));
+      // }
     });
   };
 

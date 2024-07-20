@@ -782,9 +782,8 @@ export default function Rank() {
       // Number(PledgeUserInfo?.robotAmount)
     )
       return addMessage(t("24"));
-
     handleTransaction(value, async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
 
@@ -804,15 +803,17 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("25"));
+        if (error?.code === 4001) {
+          return addMessage(t("25"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        addMessage(t("26"));
-      } else {
-        addMessage(t("25"));
-      }
+      // if (!!res?.status) {
+      await call();
+      addMessage(t("26"));
+      // } else {
+      //   addMessage(t("25"));
+      // }
     });
   };
 

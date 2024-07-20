@@ -271,22 +271,24 @@ export default function Rank() {
   const mintFun = (value: string) => {
     if (Number(value) <= 0) return;
     handleTransaction(value, async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
         res = await Contracts.example?.mint(web3ModalAccount as string);
       } catch (error: any) {
         showLoding(false);
-        return addMessage("mint失败");
+        if (error?.code === 4001) {
+          return addMessage("mint失败");
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        Navigate("/View/NFT");
-        addMessage("mint成功");
-      } else {
-        addMessage("mint失败");
-      }
+      // if (!!res?.status) {
+      await call();
+      Navigate("/View/NFT");
+      addMessage("mint成功");
+      // } else {
+      //   addMessage("mint失败");
+      // }
     });
   };
 

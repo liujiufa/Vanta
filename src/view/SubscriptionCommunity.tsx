@@ -430,7 +430,7 @@ export default function Rank() {
     if (!CommunitySoldBase?.isSatisfy || !CommunitySoldBase?.userIsNode) return;
     if (Number(value) <= 0) return;
     buyNodeHandleTransaction(Number(value) + "", async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
         let item: any = await activationCommunity({});
@@ -447,17 +447,19 @@ export default function Rank() {
         }
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("69"));
+        if (error?.code === 4001) {
+          return addMessage(t("69"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        getInitData();
-        Navigate("/View/Community");
-        addMessage(t("70"));
-      } else {
-        addMessage(t("69"));
-      }
+      // if (!!res?.status) {
+      await call();
+      await getInitData();
+      Navigate("/View/Community");
+      addMessage(t("70"));
+      // } else {
+      //   addMessage(t("69"));
+      // }
     });
   };
 

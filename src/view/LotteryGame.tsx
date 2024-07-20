@@ -529,6 +529,7 @@ export default function Rank() {
     getGamePoolInfo().then((res: any) => {
       if (res.code === 200) {
         setGamePoolInfo(res?.data);
+        setDiffTime(Number(res?.data?.intervalMin ?? 0));
         // setInputValueAmount(res?.data?.gameJoinNum);
       }
     });
@@ -541,7 +542,7 @@ export default function Rank() {
     handleTransaction(
       Number(value) * Number(GamePoolInfo?.gameJoinNum ?? 0) + "",
       async (call: any) => {
-        let res: any;
+        let res: any = null;
         try {
           showLoding(true);
 
@@ -556,15 +557,17 @@ export default function Rank() {
           }
         } catch (error: any) {
           showLoding(false);
-          return addMessage(t("69"));
+          if (error?.code === 4001) {
+            return addMessage(t("69"));
+          }
         }
         showLoding(false);
-        if (!!res?.status) {
-          call();
-          addMessage(t("70"));
-        } else {
-          addMessage(t("69"));
-        }
+        // if (!!res?.status) {
+        await call();
+        addMessage(t("70"));
+        // } else {
+        //   addMessage(t("69"));
+        // }
       }
     );
   };
@@ -600,6 +603,8 @@ export default function Rank() {
 
   useEffect(() => {
     if (token) {
+      getInitData();
+
       const now = new Date();
       const targetHour = 20; // 设定为晚上8点
 
@@ -623,8 +628,7 @@ export default function Rank() {
 
       // 将毫秒数转换为秒数
       const secondsLeft = Math.floor(millisecondsLeft / 1000);
-      setDiffTime(secondsLeft);
-      getInitData();
+      // setDiffTime(Number(GamePoolInfo?.intervalMin));
     }
   }, [token]);
 

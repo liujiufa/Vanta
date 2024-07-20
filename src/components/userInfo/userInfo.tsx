@@ -7,13 +7,15 @@ import {
   rootStore,
   Input,
 } from "easemob-chat-uikit";
-import i18next from "../../lang/i18n";
 import classNames from "classnames";
-import { useContext } from "react";
+import { useContext, useTransition } from "react";
+import { useTranslation } from "react-i18next";
+
 import toast from "../toast/toast";
 import { useState, ChangeEvent } from "react";
 import "./userInfo.scss";
 import { observer } from "mobx-react-lite";
+import { addMessage } from "../../utils/tool";
 interface UserInfoProps {
   className?: string;
   conversation: {
@@ -22,7 +24,7 @@ interface UserInfoProps {
   };
   // themeMode?: string;
 }
-const UserInfo = (props: UserInfoProps) => {
+const UserInfo = (props: any) => {
   const { className, conversation } = props;
   const context = useContext(RootContext);
   console.log("context", context);
@@ -45,7 +47,7 @@ const UserInfo = (props: UserInfoProps) => {
   const [remarkModalVisible, setRemarkModalVisible] = useState(false);
   const [remarkValue, setRemarkValue] = useState(userInfo.remark || "");
 
-  const { t } = i18next;
+  const { t } = useTranslation();
 
   const classString = classNames(
     prefixCls,
@@ -66,7 +68,7 @@ const UserInfo = (props: UserInfoProps) => {
     document.execCommand("copy");
     // 删除临时元素
     document.body.removeChild(textArea);
-    toast.success(t("copySuccess"));
+    return addMessage(t("copySuccess"));
   };
 
   const editRemark = () => {
@@ -110,6 +112,7 @@ const UserInfo = (props: UserInfoProps) => {
     rootStore.conversationStore.deleteConversation(conversation);
     rootStore.messageStore.clearMessage(conversation);
     setDeleteContactModalVisible(false);
+    props.fun();
   };
 
   return (

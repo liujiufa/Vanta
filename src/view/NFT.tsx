@@ -802,7 +802,7 @@ export default function Rank() {
   const activeFun = (value: string, tokenId: number) => {
     if (Number(value) <= 0) return;
     handleTransaction(value, async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
         res = await Contracts.example?.active(
@@ -811,17 +811,19 @@ export default function Rank() {
         );
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("69"));
+        if (error?.code === 4001) {
+          return addMessage(t("69"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        setActiveNFTModal(false);
-        getInitData();
-        addMessage(t("70"));
-      } else {
-        addMessage(t("69"));
-      }
+      // if (!!res?.status) {
+      await call();
+      await getInitData();
+      setActiveNFTModal(false);
+      addMessage(t("70"));
+      // } else {
+      //   addMessage(t("69"));
+      // }
     });
   };
 
@@ -831,7 +833,7 @@ export default function Rank() {
       // if (!UserInfo?.isNft && UserInfo?.teamLevel <= 5)
       return addMessage(t("365"));
     MBK_USDT_handleTransaction(value, async (call: any) => {
-      let res: any;
+      let res: any = null;
       try {
         showLoding(true);
         res = await Contracts.example?.stakeLP(
@@ -841,16 +843,18 @@ export default function Rank() {
         );
       } catch (error: any) {
         showLoding(false);
-        return addMessage(t("71"));
+        if (error?.code === 4001) {
+          return addMessage(t("71"));
+        }
       }
       showLoding(false);
-      if (!!res?.status) {
-        call();
-        setPledgeLPModal(false);
-        addMessage(t("72"));
-      } else {
-        addMessage(t("71"));
-      }
+      // if (!!res?.status) {
+      await call();
+      setPledgeLPModal(false);
+      addMessage(t("72"));
+      // } else {
+      //   addMessage(t("71"));
+      // }
     });
   };
 
@@ -860,7 +864,7 @@ export default function Rank() {
     if (Number(value) <= 0) return;
     if (!state.token) return;
 
-    let res: any;
+    let res: any = null;
     try {
       showLoding(true);
       let item: any = await redemptionLp({});
@@ -873,16 +877,18 @@ export default function Rank() {
       }
     } catch (error: any) {
       showLoding(false);
-      return addMessage(t("73"));
+      if (error?.code === 4001) {
+        return addMessage(t("73"));
+      }
     }
 
     showLoding(false);
-    if (!!res?.status) {
-      Navigate("/View/Node");
-      addMessage(t("74"));
-    } else {
-      addMessage(t("73"));
-    }
+    // if (!!res?.status) {
+    Navigate("/View/Node");
+    addMessage(t("74"));
+    // } else {
+    //   addMessage(t("73"));
+    // }
   };
 
   // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户

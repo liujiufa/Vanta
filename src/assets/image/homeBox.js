@@ -15,6 +15,7 @@ export { ReactComponent as SmallOutLinkIcon } from "./Home/smallOutLinkIcon.svg"
 export { ReactComponent as QuotaSubscriptionIcon } from "./Home/QuotaSubscriptionIcon.svg";
 export { ReactComponent as PrincipalRedemptionIcon } from "./Home/PrincipalRedemptionIcon.svg";
 export { ReactComponent as StakingMiningIcon } from "./Home/StakingMiningIcon.svg";
+export { ReactComponent as ChatReturnIcon } from "./Home/ChatReturnIcon.svg";
 
 export {
   ZeroStrokeIcon,
