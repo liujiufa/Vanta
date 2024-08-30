@@ -808,12 +808,12 @@ export default function Rank() {
         }
       }
       showLoding(false);
-      // if (!!res?.status) {
-      await call();
-      addMessage(t("26"));
-      // } else {
-      //   addMessage(t("25"));
-      // }
+      if (!!res?.status) {
+        await call();
+        addMessage(t("26"));
+      } else if (res?.status === false) {
+        addMessage(t("25"));
+      }
     });
   };
 

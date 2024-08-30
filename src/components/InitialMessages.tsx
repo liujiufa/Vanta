@@ -17,7 +17,7 @@ function App(props: any) {
   useEffect(() => {
     console.log(props, "props");
     setContext(props?.list);
-    childDomCopy.current.innerHTML = childDomInit.current.innerHTML; // 复制了一层节点，拼在原有节点后面，使得它看起来像无线滚动一样
+    childDomCopy.current.innerHTML = childDomInit.current?.innerHTML; // 复制了一层节点，拼在原有节点后面，使得它看起来像无线滚动一样
   }, [props]);
 
   // 开始滚动
@@ -30,7 +30,7 @@ function App(props: any) {
          * warper.current.scrollLeft：内容向左边滚动的距离
          * childDomInit.current.scrollWidth ：内容的长度
          */
-        warper.current.scrollLeft >= childDomInit.current.scrollWidth
+        warper.current?.scrollLeft >= childDomInit.current?.scrollWidth
           ? (warper.current.scrollLeft = 0)
           : warper.current.scrollLeft++;
       }, speed);

@@ -452,14 +452,14 @@ export default function Rank() {
         }
       }
       showLoding(false);
-      // if (!!res?.status) {
+      if (!!res?.status) {
       await call();
       await getInitData();
       Navigate("/View/Community");
       addMessage(t("70"));
-      // } else {
-      //   addMessage(t("69"));
-      // }
+      } else if(res?.status===false){
+        addMessage(t("69"));
+      }
     });
   };
 

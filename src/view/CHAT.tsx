@@ -114,8 +114,6 @@ function CHAT() {
     }
   }, [web3ModalAccount, qbToken]);
 
-  console.log(chatConfig, "chatConfig");
-
   return (
     <UIKitProvider
       initConfig={chatConfig}

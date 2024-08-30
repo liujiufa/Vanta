@@ -509,6 +509,30 @@ const ModalContainer_Title_Container_Participate = styled(
   border-bottom: 1px solid rgba(213, 104, 25, 0.2);
 `;
 
+const ModalContainer_Title_Container1 = styled(FlexBox)`
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  > div {
+    &:first-child {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      > img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+      }
+      > svg {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+      }
+    }
+  }
+`;
+
 const NodeInfo_Top_LotteryGame_Info = styled.div`
   width: 100%;
 `;
@@ -718,6 +742,7 @@ export default function Rank() {
   const [ActiveNFTModal, setActiveNFTModal] = useState(false);
   const [isDropDownShow, setIsDropDownShow] = useState(false);
   const [PledgeLPModal, setPledgeLPModal] = useState(false);
+  const [ActivePledge, setActivePledge] = useState(false);
   const [PledgeUserInfo, setPledgeUserInfo] = useState<any>({});
   const [LpBase, setLpBase] = useState<any>([]);
   const { signFun } = useSign();
@@ -816,14 +841,15 @@ export default function Rank() {
         }
       }
       showLoding(false);
-      // if (!!res?.status) {
-      await call();
-      await getInitData();
-      setActiveNFTModal(false);
-      addMessage(t("70"));
-      // } else {
-      //   addMessage(t("69"));
-      // }
+      if (!!res?.status) {
+        await call();
+        await getInitData();
+        
+        setActiveNFTModal(false);
+        addMessage(t("70"));
+      } else if (res?.status === false) {
+        addMessage(t("69"));
+      }
     });
   };
 
@@ -848,13 +874,13 @@ export default function Rank() {
         }
       }
       showLoding(false);
-      // if (!!res?.status) {
-      await call();
-      setPledgeLPModal(false);
-      addMessage(t("72"));
-      // } else {
-      //   addMessage(t("71"));
-      // }
+      if (!!res?.status) {
+        await call();
+        setPledgeLPModal(false);
+        addMessage(t("72"));
+      } else if (res?.status === false) {
+        addMessage(t("71"));
+      }
     });
   };
 
@@ -883,12 +909,12 @@ export default function Rank() {
     }
 
     showLoding(false);
-    // if (!!res?.status) {
-    Navigate("/View/Node");
-    addMessage(t("74"));
-    // } else {
-    //   addMessage(t("73"));
-    // }
+    if (!!res?.status) {
+      Navigate("/View/Node");
+      addMessage(t("74"));
+    } else if (res?.status === false) {
+      addMessage(t("73"));
+    }
   };
 
   // 账户类型 1机器人-管理奖账户 2机器人-业绩奖励账户
@@ -990,6 +1016,7 @@ export default function Rank() {
   }, [state.token]);
 
   const NFTBox = (isHoldNft: boolean, isLockNft: boolean) => {
+    // if (!!isLockNft) {
     if (!!isLockNft) {
       return (
         <>
@@ -1423,14 +1450,405 @@ export default function Rank() {
           </NodeInfo_Bottom_NFT>
         </NodeInfo>
       );
+    } else if (!!ActivePledge) {
+      return (
+        <>
+          {" "}
+          <NodeInfo>
+            <Active_NodeInfo_Top>
+              <ModalContainer_Title_Container_Box>
+                <ModalContainer_Title_Container_Box_Left>
+                  <ModalContainer_Title_Container>
+                    <img src={NFTIcon} />
+                    <ModalContainer_Title>{t("75")} </ModalContainer_Title>
+                  </ModalContainer_Title_Container>
+                  <ModalContainer_SubTitle>
+                    {t("102")}:{MyCardInfo?.amount ?? 0}
+                  </ModalContainer_SubTitle>
+                </ModalContainer_Title_Container_Box_Left>
+                <NFTContainer>
+                  <img src={NFTImg} alt="" />
+                  <img src={NFTImgBg} alt="" />
+                </NFTContainer>
+              </ModalContainer_Title_Container_Box>
+            </Active_NodeInfo_Top>
+
+            <Active_NodeInfo_BtnBox>
+              <div
+                onClick={() => {
+                  getRewardFun(MyCardInfo?.amount ?? 0, 7);
+                }}
+              >
+                {t("103")}
+              </div>
+              <div
+                onClick={() => {
+                  Navigate("/View/NFTAwardRecord", {
+                    state: { recordType: 1 },
+                  });
+                }}
+              >
+                {t("98")}
+              </div>
+            </Active_NodeInfo_BtnBox>
+            <NodeInfo_Bottom_NFT>
+              <NodeInfo_Bottom_Item>
+                {t("78")}
+                <span>{MyCardInfo?.poolNum ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("79")}
+                <span>{MyCardInfo?.myLpNum ?? 0} LP</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("80")}
+                <span>{MyCardInfo?.communityPerformance ?? 0} USDT</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("81")}
+                <span>{MyCardInfo?.totalAmount ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+            </NodeInfo_Bottom_NFT>
+          </NodeInfo>
+          {!!PioneerInfo?.isPioneer ? (
+            // {!!PioneerInfo?.isHoldNft && !!PioneerInfo?.isSatisfyNftCommunity ? (
+            <NodeInfo>
+              <NodeInfo_Top_LotteryGame>
+                <ModalContainer_Title_Container_Participate>
+                  <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
+                  <ModalContainer_Title>{t("104")}</ModalContainer_Title>
+                  <FinancialRecords
+                    onClick={() => {
+                      Navigate("/View/Announcement", {
+                        state: { recordType: 2 },
+                      });
+                    }}
+                  >
+                    {t("131")} <SmallOutLinkIconBox />
+                  </FinancialRecords>
+                </ModalContainer_Title_Container_Participate>
+                <NodeInfo_Bottom_NFT>
+                  <NodeInfo_Bottom_Item>
+                    {t("132")}
+                    <span>
+                      {PioneerInfo?.thisMonthAddPerformance ?? 0} USDT
+                    </span>
+                  </NodeInfo_Bottom_Item>
+                  <NodeInfo_Bottom_Item>
+                    {t("133")}
+                    <span>{PioneerInfo?.totalAmount ?? 0} VTB</span>
+                  </NodeInfo_Bottom_Item>
+                </NodeInfo_Bottom_NFT>
+                <To_Be_Collected>
+                  {t("102")}
+                  <div>
+                    {PioneerInfo?.amount ?? 0} <span>VTB</span>
+                  </div>
+                </To_Be_Collected>
+              </NodeInfo_Top_LotteryGame>
+              <BtnBox>
+                <div
+                  onClick={() => {
+                    getRewardFun(PioneerInfo?.amount ?? 0 ?? 0, 8);
+                  }}
+                >
+                  {t("103")}
+                </div>
+                <div
+                  onClick={() => {
+                    Navigate("/View/SubscriptionQuotaAwardRecord", {
+                      state: { type: 3 },
+                    });
+                  }}
+                >
+                  {t("98")}
+                </div>
+              </BtnBox>
+            </NodeInfo>
+          ) : (
+            <NodeInfo>
+              <NodeInfo_Top_LotteryGame>
+                <ModalContainer_Title_Container>
+                  <img src={MyCardInfo?.imgUrl ?? ParticipateGameIcon} />
+                  <ModalContainer_Title>{t("104")}</ModalContainer_Title>
+                </ModalContainer_Title_Container>
+                <NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame>
+                  {t("105")}
+                </NodeInfo_Top_Tip_NodeInfo_Top_LotteryGame>
+                <NodeInfo_Mid_Conditions>
+                  {t("106")}
+                  <div>
+                    <img
+                      src={!!PioneerInfo?.isHoldNft ? yesIcon : errorIcon}
+                      alt=""
+                    />
+                    {t("107")}
+                  </div>
+                  <div>
+                    <img
+                      src={
+                        !!PioneerInfo?.isSatisfyNftCommunity
+                          ? yesIcon
+                          : errorIcon
+                      }
+                      alt=""
+                    />
+                    {t("108", { num: PioneerInfo?.communityNftNum ?? 0 })}
+                  </div>
+                </NodeInfo_Mid_Conditions>
+              </NodeInfo_Top_LotteryGame>
+            </NodeInfo>
+          )}
+          <NodeInfo>
+            <NodeInfo_Top>
+              <Tooltip
+                title={
+                  <GameTooltip>
+                    <div>{t("407")}</div>
+                    <div style={{ fontWeight: 500, marginTop: "8px" }}>
+                      {t("408")}
+                    </div>
+                    <div>{t("409")}</div>
+                    <div>{t("410")}</div>
+                    <div>{t("411")}</div>
+                    <div>{t("412")}</div>
+                  </GameTooltip>
+                }
+                autoAdjustOverflow
+                showArrow={false}
+              >
+                <NodeInfo_Top_Rule style={{ zIndex: 999 }}>
+                  <HelpIconAuto /> {t("12")}
+                </NodeInfo_Top_Rule>
+              </Tooltip>
+              <ModalContainer_Title_Container>
+                <img src={LPPledgeIcon} />
+                <ModalContainer_Title>{t("109")}</ModalContainer_Title>
+              </ModalContainer_Title_Container>
+
+              <Purchase_Lottery_Entry>
+                {t("110")}
+                <Purchase_Lottery_Entry_Content>
+                  {LpBase?.map((item: any) => (
+                    <Purchase_Lottery_Entry_Item>
+                      {t("48", { num: item?.cycle })} {item?.pledgeNum}LP
+                    </Purchase_Lottery_Entry_Item>
+                  ))}
+                  {/* <Purchase_Lottery_Entry_Item>
+                    {t("48", { num: 56 })} 10000LP
+                  </Purchase_Lottery_Entry_Item>
+                  <Purchase_Lottery_Entry_Item>
+                    {t("48", { num: 84 })} 10000LP
+                  </Purchase_Lottery_Entry_Item> */}
+                </Purchase_Lottery_Entry_Content>
+              </Purchase_Lottery_Entry>
+            </NodeInfo_Top>
+            <NodeInfo_Bottom>
+              <NodeInfo_Bottom_Item>
+                {t("111")}
+                <span>{LpUserInfo?.totalDrawAmount ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("112")}
+                <span>{LpUserInfo?.amount ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("113")}
+                <span>{LpUserInfo?.maturityRedemptionNum ?? 0} LP</span>
+              </NodeInfo_Bottom_Item>
+            </NodeInfo_Bottom>
+            <BtnBox>
+              <div
+                onClick={() => {
+                  setPledgeLPModal(true);
+                }}
+              >
+                {t("114")}
+              </div>
+              <div
+                onClick={() => {
+                  unStakeLPFun(LpUserInfo?.maturityRedemptionNum ?? 0);
+                }}
+              >
+                {t("116")}
+              </div>
+              <div
+                onClick={() => {
+                  getRewardFun(LpUserInfo?.amount ?? 0, 11);
+                }}
+              >
+                {t("117")}
+              </div>
+              <div
+                onClick={() => {
+                  Navigate("/View/LPPledgeAwardRecord");
+                }}
+              >
+                {t("98")}
+              </div>
+            </BtnBox>
+          </NodeInfo>
+          <NodeInfo>
+            <Tooltip
+              title={
+                <GameTooltip>
+                  <div>{t("413")}</div>
+                </GameTooltip>
+              }
+              autoAdjustOverflow
+              showArrow={false}
+            >
+              <NodeInfo_Top_Rule style={{ zIndex: 999 }}>
+                <HelpIconAuto /> {t("12")}
+              </NodeInfo_Top_Rule>
+            </Tooltip>
+            <NodeInfo_Top_NFT_Pioneer>
+              <ModalContainer_Title_Container>
+                <img src={SubscriptionRewardsIcon} />
+                <ModalContainer_Title>{t("118")}</ModalContainer_Title>
+              </ModalContainer_Title_Container>
+            </NodeInfo_Top_NFT_Pioneer>
+            <NodeInfo_Bottom_Subscription_Rewards>
+              {t("119")}
+              <NodeInfo_Bottom_Item>
+                {t("120")}
+                <span>{SubscriptionAccountInfo?.freezeAmount ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("121")}
+                <span>{SubscriptionAccountInfo?.totalAmount ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("122")}
+                <span>{SubscriptionAccountInfo?.amount ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+            </NodeInfo_Bottom_Subscription_Rewards>
+            <BtnBox>
+              <div
+                onClick={() => {
+                  // Navigate("/View/Pledge");
+                  setPledgeNFTModal(true);
+                }}
+              >
+                {t("123")}
+              </div>
+              <div
+                onClick={() => {
+                  getRewardFun(SubscriptionAccountInfo?.amount ?? 0, 9);
+                }}
+              >
+                {t("124")}
+              </div>
+              <div
+                onClick={() => {
+                  Navigate("/View/InitialSubscriptionRewards", {
+                    state: { recordType: 1, type: 1 },
+                  });
+                }}
+              >
+                {t("98")}
+              </div>
+            </BtnBox>
+            <NodeInfo_Bottom_Subscription_Rewards1>
+              <Tooltip
+                title={
+                  <GameTooltip>
+                    <div>{t("414")}</div>
+                  </GameTooltip>
+                }
+                autoAdjustOverflow
+                showArrow={false}
+              >
+                <NodeInfo_Top_Rule style={{ zIndex: 999, marginTop: "0px" }}>
+                  <HelpIconAuto /> {t("12")}
+                </NodeInfo_Top_Rule>
+              </Tooltip>
+              {t("125")}
+              <NodeInfo_Bottom_Item style={{ marginTop: "12px" }}>
+                {t("126")}
+                <span>{FirstRoundAccountInfo?.unLockNum ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("127")}
+                <span>
+                  {FirstRoundAccountInfo?.unlockEndTime
+                    ? dateFormat(
+                        "YYYY-mm-dd HH:MM:SS",
+                        new Date(FirstRoundAccountInfo?.unlockEndTime)
+                      )
+                    : "----/--/--"}
+                </span>
+              </NodeInfo_Bottom_Item>
+              {/* <NodeInfo_Bottom_Item>
+                {t("439")}
+                <span>
+                  {FirstRoundAccountInfo?.communityAddPerformanceForward ?? 0}{" "}
+                  VTB
+                </span>
+              </NodeInfo_Bottom_Item> */}
+              <NodeInfo_Bottom_Item>
+                {t("128")}
+                <span>
+                  {FirstRoundAccountInfo?.communityAddPerformance ?? 0} VTB
+                </span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("440")}
+                <span>{FirstRoundAccountInfo?.multipleNum ?? 0}</span>
+              </NodeInfo_Bottom_Item>
+              <NodeInfo_Bottom_Item>
+                {t("129")}
+                <span>{FirstRoundAccountInfo?.maturityUnlockNum ?? 0} VTB</span>
+              </NodeInfo_Bottom_Item>
+            </NodeInfo_Bottom_Subscription_Rewards1>
+            <To_Be_Collected>
+              {t("102")}
+              <div>
+                {FirstRoundAccountInfo?.amount ?? 0} <span>VTB</span>
+              </div>
+            </To_Be_Collected>
+            <BtnBox>
+              <div
+                onClick={() => {
+                  getRewardFun(FirstRoundAccountInfo?.amount ?? 0, 10);
+                }}
+              >
+                {t("130")}
+              </div>
+              <div
+                onClick={() => {
+                  Navigate("/View/InitialSubscriptionRewards", {
+                    state: { recordType: 2 },
+                  });
+                }}
+              >
+                {t("98")}
+              </div>
+            </BtnBox>
+          </NodeInfo>
+        </>
+      );
     } else {
       return (
         <NodeInfo>
           <NodeInfo_Top>
-            <ModalContainer_Title_Container>
-              <img src={NFTIcon} />
-              <ModalContainer_Title>{t("75")} </ModalContainer_Title>
-            </ModalContainer_Title_Container>
+            <ModalContainer_Title_Container1>
+              <div>
+                <img src={NFTIcon} />
+                <ModalContainer_Title>{t("75")} </ModalContainer_Title>
+              </div>
+              {Number(UserInfo?.teamLevel) >=
+                Number(UserInfo?.pledgeLpTeamLevel) && (
+                <Btn
+                  style={{ whiteSpace: "nowrap" }}
+                  onClick={() => {
+                    setActivePledge(true);
+                  }}
+                >
+                  {t("114")}
+                </Btn>
+              )}
+            </ModalContainer_Title_Container1>
             <NodeInfo_Top_Tip>{t("76")}</NodeInfo_Top_Tip>
             <NodeInfo_Top_Btn
               onClick={() => {

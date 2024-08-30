@@ -254,7 +254,7 @@ const FooterContainer = styled.div`
   height: 83px;
   width: 100%;
   max-width: 450px;
-  z-index: 1;
+  z-index: 999999;
   background: #000000;
   .tabBox {
     width: 100%;

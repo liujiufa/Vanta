@@ -275,13 +275,13 @@ export default function Rank() {
       }
 
       showLoding(false);
-      // if (!!res?.status) {
+      if (!!res?.status) {
       await call();
       Navigate("/View/Node");
       addMessage(t("26"));
-      // } else {
-      //   addMessage(t(item?.msg));
-      // }
+      } else if(res?.status===false){
+        addMessage(t(item?.msg));
+      }
     });
   };
 

@@ -282,13 +282,13 @@ export default function Rank() {
         }
       }
       showLoding(false);
-      // if (!!res?.status) {
+      if (!!res?.status) {
       await call();
       Navigate("/View/NFT");
       addMessage("mint成功");
-      // } else {
-      //   addMessage("mint失败");
-      // }
+      } else if(res?.status===false){
+        addMessage("mint失败");
+      }
     });
   };
 

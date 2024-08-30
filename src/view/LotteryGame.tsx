@@ -562,12 +562,12 @@ export default function Rank() {
           }
         }
         showLoding(false);
-        // if (!!res?.status) {
-        await call();
-        addMessage(t("70"));
-        // } else {
-        //   addMessage(t("69"));
-        // }
+        if (!!res?.status) {
+          await call();
+          addMessage(t("70"));
+        } else if (res?.status === false) {
+          addMessage(t("69"));
+        }
       }
     );
   };

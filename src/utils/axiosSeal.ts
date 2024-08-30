@@ -25,7 +25,7 @@ class HttpRequest {
     // 定义这个函数用于添加全局请求和响应拦截逻辑
     // 在这里添加请求和响应拦截
     instance.interceptors.request.use(
-      (config: AxiosRequestConfig) => {
+      (config: any) => {
         // config.headers.lang = 'en'
         if (
           (config.method === "POST" || config.method === "post") &&

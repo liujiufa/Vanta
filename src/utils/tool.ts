@@ -118,12 +118,12 @@ export function isApprove(price: number | string, Approve: string) {
 export function dateFormat(fmt: string, date: Date) {
   let ret;
   const opt: { [key: string]: string } = {
-    "Y+": date.getFullYear().toString(), // 年
-    "m+": (date.getMonth() + 1).toString(), // 月
-    "d+": date.getDate().toString(), // 日
-    "H+": date.getHours().toString(), // 时
-    "M+": date.getMinutes().toString(), // 分
-    "S+": date.getSeconds().toString(), // 秒
+    "Y+": date.getUTCFullYear().toString(), // 年
+    "m+": (date.getUTCMonth() + 1).toString(), // 月
+    "d+": date.getUTCDate().toString(), // 日
+    "H+": date.getUTCHours().toString(), // 时
+    "M+": date.getUTCMinutes().toString(), // 分
+    "S+": date.getUTCSeconds().toString(), // 秒
     // 有其他格式化字符需求可以继续添加，必须转化成字符串
   };
   for (let k in opt) {

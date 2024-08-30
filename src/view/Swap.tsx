@@ -245,12 +245,12 @@ export default function Rank() {
         }
       }
       showLoding(false);
-      // if (!!res?.status) {
+      if (!!res?.status) {
       await call();
       addMessage(t("239"));
-      // } else {
-      //   addMessage(t("238"));
-      // }
+      } else if(res?.status===false){
+        addMessage(t("238"));
+      }
     });
   };
 
